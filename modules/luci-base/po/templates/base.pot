@@ -1301,7 +1301,7 @@ msgstr ""
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:170
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:196
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:2098
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/channel_analysis.js:422
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/channel_analysis.js:434
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/60_wifi.js:150
 msgid "BSSID"
 msgstr ""
@@ -1714,17 +1714,17 @@ msgstr ""
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:140
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:198
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:2096
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/channel_analysis.js:419
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/channel_analysis.js:431
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/60_wifi.js:172
 msgid "Channel"
 msgstr ""
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/channel_analysis.js:385
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/channel_analysis.js:395
 #: modules/luci-mod-status/root/usr/share/luci/menu.d/luci-mod-status.json:105
 msgid "Channel Analysis"
 msgstr ""
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/channel_analysis.js:420
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/channel_analysis.js:432
 msgid "Channel Width"
 msgstr ""
 
@@ -5933,7 +5933,7 @@ msgstr ""
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:194
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:827
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:2097
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/channel_analysis.js:421
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/channel_analysis.js:433
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/60_wifi.js:149
 msgid "Mode"
 msgstr ""
@@ -7865,7 +7865,7 @@ msgstr ""
 msgid "References"
 msgstr ""
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/channel_analysis.js:390
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/channel_analysis.js:400
 msgid "Refresh Channels"
 msgstr ""
 
@@ -8411,7 +8411,7 @@ msgstr ""
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:168
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:195
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:2095
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/channel_analysis.js:418
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/channel_analysis.js:430
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/60_wifi.js:148
 msgid "SSID"
 msgstr ""
@@ -8726,8 +8726,8 @@ msgstr ""
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:74
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:200
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:2094
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/channel_analysis.js:42
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/channel_analysis.js:417
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/channel_analysis.js:43
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/channel_analysis.js:429
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/60_wifi.js:147
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/60_wifi.js:237
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/60_wifi.js:280
@@ -9199,7 +9199,7 @@ msgid "Starting configuration apply…"
 msgstr ""
 
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:2111
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/channel_analysis.js:442
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/channel_analysis.js:454
 msgid "Starting wireless scan..."
 msgstr ""
 
@@ -11291,8 +11291,8 @@ msgstr ""
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:199
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:200
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:201
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/channel_analysis.js:41
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/channel_analysis.js:42
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/channel_analysis.js:43
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/60_wifi.js:278
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/60_wifi.js:280
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/60_wifi.js:281
@@ -11394,7 +11394,7 @@ msgid "hexadecimal encoded value"
 msgstr ""
 
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:2171
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/channel_analysis.js:326
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/channel_analysis.js:336
 msgid "hidden"
 msgstr ""
 
