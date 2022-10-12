@@ -3,6 +3,7 @@
 'require poll';
 'require request';
 'require ui';
+'require dom';
 'require rpc';
 'require network';
 
@@ -18,11 +19,15 @@ var graphPolls = [],
 
 Math.log2 = Math.log2 || function(x) { return Math.log(x) * Math.LOG2E; };
 
+function rate(n, br) {
+	n = (n || 0).toFixed(2);
+	return [ '%1024.2mbit/s'.format(n * 8), br ? '<br>' : ' ', '(%1024.2mB/s)'.format(n) ]
+}
+
 return view.extend({
+
 	load: function() {
 		return Promise.all([
-			this.loadSVG(L.resource('svg/wireless.svg')),
-			this.loadSVG(L.resource('svg/wifirate.svg')),
 			network.getWifiDevices().then(function(radios) {
 				var tasks = [], all_networks = [];
 
@@ -34,11 +39,23 @@ return view.extend({
 				return Promise.all(tasks).then(function() {
 					return all_networks;
 				});
-			})
+			}),
+			this.loadSVG(L.resource('svg/wireless.svg')),
+			this.loadSVG(L.resource('svg/bandwidth.svg')),
+			this.loadSVG(L.resource('svg/wifirate.svg')),
+			this.loadSVG(L.resource('svg/mcs.svg'))
 		]);
 	},
+	isRadios1g: function(radio)
+	{
+		if (radio._ubusdata.dev !== undefined) {
+			return radio._ubusdata.dev.config.band == 's1g';
+		} else {
+			return false;
+		}
+	},
 
-	updateGraph: function(ifname, svg, lines, cb) {
+	updateGraph: function(ifname, mode, svg, lines, cb) {
 		var G = svg.firstElementChild;
 
 		var view = document.querySelector('#view');
@@ -91,6 +108,7 @@ return view.extend({
 
 		graphPolls.push({
 			ifname: ifname,
+			mode: mode,
 			svg:    svg,
 			lines:  lines,
 			cb:     cb,
@@ -110,7 +128,7 @@ return view.extend({
 
 			for (var i = 0; i < graphPolls.length; i++) {
 				var ctx = graphPolls[i];
-				tasks.push(L.resolveDefault(callLuciRealtimeStats('wireless', ctx.ifname), []));
+				tasks.push(L.resolveDefault(callLuciRealtimeStats(ctx.mode, ctx.ifname), []));
 			}
 
 			return Promise.all(tasks).then(L.bind(function(datasets) {
@@ -142,9 +160,23 @@ return view.extend({
 								last_timestamp = data[j][0];
 							}
 
-							info.line_current[i] = data[j][di + 1] * multiply;
-							info.line_current[i] -= Math.min(info.line_current[i], offset);
-							values[i].push(info.line_current[i]);
+							if (lines[di].counter) {
+								/* normalize difference against time interval */
+								if (j > 0) {
+									var time_delta = data[j][0] - data[j - 1][0];
+									if (time_delta) {
+										info.line_current[i] = (data[j][di + 1] * multiply - data[j - 1][di + 1] * multiply) / time_delta;
+										info.line_current[i] -= Math.min(info.line_current[i], offset);
+										values[i].push(info.line_current[i]);
+									}
+								}
+							}
+							else {
+
+								info.line_current[i] = data[j][di + 1] * multiply;
+								info.line_current[i] -= Math.min(info.line_current[i], offset);
+								values[i].push(info.line_current[i]);
+							}
 						}
 
 						i++;
@@ -236,24 +268,23 @@ return view.extend({
 		});
 	},
 
-	render: function(data) {
-		var svg1 = data[0],
-		    svg2 = data[1],
-		    wifidevs = data[2];
-
+	render: function([wifidevs, ...svgs]) {
 		var v = E('div', {}, E('div'));
 
 		for (var i = 0; i < wifidevs.length; i++) {
 			var ifname = wifidevs[i].getIfname();
+			var is_s1g = this.isRadios1g(wifidevs[i]);
+			var mode = "wireless";
+			if (is_s1g)
+				mode = "interface";
 
 			if (!ifname)
 				continue;
 
-			var csvg1 = svg1.cloneNode(true),
-			    csvg2 = svg2.cloneNode(true);
+			const [wireless_svg, bandwidth_svg, wifirate_svg, mcs_svg] = svgs.map(svg => svg.cloneNode(true));
 
 			v.firstElementChild.appendChild(E('div', { 'data-tab': ifname, 'data-tab-title': ifname }, [
-				csvg1,
+				wireless_svg,
 				E('div', { 'class': 'right' }, E('small', { 'id': 'scale' }, '-')),
 				E('br'),
 
@@ -281,10 +312,32 @@ return view.extend({
 				]),
 				E('br'),
 
-				csvg2,
-				E('div', { 'class': 'right' }, E('small', { 'id': 'scale2' }, '-')),
-				E('br'),
+				is_s1g? bandwidth_svg:wifirate_svg,
+                E('div', { 'class': 'right' }, E('small', { 'id': 'scale2' }, '-')),
+                E('br'),
 
+				is_s1g? E('table', { 'class': 'table', 'style': 'width:100%;table-layout:fixed' }, [
+					E('tr', { 'class': 'tr' }, [
+						E('td', { 'class': 'td right top' }, E('strong', { 'style': 'border-bottom:2px solid blue' }, [_('Inbound:')])),
+						E('td', { 'class': 'td', 'id': 'rx_bw_cur' }, [ '0 bit/s'  ]),
+
+						E('td', { 'class': 'td right top' }, E('strong', {}, [_('Average:')])),
+						E('td', { 'class': 'td', 'id': 'rx_bw_avg' }, [ '0 bit/s' ]),
+
+						E('td', { 'class': 'td right top' }, E('strong', {}, [_('Peak:')])),
+						E('td', { 'class': 'td', 'id': 'rx_bw_peak' }, [ '0 bit/s' ])
+					]),
+					E('tr', { 'class': 'tr' }, [
+						E('td', { 'class': 'td right top' }, E('strong', { 'style': 'border-bottom:2px solid green' }, [_('Outbound:')])),
+						E('td', { 'class': 'td', 'id': 'tx_bw_cur' }, [ '0 bit/s' ]),
+
+						E('td', { 'class': 'td right top' }, E('strong', {}, [_('Average:')])),
+						E('td', { 'class': 'td', 'id': 'tx_bw_avg' }, [ '0 bit/s' ]),
+
+						E('td', { 'class': 'td right top' }, E('strong', {}, [_('Peak:')])),
+						E('td', { 'class': 'td', 'id': 'tx_bw_peak' }, [ '0 bit/s' ])
+					])
+				]):
 				E('table', { 'class': 'table', 'style': 'width:100%;table-layout:fixed' }, [
 					E('tr', { 'class': 'tr' }, [
 						E('td', { 'class': 'td right top' }, E('strong', { 'style': 'border-bottom:2px solid green' }, [ _('Phy Rate:') ])),
@@ -296,10 +349,39 @@ return view.extend({
 						E('td', { 'class': 'td right top' }, E('strong', {}, [ _('Peak:') ])),
 						E('td', { 'class': 'td', 'id': 'rate_bw_peak' }, [ '0 Mbit/s' ])
 					])
-				])
+				]),
+				E('br'),
+
+				mcs_svg,
+				E('div', { 'class': 'right' }, E('small', { 'id': 'scale3' }, '-')),
+				E('br'),
+
+				E('table', { 'class': 'table', 'style': 'width:100%;table-layout:fixed' }, [
+					E('tr', { 'class': 'tr' }, [
+						E('td', { 'class': 'td right top' }, E('strong', { 'style': 'border-bottom:2px solid blue' }, [ _('Max RX MCS Index:') ])),
+						E('td', { 'class': 'td', 'id': 'mcs_rx_cur' }, [ '0' ]),
+
+						E('td', { 'class': 'td right top' }, E('strong', {}, [ _('') ])),
+						E('td', { 'class': 'td' }, []),
+
+						E('td', { 'class': 'td right top' }, E('strong', {}, [ _('Peak:') ])),
+						E('td', { 'class': 'td', 'id': 'mcs_rx_peak' }, [ '0']),
+					]),
+					E('tr', { 'class': 'tr' }, [
+						E('td', { 'class': 'td right top' }, E('strong', { 'style': 'border-bottom:2px solid green' }, [ _('Max TX MCS Index:') ])),
+						E('td', { 'class': 'td', 'id': 'mcs_tx_cur' }, [ '0' ]),
+
+						E('td', { 'class': 'td right top' }, E('strong', {}, [ _('') ])),
+						E('td', { 'class': 'td'}, [ ]),
+
+						E('td', { 'class': 'td right top' }, E('strong', {}, [ _('Peak:') ])),
+						E('td', { 'class': 'td', 'id': 'mcs_tx_peak' }, [ '0' ]),
+					])
+				]),
+				E('br'),
 			]));
 
-			this.updateGraph(ifname, csvg1, [ null, { line: 'rssi', offset: 155 }, { line: 'noise', offset: 155 } ], function(svg, info) {
+			this.updateGraph(ifname, 'wireless', wireless_svg, [ null, { line: 'rssi', offset: 155 }, { line: 'noise', offset: 155 } ],function(svg, info) {
 				var G = svg.firstElementChild, tab = svg.parentNode;
 
 				G.getElementById('label_25').firstChild.data = '%d %s'.format(info.label_25 - 100, _('dBm'));
@@ -317,18 +399,53 @@ return view.extend({
 				tab.querySelector('#noise_bw_peak').firstChild.data = '%d %s'.format(info.line_peak[1] - 100, _('dBm'));
 			});
 
-			this.updateGraph(ifname, csvg2, [ { line: 'rate', multiply: 0.001 } ], function(svg, info) {
+			if (is_s1g)
+				this.updateGraph(ifname, mode, bandwidth_svg, [{ line: 'rx', counter: true }, null, { line: 'tx', counter: true }], function (svg, info) {
+					var G = svg.firstElementChild, tab = svg.parentNode;
+
+					G.getElementById('label_25').innerHTML = rate(info.label_25, true).join('');
+					G.getElementById('label_50').innerHTML = rate(info.label_50, true).join('');
+					G.getElementById('label_75').innerHTML = rate(info.label_75, true).join('');
+
+					tab.querySelector('#scale').firstChild.data = _('(%d minute window, %d second interval)').format(info.timeframe, info.interval);
+
+					tab.querySelector('#rx_bw_cur').innerHTML = rate(info.line_current[0], true).join('');
+					tab.querySelector('#rx_bw_avg').innerHTML = rate(info.line_average[0], true).join('');
+					tab.querySelector('#rx_bw_peak').innerHTML = rate(info.line_peak[0], true).join('');
+
+					tab.querySelector('#tx_bw_cur').innerHTML = rate(info.line_current[1], true).join('');
+					tab.querySelector('#tx_bw_avg').innerHTML = rate(info.line_average[1], true).join('');
+					tab.querySelector('#tx_bw_peak').innerHTML = rate(info.line_peak[1], true).join('');
+				});
+			else
+				this.updateGraph(ifname, mode, wifirate_svg, [{ line: 'rate', multiply: 0.001 }], function (svg, info) {
+					var G = svg.firstElementChild, tab = svg.parentNode;
+
+					G.getElementById('label_25').firstChild.data = '%.2f %s'.format(info.label_25, _('Mbit/s'));
+					G.getElementById('label_50').firstChild.data = '%.2f %s'.format(info.label_50, _('Mbit/s'));
+					G.getElementById('label_75').firstChild.data = '%.2f %s'.format(info.label_75, _('Mbit/s'));
+
+					tab.querySelector('#scale2').firstChild.data = _('(%d minute window, %d second interval)').format(info.timeframe, info.interval);
+
+					tab.querySelector('#rate_bw_cur').firstChild.data = '%d %s'.format(info.line_current[0], _('Mbit/s'));
+					tab.querySelector('#rate_bw_avg').firstChild.data = '%d %s'.format(info.line_average[0], _('Mbit/s'));
+					tab.querySelector('#rate_bw_peak').firstChild.data = '%d %s'.format(info.line_peak[0], _('Mbit/s'));
+				});
+
+			this.updateGraph(ifname, 'wireless', mcs_svg, [null, null, null, { line: 'mcs_rx' }, { line: 'mcs_tx' }], function(svg, info) {
 				var G = svg.firstElementChild, tab = svg.parentNode;
 
-				G.getElementById('label_25').firstChild.data = '%.2f %s'.format(info.label_25, _('Mbit/s'));
-				G.getElementById('label_50').firstChild.data = '%.2f %s'.format(info.label_50, _('Mbit/s'));
-				G.getElementById('label_75').firstChild.data = '%.2f %s'.format(info.label_75, _('Mbit/s'));
+				G.getElementById('label_25').firstChild.data = '%d'.format(info.label_25);
+				G.getElementById('label_50').firstChild.data = '%d'.format(info.label_50);
+				G.getElementById('label_75').firstChild.data = '%d'.format(info.label_75);
 
-				tab.querySelector('#scale2').firstChild.data = _('(%d minute window, %d second interval)').format(info.timeframe, info.interval);
+				tab.querySelector('#scale').firstChild.data = _('(%d minute window, %d second interval)').format(info.timeframe, info.interval);
 
-				tab.querySelector('#rate_bw_cur').firstChild.data = '%d %s'.format(info.line_current[0], _('Mbit/s'));
-				tab.querySelector('#rate_bw_avg').firstChild.data = '%d %s'.format(info.line_average[0], _('Mbit/s'));
-				tab.querySelector('#rate_bw_peak').firstChild.data = '%d %s'.format(info.line_peak[0], _('Mbit/s'));
+				tab.querySelector('#mcs_rx_cur').firstChild.data = '%d'.format(info.line_current[0]);
+				tab.querySelector('#mcs_rx_peak').firstChild.data = '%d'.format(info.line_peak[0]);
+
+				tab.querySelector('#mcs_tx_cur').firstChild.data = '%d'.format(info.line_current[1]);
+				tab.querySelector('#mcs_tx_peak').firstChild.data = '%d'.format(info.line_peak[1]);
 			});
 		}
 
