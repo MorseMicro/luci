@@ -22,6 +22,7 @@ return view.extend({
 		expect: { }
 	}),
 
+
 	render_signal_badge: function(signalPercent, signalValue) {
 		var icon, title, value;
 
@@ -116,7 +117,7 @@ return view.extend({
 
 	create_channel_graph: function(chan_analysis, freq_tbl, freq) {
 		var is5GHz = freq == '5GHz',
-		    columns = is5GHz ? freq_tbl.length * 4 : freq_tbl.length + 3,
+			columns = is5GHz ? freq_tbl.length * 4 : freq_tbl.length + 3,
 		    chan_graph = chan_analysis.graph,
 		    G = chan_graph.firstElementChild,
 		    step = (chan_graph.offsetWidth - 2) / columns,
@@ -237,6 +238,10 @@ return view.extend({
 					chan_width = 8;
 				}
 
+				if (local_wifi.hwmode == "ah") {
+					chan_width = chan_width_text;
+				}
+
 				local_wifi.signal = -10;
 				local_wifi.ssid = 'Local Interface';
 
@@ -317,6 +322,11 @@ return view.extend({
 					}
 				}
 
+				if (res.ah_operation != null) {
+					chan_width = res.ah_operation.channel_width;
+					res.channel_width = `${chan_width} MHz`;
+				}
+
 				this.add_wifi_to_graph(chan_analysis, res, scanCache, center_channels, chan_width);
 
 				rows.push([
@@ -395,14 +405,16 @@ return view.extend({
 		for (var ifname in wifiDevs) {
 			var freq_tbl = {
 				['2.4GHz'] : [],
-				['5GHz'] : [],
+				['5GHz'] : [], 
+				['900MHz'] : [], 
 			};
-
 			/* Split FrequencyList in Bands */
 			wifiDevs[ifname].freq.forEach(function(freq) {
-				if (freq.mhz >= 5000) {
+				if (freq.mhz >= 500_000) {
+					freq_tbl['900MHz'].push(freq.channel);
+				} else if (freq.mhz >= 5000) {
 					freq_tbl['5GHz'].push(freq.channel);
-				} else {
+				} else if(freq.mhz >= 2000) {
 					freq_tbl['2.4GHz'].push(freq.channel);
 				}
 			});
