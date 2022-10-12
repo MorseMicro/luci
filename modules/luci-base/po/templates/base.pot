@@ -45,8 +45,10 @@ msgstr ""
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/bandwidth.js:296
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/connections.js:405
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/load.js:272
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:309
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:327
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:391
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:410
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:428
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:442
 msgid "(%d minute window, %d second interval)"
 msgstr ""
 
@@ -1293,9 +1295,11 @@ msgstr ""
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/load.js:236
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/load.js:246
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/load.js:256
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:265
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:275
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:293
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:296
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:306
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:324
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:334
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:346
 msgid "Average:"
 msgstr ""
 
@@ -4802,6 +4806,7 @@ msgid "Inactivity timeout"
 msgstr ""
 
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/bandwidth.js:267
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:321
 msgid "Inbound:"
 msgstr ""
 
@@ -5819,6 +5824,14 @@ msgstr ""
 msgid "Max FDB size"
 msgstr ""
 
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:361
+msgid "Max RX MCS Index:"
+msgstr ""
+
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:371
+msgid "Max TX MCS Index:"
+msgstr ""
+
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js:728
 msgid "Max cache TTL"
 msgstr ""
@@ -5901,12 +5914,12 @@ msgstr ""
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:213
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/60_wifi.js:28
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/60_wifi.js:173
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:323
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:324
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:325
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:329
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:330
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:331
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:424
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:425
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:426
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:430
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:431
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:432
 msgid "Mbit/s"
 msgstr ""
 
@@ -6617,7 +6630,7 @@ msgstr ""
 msgid "Noise Margin"
 msgstr ""
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:272
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:303
 msgid "Noise:"
 msgstr ""
 
@@ -7025,6 +7038,7 @@ msgid "Out"
 msgstr ""
 
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/bandwidth.js:277
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:331
 msgid "Outbound:"
 msgstr ""
 
@@ -7422,9 +7436,13 @@ msgstr ""
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/load.js:239
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/load.js:249
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/load.js:259
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:268
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:278
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:296
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:299
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:309
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:327
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:337
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:349
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:367
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:377
 msgid "Peak:"
 msgstr ""
 
@@ -7512,7 +7530,7 @@ msgstr ""
 msgid "PersistentKeepAlive setting is invalid"
 msgstr ""
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:290
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:343
 msgid "Phy Rate:"
 msgstr ""
 
@@ -8934,7 +8952,7 @@ msgstr ""
 msgid "Signal Refresh Rate"
 msgstr ""
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:262
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:293
 msgid "Signal:"
 msgstr ""
 
@@ -11519,21 +11537,21 @@ msgstr ""
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/60_wifi.js:281
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/60_wifi.js:285
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/60_wifi.js:286
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:263
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:266
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:269
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:273
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:276
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:279
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:305
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:306
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:294
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:297
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:300
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:304
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:307
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:311
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:312
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:313
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:315
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:316
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:317
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:310
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:387
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:388
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:389
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:393
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:394
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:395
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:397
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:398
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/wireless.js:399
 msgid "dBm"
 msgstr ""
 
