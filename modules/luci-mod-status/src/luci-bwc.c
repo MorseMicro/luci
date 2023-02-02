@@ -88,6 +88,8 @@ struct radio_entry {
 	uint16_t rate;
 	uint8_t  rssi;
 	uint8_t  noise;
+	int8_t   max_rx_mcs;
+	int8_t   max_tx_mcs;
 };
 
 static int readpid(void)
@@ -270,8 +272,39 @@ static void * iw_open(void)
 	return iwlib;
 }
 
+/* Find the maximum MCS value from the assoclist, either tx or rx.
+ * Returns -1 if unavailable (e.g. if not connected to anything).
+ *
+ * Note this gives us a single, somewhat dubious, MCS for both stations
+ * and access points.
+ */
+static void mcs_update(struct iwinfo_ops *backend, const char *ifname, int8_t *max_rx_mcs, int8_t *max_tx_mcs) {
+	// This sort of nonsense makes me pretty unhappy, but the currently iwinfo
+	// assoclist API just expects an infinite buffer.
+	struct iwinfo_assoclist_entry assoclist[1000];
+	int len;
+
+	*max_rx_mcs = *max_tx_mcs = -1;
+
+	if (NULL == backend->assoclist)
+	{
+		return;
+	}
+
+	if (0 != backend->assoclist(ifname, (char *)assoclist, &len))
+	{
+		return;
+	}
+
+	for (int i = 0; i < len; ++i)
+	{
+		if (assoclist[i].rx_rate.mcs > *max_rx_mcs) *max_rx_mcs = assoclist[i].rx_rate.mcs;
+		if (assoclist[i].tx_rate.mcs > *max_tx_mcs) *max_tx_mcs = assoclist[i].tx_rate.mcs;
+	}
+}
+
 static int iw_update(
-	void *iw, const char *ifname, uint16_t *rate, uint8_t *rssi, uint8_t *noise
+	void *iw, const char *ifname, uint16_t *rate, uint8_t *rssi, uint8_t *noise, int8_t *max_rx_mcs, int8_t *max_tx_mcs
 ) {
 	struct iwinfo_ops *(*probe)(const char *);
 	int val;
@@ -292,6 +325,7 @@ static int iw_update(
 	*rate = (backend->bitrate && !backend->bitrate(ifname, &val)) ? val : 0;
 	*rssi = (backend->signal && !backend->signal(ifname, &val)) ? val : 0;
 	*noise = (backend->noise && !backend->noise(ifname, &val)) ? val : 0;
+	mcs_update(backend, ifname, max_rx_mcs, max_tx_mcs);
 
 	return 1;
 }
@@ -340,7 +374,7 @@ static int update_ifstat(
 }
 
 static int update_radiostat(
-	const char *ifname, uint16_t rate, uint8_t rssi, uint8_t noise
+	const char *ifname, uint16_t rate, uint8_t rssi, uint8_t noise, int8_t max_rx_mcs, int8_t max_tx_mcs
 ) {
 	char path[1024];
 
@@ -364,6 +398,8 @@ static int update_radiostat(
 	e.rate  = htobe16(rate);
 	e.rssi  = rssi;
 	e.noise = noise;
+	e.max_rx_mcs = max_rx_mcs;
+	e.max_tx_mcs = max_tx_mcs;
 
 	return update_file(path, &e, sizeof(struct radio_entry));
 }
@@ -432,6 +468,7 @@ static int run_daemon(void)
 	uint32_t udp, tcp, other;
 	uint16_t rate;
 	uint8_t rssi, noise;
+	int8_t max_rx_mcs, max_tx_mcs;
 	float lf1, lf5, lf15;
 	char line[1024];
 	char path[64];
@@ -509,8 +546,8 @@ static int run_daemon(void)
 				if (!strcmp(e->d_name, "lo") || !strcmp(e->d_name, ".") || !strcmp(e->d_name, ".."))
 					continue;
 
-				if (iw && iw_update(iw, e->d_name, &rate, &rssi, &noise))
-					update_radiostat(e->d_name, rate, rssi, noise);
+				if (iw && iw_update(iw, e->d_name, &rate, &rssi, &noise, &max_rx_mcs, &max_tx_mcs))
+					update_radiostat(e->d_name, rate, rssi, noise, max_rx_mcs, max_tx_mcs);
 
 				for (i = 0; i < sizeof(sysfs_stats)/sizeof(sysfs_stats[0]); i++)
 				{
@@ -671,9 +708,9 @@ static int run_dump_radio(const char *ifname)
 		if (!e->time)
 			continue;
 
-		printf("[ %" PRIu32 ", %" PRIu16 ", %" PRIu8 ", %" PRIu8 " ]%s\n",
+		printf("[ %" PRIu32 ", %" PRIu16 ", %" PRIu8 ", %" PRIu8 ", %" PRId8 ", %" PRId8 "]%s\n",
 			be32toh(e->time),
-			be16toh(e->rate), e->rssi, e->noise,
+			be16toh(e->rate), e->rssi, e->noise, e->max_rx_mcs, e->max_tx_mcs,
 			((i + sizeof(struct radio_entry)) < m.size) ? "," : "");
 	}
 
