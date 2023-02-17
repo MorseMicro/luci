@@ -4906,6 +4906,84 @@ var UI = baseclass.extend(/** @lends LuCI.ui.prototype */ {
 	},
 
 	/**
+	 * Create a pre-bound event handler function with a cancel option.
+	 *
+	 * This is very similar to createHandlerFn, but allows one to interact
+	 * with the target after clicking in order to trigger a cancel.
+	 *
+	 * To do this, a 'cancelPromise' is passed as the second argument
+	 * to fn, and this is resolved with the result 'ui.CANCEL'. That is,
+	 * it can be used like:
+	 *
+	 *     async handleAction(ev, cancelPromise, ...) {
+	 *         const result = await Promise.race([cancelPromise, myNormalAction])
+	 *         if (result === ui.CANCEL) ...
+	 *     }
+	 *
+	 * @param {*} ctx
+	 * The `this` context to use for the wrapped function.
+	 *
+	 * @param {function|string} fn
+	 * Specifies the function to wrap. In case of a function value, the
+	 * function is used as-is. If a string is specified instead, it is looked
+	 * up in `ctx` to obtain the function to wrap. In both cases the bound
+	 * function will be invoked with `ctx` as `this` context
+	 *
+	 * @param {string} newText
+	 * Change the button to this text while the event is in process.
+	 * Usually this would be 'Cancel', 'Stop', or similar.
+	 *
+	 * @param {...*} extra_args
+	 * Any further parameter as passed as-is to the bound event handler
+	 * function in the same order as passed to `createHandlerFn()`.
+	 *
+	 * @returns {function|null}
+	 * Returns the pre-bound handler function which is suitable to be passed
+	 * to `addEventListener()`. Returns `null` if the given `fn` argument is
+	 * a string which could not be found in `ctx` or if `ctx[fn]` is not a
+	 * valid function value.
+	 */
+	createCancellableHandlerFn: function(ctx, fn, newText, ...args) {
+		if (typeof(fn) == 'string')
+			fn = ctx[fn];
+
+		if (typeof(fn) != 'function')
+			return null;
+
+		fn = fn.bind(ctx);
+
+		var cancel = this.CANCEL;
+		var cancelPromiseResolve = null;
+
+		return function(ev) {
+			if (!cancelPromiseResolve) {
+				var cancelPromise = new Promise((resolve, reject) => cancelPromiseResolve = resolve);
+				var t = ev.currentTarget;
+				var origTextContent = t.textContent;
+
+				t.textContent = newText;
+				t.classList.add('spinning');
+
+				Promise.resolve(fn(ev, cancelPromise, ...args)).finally(function() {
+					t.classList.remove('spinning');
+					t.textContent = origTextContent;
+					cancelPromiseResolve = null;
+				});
+			} else {
+				// Clicked on when there's a cancel promise;
+				// i.e. we're already in stop mode, so do that.
+				cancelPromiseResolve(cancel);
+			}
+		}
+	},
+
+	/**
+	 * Symbol which the cancelPromise passed to createCancellableFunction
+	 * resolves to if the action is cancelled.
+	 */
+	CANCEL: Symbol('CANCEL'),
+
+	/**
 	 * Load specified view class path and set it up.
 	 *
 	 * Transforms the given view path into a class name, requires it
