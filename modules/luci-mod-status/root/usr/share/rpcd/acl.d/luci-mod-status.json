@@ -35,7 +35,9 @@
 				"/sbin/logread": [ "stat" ],
 				"/sbin/logread -e ^": [ "exec" ],
 				"/usr/sbin/logread": [ "stat" ],
-				"/usr/sbin/logread -e ^": [ "exec" ]
+				"/usr/sbin/logread -e ^": [ "exec" ],
+				"/usr/bin/tail -3000 /var/log/beerocks_agent.log": [ "exec" ],
+				"/usr/bin/tail -3000 /var/log/beerocks_controller.log": [ "exec" ]
 			},
 			"ubus": {
 				"file": [ "stat" ]
