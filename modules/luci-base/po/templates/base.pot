@@ -1720,7 +1720,7 @@ msgid "Channel"
 msgstr ""
 
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/channel_analysis.js:395
-#: modules/luci-mod-status/root/usr/share/luci/menu.d/luci-mod-status.json:105
+#: modules/luci-mod-status/root/usr/share/luci/menu.d/luci-mod-status.json:132
 msgid "Channel Analysis"
 msgstr ""
 
@@ -1965,7 +1965,7 @@ msgstr ""
 msgid "Connection lost"
 msgstr ""
 
-#: modules/luci-mod-status/root/usr/share/luci/menu.d/luci-mod-status.json:160
+#: modules/luci-mod-status/root/usr/share/luci/menu.d/luci-mod-status.json:187
 msgid "Connections"
 msgstr ""
 
@@ -2865,6 +2865,16 @@ msgstr ""
 
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:1620
 msgid "Each STA is assigned its own AP_VLAN interface."
+msgstr ""
+
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/beerocks_agent_log.js:12
+#: modules/luci-mod-status/root/usr/share/luci/menu.d/luci-mod-status.json:108
+msgid "EasyMesh Agent Log"
+msgstr ""
+
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/beerocks_controller_log.js:12
+#: modules/luci-mod-status/root/usr/share/luci/menu.d/luci-mod-status.json:93
+msgid "EasyMesh Controller Log"
 msgstr ""
 
 #: modules/luci-base/htdocs/luci-static/resources/form.js:2687
@@ -3948,7 +3958,7 @@ msgstr ""
 msgid "Grant access to crontab configuration"
 msgstr ""
 
-#: modules/luci-mod-status/root/usr/share/rpcd/acl.d/luci-mod-status.json:70
+#: modules/luci-mod-status/root/usr/share/rpcd/acl.d/luci-mod-status.json:72
 msgid "Grant access to firewall status"
 msgstr ""
 
@@ -3992,7 +4002,7 @@ msgstr ""
 msgid "Grant access to realtime statistics"
 msgstr ""
 
-#: modules/luci-mod-status/root/usr/share/rpcd/acl.d/luci-mod-status.json:47
+#: modules/luci-mod-status/root/usr/share/rpcd/acl.d/luci-mod-status.json:49
 msgid "Grant access to routing status"
 msgstr ""
 
@@ -4012,7 +4022,7 @@ msgstr ""
 msgid "Grant access to uHTTPd configuration"
 msgstr ""
 
-#: modules/luci-mod-status/root/usr/share/rpcd/acl.d/luci-mod-status.json:61
+#: modules/luci-mod-status/root/usr/share/rpcd/acl.d/luci-mod-status.json:63
 msgid "Grant access to wireless channel status"
 msgstr ""
 
@@ -5359,7 +5369,7 @@ msgstr ""
 msgid "Listening port for inbound DNS queries."
 msgstr ""
 
-#: modules/luci-mod-status/root/usr/share/luci/menu.d/luci-mod-status.json:130
+#: modules/luci-mod-status/root/usr/share/luci/menu.d/luci-mod-status.json:157
 #: themes/luci-theme-openwrt/ucode/template/themes/openwrt.org/header.ut:47
 msgid "Load"
 msgstr ""
@@ -7546,7 +7556,7 @@ msgid "PrivateKey setting is missing or invalid"
 msgstr ""
 
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/processes.js:64
-#: modules/luci-mod-status/root/usr/share/luci/menu.d/luci-mod-status.json:93
+#: modules/luci-mod-status/root/usr/share/luci/menu.d/luci-mod-status.json:120
 msgid "Processes"
 msgstr ""
 
@@ -7783,7 +7793,7 @@ msgstr ""
 msgid "Really switch protocol?"
 msgstr ""
 
-#: modules/luci-mod-status/root/usr/share/luci/menu.d/luci-mod-status.json:118
+#: modules/luci-mod-status/root/usr/share/luci/menu.d/luci-mod-status.json:145
 msgid "Realtime Graphs"
 msgstr ""
 
@@ -10164,7 +10174,7 @@ msgstr ""
 
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/iptables.js:54
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/iptables.js:65
-#: modules/luci-mod-status/root/usr/share/luci/menu.d/luci-mod-status.json:139
+#: modules/luci-mod-status/root/usr/share/luci/menu.d/luci-mod-status.json:166
 msgid "Traffic"
 msgstr ""
 
@@ -11091,7 +11101,7 @@ msgstr ""
 
 #: modules/luci-mod-network/root/usr/share/luci/menu.d/luci-mod-network.json:17
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/60_wifi.js:10
-#: modules/luci-mod-status/root/usr/share/luci/menu.d/luci-mod-status.json:148
+#: modules/luci-mod-status/root/usr/share/luci/menu.d/luci-mod-status.json:175
 msgid "Wireless"
 msgstr ""
 
