@@ -274,9 +274,14 @@ else
 endif
 
 define SubstituteVersion
+	if [ -e "/dev/urandom" ]; then \
+		REV=$$$$(tr -dc A-Za-z0-9 </dev/urandom | head -c 13); \
+	else \
+		REV=$(if $(PKG_VERSION),$(PKG_VERSION),$(PKG_SRC_VERSION)); \
+	fi; \
 	$(FIND) $(1) -type f -name '*.htm' | while read src; do \
-		$(SED) 's/<%# *\([^ ]*\)PKG_VERSION *%>/\1$(if $(PKG_VERSION),$(PKG_VERSION),$(PKG_SRC_VERSION))/g' \
-		    -e 's/"\(<%= *\(media\|resource\) *%>[^"]*\.\(js\|css\)\)"/"\1?v=$(if $(PKG_VERSION),$(PKG_VERSION),$(PKG_SRC_VERSION))"/g' \
+		$(SED) "s/<%# *\([^ ]*\)PKG_VERSION *%>/\1$$$$REV/g" \
+		    -e "s/\"\(<%= *\(media\|resource\) *%>[^\"]*\.\(js\|css\)\)\"/\"\1?v=$$$$REV\"/g" \
 			"$$$$src"; \
 	done; \
 	$(FIND) $(1) -type f -name '*.ut' | while read src; do \
