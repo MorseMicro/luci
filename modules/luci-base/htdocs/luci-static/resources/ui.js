@@ -385,6 +385,7 @@ var UITextfield = UIElement.extend(/** @lends LuCI.ui.Textfield.prototype */ {
 					'class': 'cbi-button cbi-button-neutral',
 					'title': _('Reveal/hide password'),
 					'aria-label': _('Reveal/hide password'),
+					'tabIndex': '-1',
 					'click': function(ev) {
 						var e = this.previousElementSibling;
 						e.type = (e.type === 'password') ? 'text' : 'password';
