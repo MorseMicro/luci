@@ -383,6 +383,7 @@ const UITextfield = UIElement.extend(/** @lends LuCI.ui.Textfield.prototype */ {
 					'class': 'cbi-button cbi-button-neutral',
 					'title': _('Reveal/hide password'),
 					'aria-label': _('Reveal/hide password'),
+					'tabIndex': '-1',
 					'click': function(ev) {
 						// DOM manipulation (e.g. by password managers) may have inserted other
 						// elements between the reveal button and the input. This searches for
