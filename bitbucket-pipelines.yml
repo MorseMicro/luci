@@ -1,0 +1,36 @@
+image: atlassian/default-image:4
+
+pipelines:
+  branches:
+    rel_*:
+      - step: &luci-base-test
+          name: Verify luci base .pot output
+          script:
+            - apt-get update && apt-get install gettext -y
+            - mkdir tmp
+            - cp modules/luci-base/po/templates/base.pot modules/luci-base/po/templates/base.pot.prev
+            - ./build/mkbasepot.sh
+            - msgcmp --use-untranslated modules/luci-base/po/templates/base.pot.prev modules/luci-base/po/templates/base.pot
+      - step:
+          name: Verify luci-base japanese translation
+          script:
+            - apt-get update && apt-get install gettext -y
+            - msgcmp modules/luci-base/po/ja/base.po modules/luci-base/po/templates/base.pot
+  pull-requests:
+    '**':
+      - stage:
+          name: .po template verification
+          condition:
+            changesets:
+              includePaths:
+                # These paths are listed in mkbasepot.sh
+                - "modules/luci-base/**"
+                - "modules/luci-compat/**"
+                - "modules/luci-mod-admin-full/**"
+                - "modules/luci-mod-network/**"
+                - "modules/luci-mod-status/**"
+                - "modules/luci-mod-system/**"
+                - "protocols/**"
+                - "themes/**"
+          steps:
+            - step: *luci-base-test
