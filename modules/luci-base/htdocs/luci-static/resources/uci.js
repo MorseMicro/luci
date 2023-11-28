@@ -457,12 +457,12 @@ return baseclass.extend(/** @lends LuCI.uci.prototype */ {
 		for (const s in v)
 			if (!d || d[s] !== true)
 				if (!type || v[s]['.type'] == type)
-					sa.push(Object.assign({ }, v[s], c ? c[s] : null));
+					sa.push(Object.assign({ }, this.get(conf, s)));
 
 		if (n)
 			for (const s in n)
 				if (!type || n[s]['.type'] == type)
-					sa.push(Object.assign({ }, n[s]));
+					sa.push(Object.assign({ }, this.get(conf, s)));
 
 		sa.sort((a, b) => {
 			return a['.index'] - b['.index'];
