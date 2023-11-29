@@ -546,20 +546,21 @@ return baseclass.extend(/** @lends LuCI.uci.prototype */ {
 			if (d[conf]?.[sid] === true)
 				return null;
 
-			const s = v[conf][sid] || null;
+			if (!v[conf][sid])
+				return null;
 
-			if (s) {
-				/* merge changes */
-				if (c[conf]?.[sid])
-					for (const opt in c[conf][sid])
-						if (c[conf][sid][opt] != null)
-							s[opt] = c[conf][sid][opt];
+			var s = Object.assign({ }, v[conf][sid]);
 
-				/* merge deletions */
-				if (d[conf]?.[sid])
-					for (const opt in d[conf][sid])
-						delete s[opt];
-			}
+			/* merge changes */
+			if (c[conf] && c[conf][sid])
+				for (var opt in c[conf][sid])
+					if (c[conf][sid][opt] != null)
+						s[opt] = c[conf][sid][opt];
+
+			/* merge deletions */
+			if (d[conf] && d[conf][sid])
+				for (var opt in d[conf][sid])
+					delete s[opt];
 
 			return s;
 		}
