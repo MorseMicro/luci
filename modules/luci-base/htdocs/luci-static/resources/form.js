@@ -1428,6 +1428,19 @@ const CBIAbstractValue = CBIAbstractElement.extend(/** @lends LuCI.form.Abstract
 	 */
 
 	/**
+	 * Name to use for errors etc.
+	 *
+	 * By default, the option.title (or if this doesn't exist, the uci option name)
+	 * is used for displaying validation messages about this option.
+	 *
+	 * Setting displayname will use this instead.
+	 *
+	 * @name LuCI.form.AbstractValue.prototype#displayname
+	 * @type string
+	 * @default null
+	 */
+
+	/**
 	 * Override the UCI configuration name to read the option value from.
 	 *
 	 * By default, the configuration name is inherited from the parent Map.
@@ -2007,7 +2020,7 @@ const CBIAbstractValue = CBIAbstractElement.extend(/** @lends LuCI.form.Abstract
 		const active = this.isActive(section_id);
 
 		if (active && !this.isValid(section_id)) {
-			const title = this.stripTags(this.title).trim();
+			const title = this.stripTags(this.displayname || this.title).trim();
 			const error = this.getValidationError(section_id);
 
 			return Promise.reject(new TypeError(
@@ -2023,7 +2036,7 @@ const CBIAbstractValue = CBIAbstractElement.extend(/** @lends LuCI.form.Abstract
 					return Promise.resolve(this.remove(section_id));
 				}
 				else {
-					const title = this.stripTags(this.title).trim();
+					const title = this.stripTags(this.displayname || this.title).trim();
 
 					return Promise.reject(new TypeError(
 						_('Option "%s" must not be empty.').format(title || this.option)));
