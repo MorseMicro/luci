@@ -1123,8 +1123,8 @@ const CBIAbstractSection = CBIAbstractElement.extend(/** @lends LuCI.form.Abstra
 	formvalue(section_id, option) {
 		const rv = (arguments.length == 1) ? {} : null;
 
-		for (let i = 0, o; (o = this.children[i]) != null; i++) {
-			const func = this.map.root ? this.children[i].formvalue : this.children[i].cfgvalue;
+		for (var i = 0, o; (o = this.children[i]) != null; i++) {
+			const func = (this.map.root && this.map.root.children.length > 0) ? this.children[i].formvalue : this.children[i].cfgvalue;
 
 			if (rv)
 				rv[o.option] = func.call(o, section_id);
