@@ -386,7 +386,9 @@ Zone = AbstractFirewallItem.extend({
 			if (sections[i][what] != this.getName())
 				continue;
 
-			forwards.push(new Forwarding(sections[i]['.name']));
+			if (sections[i].enabled !== '0') {
+				forwards.push(new Forwarding(sections[i]['.name']));
+			}
 		}
 
 		return forwards;
