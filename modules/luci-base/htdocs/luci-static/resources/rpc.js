@@ -49,8 +49,8 @@ return baseclass.extend(/** @lends LuCI.rpc.prototype */ {
 
 		try {
 			if (!res.ok)
-				L.raise('RPCError', 'RPC call to %s/%s failed with HTTP error %d: %s',
-					req.object, req.method, res.status, res.statusText || '?');
+				L.raise('RPCError', 'RPC call to %s/%s %s failed with HTTP error %d: %s',
+					req.object, req.method, JSON.stringify(req.params), res.status, res.statusText || '?');
 
 			msg = res.json();
 		}
@@ -74,13 +74,13 @@ return baseclass.extend(/** @lends LuCI.rpc.prototype */ {
 		try {
 			/* verify message frame */
 			if (!L.isObject(msg) || msg.jsonrpc != '2.0')
-				L.raise('RPCError', 'RPC call to %s/%s returned invalid message frame',
-					req.object, req.method);
+				L.raise('RPCError', 'RPC call to %s/%s %s returned invalid message frame',
+					req.object, req.method, JSON.stringify(req.params));
 
 			/* check error condition */
 			if (L.isObject(msg.error) && msg.error.code && msg.error.message)
-				L.raise('RPCError', 'RPC call to %s/%s failed with error %d: %s',
-					req.object, req.method, msg.error.code, msg.error.message || '?');
+				L.raise('RPCError', 'RPC call to %s/%s %s failed with error %d: %s',
+					req.object, req.method, JSON.stringify(req.params), msg.error.code, msg.error.message || '?');
 		}
 		catch (e) {
 			return req.reject(e);
@@ -91,8 +91,8 @@ return baseclass.extend(/** @lends LuCI.rpc.prototype */ {
 		}
 		else if (Array.isArray(msg.result)) {
 			if (req.raise && msg.result[0] !== 0)
-				L.raise('RPCError', 'RPC call to %s/%s failed with ubus code %d: %s',
-					req.object, req.method, msg.result[0], this.getStatusText(msg.result[0]));
+				L.raise('RPCError', 'RPC call to %s/%s %s failed with ubus code %d: %s',
+					req.object, req.method, JSON.stringify(req.params), msg.result[0], this.getStatusText(msg.result[0]));
 
 			ret = (msg.result.length > 1) ? msg.result[1] : msg.result[0];
 		}
