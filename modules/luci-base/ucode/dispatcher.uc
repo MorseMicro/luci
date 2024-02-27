@@ -899,6 +899,11 @@ dispatch = function(_http, path) {
 
 		path ??= map(match(http.getenv('PATH_INFO'), /[^\/]+/g), m => urldecode(m[0]));
 
+		let homepage = uci.get('luci', 'main', 'homepage');
+		if (path == null && homepage != null) {
+			path = split(homepage, "/");
+		}
+
 		let resolved = resolve_page(menu, path);
 
 		runtime.env.ctx = resolved.ctx;
