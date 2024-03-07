@@ -280,8 +280,8 @@ define SubstituteVersion
 			"$$$$src"; \
 	done; \
 	$(FIND) $(1) -type f -name '*.ut' | while read src; do \
-		$(SED) 's/{# *\([^ ]*\)PKG_VERSION *#}/\1$(if $(PKG_VERSION),$(PKG_VERSION),$(PKG_SRC_VERSION))/g' \
-		    -e 's/"\({{ *\(media\|resource\) *}}[^"]*\.\(js\|css\)\)"/"\1?v=$(if $(PKG_VERSION),$(PKG_VERSION),$(PKG_SRC_VERSION))"/g' \
+		$(SED) "s/{# *\([^ ]*\)PKG_VERSION *#}/\1$$$$REV/g" \
+		    -e "s/\"\({{ *\(media\|resource\) *}}[^\"]*\.\(js\|css\)\)\"/\"\1?v=$$$$REV\"/g" \
 			"$$$$src"; \
 	done
 endef
