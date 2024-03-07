@@ -2878,6 +2878,33 @@
 		},
 
 		/**
+		 * Construct an URL path relative to the global static resource path
+		 * of the LuCI ui (usually `/luci-static/resources`) with a
+		 * cache-busting parameter.
+		 *
+		 * This is the same as .resource(), except with cache busting.
+		 *
+		 * The resulting URL is guaranteed to only contain the characters
+		 * `a-z`, `A-Z`, `0-9`, `_`, `.`, `%`, `,`, `;`, and `-` as well
+		 * as `/` for the path separator.
+		 *
+		 * @instance
+		 * @memberof LuCI
+		 *
+		 * @param {string[]} [parts]
+		 * An array of parts to join into an URL path. Parts may contain
+		 * slashes and any of the other characters mentioned above.
+		 *
+		 * @return {string}
+		 * Returns the resulting URL path.
+		 */
+		resourceCacheBusted: function() {
+			const url = this.path(env.resource, arguments);
+
+			return env.resource_version ? url + '?v=' + env.resource_version : url;
+		},
+
+		/**
 		 * Construct an URL path relative to the media resource path of the
 		 * LuCI ui (usually `/luci-static/$theme_name`).
 		 *
