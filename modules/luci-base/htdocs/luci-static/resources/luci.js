@@ -1942,6 +1942,15 @@
 			DOM.content(vp, E('div', { 'class': 'spinning' }, _('Loading view…')));
 
 			return Promise.resolve(this.load())
+				.then(function (...args) {
+					if (L.loaded) {
+						return Promise.resolve.apply(Promise, arguments);
+					} else {
+						return new Promise(function (resolve) {
+							document.addEventListener('luci-loaded', resolve.bind(null, ...args), { once: true });
+						});
+					}
+				})
 				.then(LuCI.prototype.bind(this.render, this))
 				.then(LuCI.prototype.bind(function(nodes) {
 					var vp = document.getElementById('view');
@@ -2745,8 +2754,11 @@
 		initDOM: function() {
 			originalCBIInit();
 			Poll.start();
+			L.loaded = true;
 			document.dispatchEvent(new CustomEvent('luci-loaded'));
 		},
+
+		loaded: false,
 
 		/**
 		 * The `env` object holds environment settings used by LuCI, such
