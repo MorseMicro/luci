@@ -1894,7 +1894,7 @@
 			return Promise.resolve(this.load())
 				.then(function (...args) {
 					if (L.loaded) {
-						return Promise.resolve(...args);
+						return Promise.resolve.apply(Promise, arguments);
 					} else {
 						return new Promise(function (resolve) {
 							document.addEventListener('luci-loaded', resolve.bind(null, ...args), { once: true });
