@@ -9640,8 +9640,8 @@ msgstr ""
 #: protocols/luci-proto-gre/htdocs/luci-static/resources/protocol/grev6tap.js:84
 msgid ""
 "Specify a Traffic Class. Can be <code>inherit</code> (the outer header "
-"inherits the value of the inner header) or an hexadecimal value "
-"<code>00..FF</code> (optional)."
+"inherits the value of the inner header) or an hexadecimal value <code>00.."
+"FF</code> (optional)."
 msgstr ""
 
 #: protocols/luci-proto-gre/htdocs/luci-static/resources/protocol/gre.js:64
