@@ -24,9 +24,9 @@
 		token          : ctx.authtoken,
 		nodespec       : dispatched,
 		apply_rollback : max(+config.apply.rollback ||  90, 90),
-		apply_holdoff  : max(+config.apply.holdoff  ||   4,  1),
+		apply_holdoff  : max(+config.apply.holdoff  ||   4,  0.01),
 		apply_timeout  : max(+config.apply.timeout  ||   5,  1),
-		apply_display  : max(+config.apply.display  || 1.5,  1),
+		apply_display  : max(+config.apply.display  || 1.5,  0.01),
 		rollback_token : rollback_token
 	} }`, '/', '\\/') }});
 </script>
