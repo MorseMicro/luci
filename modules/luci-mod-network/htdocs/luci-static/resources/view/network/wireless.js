@@ -810,6 +810,11 @@ return view.extend({
 					o.enabled = '1';
 					o.disabled = '0';
 					o.default = o.disabled;
+
+					o = ss.taboption('advanced', form.Flag, 'vfem_4v3', _('4.3V VFEM'), _('Enables a 4.3V VFEM on the HaLow module'));
+					o.enabled = '1';
+					o.disabled = '0';
+					o.default = o.disabled;
 				}
 
 				o = s.option(form.SectionValue, '_device', form.NamedSection, radioNet.getName(), 'wifi-iface', _('Interface Configuration'));
