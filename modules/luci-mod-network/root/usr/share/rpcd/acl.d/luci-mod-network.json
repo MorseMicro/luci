@@ -51,9 +51,11 @@
 	"luci-mod-network-diagnostics": {
 		"description": "Grant access to network diagnostic tools",
 		"read": {
+			"cgi-io": [ "exec" ],
 			"file": {
 				"/bin/ping": [ "exec" ],
 				"/bin/ping6": [ "exec", "list" ],
+				"/bin/iperf3": [ "list" ],
 				"/bin/traceroute": [ "exec" ],
 				"/bin/traceroute6": [ "exec", "list" ],
 				"/usr/bin/nslookup": [ "exec" ],
@@ -61,6 +63,8 @@
 				"/usr/bin/ping6": [ "exec", "list" ],
 				"/usr/bin/traceroute": [ "exec" ],
 				"/usr/bin/traceroute6": [ "exec", "list" ],
+				"/usr/bin/iperf3": [ "list" ],
+				"/usr/libexec/command-poll iperf3 *": [ "exec" ],
 				"/usr/bin/arp-scan": [ "exec", "list" ]
 			},
 			"ubus": {
