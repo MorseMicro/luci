@@ -4119,7 +4119,34 @@ WifiNetwork = baseclass.extend(/** @lends LuCI.network.WifiNetwork.prototype */ 
 		var freq = this.ubus('net', 'iwinfo', 'frequency');
 
 		if (freq != null && freq > 0)
-			return '%.03f'.format(freq / 1000);
+			if (freq > 500000)
+				/* For values in MHz, a 0.5MHz resolution is used, so show only the
+				 * first fractional digit */
+				return '%.01f'.format(freq / 1000);
+			else
+				/* For values in GHz, a 1 MHz resolution is used, so show only the
+				 * first 3 fractional digits */
+				return '%.03f'.format(freq / 1000);
+
+		return null;
+	},
+
+	/**
+	 * Query the unit (MHz or GHz) for the current operating frequency of the wireless network.
+	 *
+	 * @returns {null|string}
+	 * Returns the frequency unit for the current operating frequency of the network. Returns null if not available.
+	 */
+	getFrequencyUnit: function() {
+		var freq = this.getFrequency();
+
+		if (freq != null && freq > 0)
+			/* if the result of getFrequency Function is bigger than 500,
+			 * it means that the frequency is in MHz.*/
+			if (freq > 500)
+				return _('MHz');
+			else
+				return _('GHz');
 
 		return null;
 	},
