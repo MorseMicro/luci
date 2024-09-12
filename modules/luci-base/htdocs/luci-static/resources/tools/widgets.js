@@ -4,6 +4,12 @@
 'require network';
 'require firewall';
 'require fs';
+'require uci';
+'require rpc';
+'require dom';
+'require halow';
+
+const DEFAULT_S1G_COUNTRY = 'US';
 
 function getUsers() {
     return fs.lines('/etc/passwd').then(function(lines) {
@@ -16,6 +22,520 @@ function getGroups() {
         return lines.map(function(line) { return line.split(/:/)[0] });
     });
 }
+
+var CBIWifiFrequencyValue = form.Value.extend({
+	callFrequencyList: rpc.declare({
+		object: 'iwinfo',
+		method: 'freqlist',
+		params: [ 'device' ],
+		expect: { results: [] }
+	}),
+
+	load: function(section_id) {
+		if (this.ucisection) {
+			section_id = this.ucisection;
+		}
+
+		return Promise.all([
+			network.getWifiDevice(section_id),
+			this.callFrequencyList(section_id),
+			halow.loadChannelMap(),
+		]).then(L.bind(function(data) {
+			this.halowChannelMap = data[2];
+			this.channels = {
+				'2g': L.hasSystemFeature('hostapd', 'acs') ? [ 'auto', 'auto', true ] : [],
+				'5g': L.hasSystemFeature('hostapd', 'acs') ? [ 'auto', 'auto', true ] : [],
+				'6g': [],
+				'60g': [],
+				's1g': []
+			};
+
+			// s1g is a problem because the driver doesn't like telling us information until it's loaded.
+			// For now, we just use the channel map.
+			// Note that if no s1g channels were added here, we'd also have the issue that
+			// s1g would be added to the <select> so that setting band.value to s1g would fail,
+			// which leads to defaulting to 11a (see write:).
+			if (uci.get('wireless', section_id, 'type') == 'morse') {
+				// All our info is in this.halowChannelMap.
+				return;
+			}
+
+			for (var i = 0; i < data[1].length; i++) {
+				var band;
+
+				if (data[1][i].mhz >= 800000 && data[1][i].mhz <= 1000000) {
+					// NB these are coming back in khz rather than mhz due
+					// to us wanting sub MHz granularity and the netlink
+					// command not supporting that.
+					data[1][i].mhz /= 1000;
+				}
+
+				if (data[1][i].mhz >= 2412 && data[1][i].mhz <= 2484)
+					band = '2g';
+				else if (data[1][i].mhz >= 5160 && data[1][i].mhz <= 5885)
+					band = '5g';
+				else if (data[1][i].mhz >= 5925 && data[1][i].mhz <= 7125)
+					band = '6g';
+				else if (data[1][i].mhz >= 58320 && data[1][i].mhz <= 69120)
+					band = '60g';
+				else if (data[1][i].mhz >= 800 && data[1][i].mhz <= 1000)
+					band = 's1g';
+				else
+					continue;
+
+				this.channels[band].push(
+					data[1][i].channel,
+					this.formatChannel(data[1][i].channel, data[1][i].mhz),
+					!data[1][i].restricted
+				);
+			}
+
+			var hwmodelist = L.toArray(data[0] ? data[0].getHWModes() : null)
+				.reduce(function(o, v) { o[v] = true; return o }, {});
+
+			this.modes = [
+				'', 'Legacy', true,
+				'n', 'N', hwmodelist.n,
+				'ac', 'AC', hwmodelist.ac,
+				'ax', 'AX', hwmodelist.ax
+			];
+
+			var htmodelist = L.toArray(data[0] ? data[0].getHTModes() : null)
+				.reduce(function(o, v) { o[v] = true; return o }, {});
+
+			this.htmodes = {
+				'': [ '', '-', true ],
+				'n': [
+					'HT20', '20 MHz', htmodelist.HT20,
+					'HT40', '40 MHz', htmodelist.HT40
+				],
+				'ac': [
+					'VHT20', '20 MHz', htmodelist.VHT20,
+					'VHT40', '40 MHz', htmodelist.VHT40,
+					'VHT80', '80 MHz', htmodelist.VHT80,
+					'VHT160', '160 MHz', htmodelist.VHT160
+				],
+				'ax': [
+					'HE20', '20 MHz', htmodelist.HE20,
+					'HE40', '40 MHz', htmodelist.HE40,
+					'HE80', '80 MHz', htmodelist.HE80,
+					'HE160', '160 MHz', htmodelist.HE160
+				]
+			};
+
+			this.bands = {
+				'': [
+					'2g', '2.4 GHz', this.channels['2g'].length > 3,
+					'5g', '5 GHz', this.channels['5g'].length > 3,
+					'60g', '60 GHz', this.channels['60g'].length > 0,
+					's1g', '< 1GHz', this.channels['s1g'].length > 0,
+				],
+				'n': [
+					'2g', '2.4 GHz', this.channels['2g'].length > 3,
+					'5g', '5 GHz', this.channels['5g'].length > 3
+				],
+				'ac': [
+					'5g', '5 GHz', true
+				],
+				'ax': [
+					'2g', '2.4 GHz', this.channels['2g'].length > 3,
+					'5g', '5 GHz', this.channels['5g'].length > 3
+				]
+			};
+		}, this));
+	},
+
+	setValues: function(sel, vals, displaySingleOption) {
+		if (sel.vals)
+			sel.vals.selected = sel.selectedIndex;
+
+		while (sel.options[0])
+			sel.remove(0);
+
+		for (var i = 0; vals && i < vals.length; i += 3)
+			if (vals[i+2])
+				sel.add(E('option', { value: vals[i+0] }, [ vals[i+1] ]));
+
+		if (vals && !isNaN(vals.selected))
+			sel.selectedIndex = vals.selected;
+
+		if (displaySingleOption) {
+			sel.parentNode.style.display = (sel.options.length <= 0) ? 'none' : '';
+		} else {
+			sel.parentNode.style.display = (sel.options.length <= 1) ? 'none' : '';
+		}
+		sel.vals = vals;
+	},
+
+	// This is usually called from the onchange callback of a CBIWifiCountryValue
+	// (there's no country element as part of this widget).
+	toggleS1gCountry: function(section_id, country) {
+		var elem = this.map.findElement('id', this.cbid(section_id));
+
+		this.updateS1gCountry(elem, country);
+		this.updateS1gWidths(elem);
+
+		elem.querySelector('.s1g-width').dispatchEvent(new CustomEvent('change'));
+	},
+
+	toggleWifiMode: function(elem) {
+		this.updateWifiHTMode(elem);
+		this.updateWifiBand(elem);
+
+		this.map.checkDepends();
+	},
+
+	toggleWifiS1gWidth: function(elem) {
+		this.updateWifiChannel(elem);
+
+		this.map.checkDepends();
+	},
+
+	toggleWifiBand: function(elem) {
+		this.updateWifiChannel(elem);
+
+		this.map.checkDepends();
+	},
+
+	updateS1gCountry: function(elem, country) {
+		elem.dataset.country = country;
+	},
+
+	updateS1gWidths: function(elem) {
+		var s1gWidthEl = elem.querySelector('.s1g-width');
+		var s1gWidths = Array.from((new Set(Object.values(this.halowChannelMap[elem.dataset.country]).map(ch => ch.bw))).keys());
+
+		s1gWidths.sort((a, b) => Number(b) - Number(a));
+		var s1gWidthsValues = [];
+		for (const s1gWidth of s1gWidths) {
+			s1gWidthsValues.push(s1gWidth, `${s1gWidth} MHz`, true);
+		}
+
+		this.setValues(s1gWidthEl, s1gWidthsValues, true);
+	},
+
+	updateWifiHTMode: function(elem) {
+		var mode = elem.querySelector('.mode');
+		var bwdt = elem.querySelector('.htmode');
+
+		this.setValues(bwdt, this.htmodes[mode.value]);
+	},
+
+	updateWifiBand: function(elem) {
+		var mode = elem.querySelector('.mode');
+		var band = elem.querySelector('.band');
+
+		this.setValues(band, this.bands[mode.value]);
+	},
+
+	updateWifiChannel: function(elem, existingChannel) {
+		var bandEl = elem.querySelector('.band');
+		var chanEl = elem.querySelector('.channel');
+
+		var s1gWidth = elem.querySelector('.s1g-width')?.value;
+		if (s1gWidth) {
+			const channelValues = [];
+			for (const chanInfo of Object.values(this.halowChannelMap[elem.dataset.country])) {
+				if (chanInfo.bw === s1gWidth) {
+					channelValues.push(chanInfo.s1g_chan, this.formatChannel(chanInfo.s1g_chan, chanInfo.centre_freq_mhz), true);
+				}
+			}
+			this.setValues(chanEl, channelValues, true);
+
+			if (existingChannel) {
+				// i.e. after we've initially created the input widget, set the channel
+				// to whatever is in UCI.
+				chanEl.value = existingChannel;
+			}
+		} else {
+			this.setValues(chanEl, this.channels[bandEl.value]);
+		}
+	},
+
+	setInitialValues: function(section_id, elem) {
+		var mode = elem.querySelector('.mode'),
+		    band = elem.querySelector('.band'),
+		    chan = elem.querySelector('.channel'),
+		    bwdt = elem.querySelector('.htmode'),
+		    s1gWidth = elem.querySelector('.s1g-width'),
+		    htval = uci.get('wireless', section_id, 'htmode'),
+		    hwval = uci.get('wireless', section_id, 'hwmode'),
+		    chval = uci.get('wireless', section_id, 'channel'),
+		    bandval = uci.get('wireless', section_id, 'band'),
+		    country = uci.get('wireless', section_id, 'country'),
+		    type = uci.get('wireless', section_id, 'type');
+
+		if (type === 'morse') {
+			this.updateS1gCountry(elem, country || DEFAULT_S1G_COUNTRY);
+			this.updateS1gWidths(elem);
+
+			// If we have an existing channel, set the bw appropriately
+			// and do _not_ trigger change events (it's a load!).
+			const bw = this.halowChannelMap[country]?.[chval]?.bw;
+			if (bw) {
+				s1gWidth.value = bw;
+			}
+
+			// This is only to convince 'write' that we're an s1g device.
+			this.useBandOption = false;
+			this.setValues(band, ['s1g', '< 1GHz', true]);
+			band.value = 's1g';
+
+			this.updateWifiChannel(elem, chval);
+			this.map.checkDepends();
+
+			return elem;
+		}
+
+		this.setValues(mode, this.modes);
+
+		if (/HE20|HE40|HE80|HE160/.test(htval))
+			mode.value = 'ax';
+		else if (/VHT20|VHT40|VHT80|VHT160/.test(htval))
+			mode.value = 'ac';
+		else if (/HT20|HT40/.test(htval))
+			mode.value = 'n';
+		else
+			mode.value = '';
+
+		this.toggleWifiMode(elem);
+
+		if (hwval != null) {
+			this.useBandOption = false;
+
+			if (/ah/.test(hwval)) {
+				band.value = 's1g';
+			} else if (/a/.test(hwval))
+				band.value = '5g';
+			else
+				band.value = '2g';
+		}
+		else {
+			this.useBandOption = true;
+
+			band.value = bandval;
+		}
+
+		this.toggleWifiBand(elem);
+
+		bwdt.value = htval;
+		chan.value = chval || (chan.options[0] ? chan.options[0].value : 'auto');
+
+		return elem;
+	},
+
+	renderWidget: function(section_id, option_index, cfgvalue) {
+		// Confusingly, luci constructs the cbid without the overridden section_id
+		// from this.ucisection. This is particularly odd since this.transformDepList
+		// does do this transform. Seems like a bug to me, but for consistency
+		// we retain this behaviour.
+		var elem = E('div', {id: this.cbid(section_id)});
+
+		dom.content(elem, [
+			E('label', { 'style': 'float:left; margin-right:3px; display:none;' }, [
+				_('Mode'), E('br'),
+				E('select', {
+					'class': 'mode',
+					'style': 'width:auto',
+					'change': L.bind(this.toggleWifiMode, this, elem),
+					'disabled': (this.disabled != null) ? this.disabled : this.map.readonly
+				})
+			]),
+			E('label', { 'style': 'float:left; margin-right:3px; display:none;' }, [
+				_('Band'), E('br'),
+				E('select', {
+					'class': 'band',
+					'style': 'width:auto',
+					'change': L.bind(this.toggleWifiBand, this, elem),
+					'disabled': (this.disabled != null) ? this.disabled : this.map.readonly
+				})
+			]),
+			E('label', { 'style': 'float:left; margin-right:3px; display:none;' }, [
+				_('Width'), E('br'),
+				E('select', {
+					'class': 's1g-width',
+					'style': 'width:auto',
+					'change': L.bind(this.toggleWifiS1gWidth, this, elem),
+					'disabled': (this.disabled != null) ? this.disabled : this.map.readonly
+				})
+			]),
+			E('label', { 'style': 'float:left; margin-right:3px; display:none;' }, [
+				_('Channel'), E('br'),
+				E('select', {
+					'class': 'channel',
+					'style': 'width:auto',
+					'disabled': (this.disabled != null) ? this.disabled : this.map.readonly
+				})
+			]),
+			E('label', { 'style': 'float:left; margin-right:3px; display:none;' }, [
+				_('Width'), E('br'),
+				E('select', {
+					'class': 'htmode',
+					'style': 'width:auto',
+					'disabled': (this.disabled != null) ? this.disabled : this.map.readonly
+				})
+			]),
+			E('br', { 'style': 'clear:left' })
+		]);
+
+		const changeState = {};
+		for (const el of elem.querySelectorAll('select')) {
+			// Usually, this would be a widget-change event, but we're not backing
+			// onto a normal UI element here, so...
+			el.addEventListener('change',
+				L.bind(this.map.checkDepends, this.map));
+
+			el.addEventListener('change',
+				L.bind(this.handleValueChange, this, section_id, changeState));
+		}
+
+		return this.setInitialValues(this.ucisection || section_id, elem);
+	},
+
+	cfgvalue: function(section_id) {
+		if (this.ucisection) {
+			section_id = this.ucisection;
+		}
+
+		return [
+		    uci.get('wireless', section_id, 'htmode'),
+		    uci.get('wireless', section_id, 'hwmode') || uci.get('wireless', section_id, 'band'),
+		    uci.get('wireless', section_id, 'channel'),
+		    // We put country here (and in formvalue) to make sure if the country has changed
+		    // this counts for causing handleValueChange.
+		    uci.get('wireless', section_id, 'country'),
+		];
+	},
+
+	formvalue: function(section_id) {
+		var node = this.map.findElement('data-field', this.cbid(section_id));
+
+		return [
+		    node.querySelector('.htmode').value,
+		    node.querySelector('.band').value,
+		    node.querySelector('.channel').value,
+		    node.dataset.country,
+		];
+	},
+
+	s1gWidth: function(section_id) {
+		if (this.map.root && this.map.root.children.length > 0) {
+			return this.map.findElement('data-field', this.cbid(section_id)).querySelector('.s1g-width').value;
+		} else {
+			var country = uci.get('wireless', section_id, 'country'),
+			    channel = uci.get('wireless', section_id, 'channel');
+			return this.halowChannelMap[country]?.[channel]?.bw;
+		}
+	},
+
+	write: function(section_id, value) {
+		if (this.ucisection) {
+			section_id = this.ucisection;
+		}
+
+		uci.set('wireless', section_id, 'htmode', value[0] || null);
+
+		if (this.useBandOption)
+			uci.set('wireless', section_id, 'band', value[1]);
+		else if (value[1] === 's1g')
+			uci.set('wireless', section_id, 'hwmode', '11ah');
+		else
+			uci.set('wireless', section_id, 'hwmode', (value[1] == '2g') ? '11g' : '11a');
+
+		uci.set('wireless', section_id, 'channel', value[2]);
+	},
+
+	formatChannel: function(chanNum, freqMHz) {
+		return '%d (%f MHz)'.format(chanNum, freqMHz);
+	},
+});
+
+
+var CBIWifiTxPowerValue = form.ListValue.extend({
+	callTxPowerList: rpc.declare({
+		object: 'iwinfo',
+		method: 'txpowerlist',
+		params: [ 'device' ],
+		expect: { results: [] }
+	}),
+
+	load: function(section_id) {
+		return this.callTxPowerList(section_id).then(L.bind(function(pwrlist) {
+			this.powerval = this.wifiNetwork ? this.wifiNetwork.getTXPower() : null;
+			this.poweroff = this.wifiNetwork ? this.wifiNetwork.getTXPowerOffset() : null;
+
+			this.value('', _('driver default'));
+
+			for (var i = 0; i < pwrlist.length; i++)
+				this.value(pwrlist[i].dbm, '%d dBm (%d mW)'.format(pwrlist[i].dbm, pwrlist[i].mw));
+
+			return form.ListValue.prototype.load.apply(this, [section_id]);
+		}, this));
+	},
+
+	renderWidget: function(section_id, option_index, cfgvalue) {
+		var widget = form.ListValue.prototype.renderWidget.apply(this, [section_id, option_index, cfgvalue]);
+		    widget.firstElementChild.style.width = 'auto';
+
+		dom.append(widget, E('span', [
+			' - ', _('Current power'), ': ',
+			E('span', [ this.powerval != null ? '%d dBm'.format(this.powerval) : E('em', _('unknown')) ]),
+			this.poweroff ? ' + %d dB offset = %s dBm'.format(this.poweroff, this.powerval != null ? this.powerval + this.poweroff : '?') : ''
+		]));
+
+		return widget;
+	}
+});
+
+var CBIWifiCountryValue = form.Value.extend({
+	callCountryList: rpc.declare({
+		object: 'iwinfo',
+		method: 'countrylist',
+		params: [ 'device' ],
+		expect: { results: [] }
+	}),
+
+	load: function(section_id) {
+		const s1g = uci.get('wireless', section_id, 'band') == 's1g' || uci.get('wireless', section_id, 'hwmode') == '11ah';
+
+		if (s1g) {
+			return halow.loadChannelMap().then(channelMap => {
+				// The s1g driver won't come up until we have a valid region, so we can't reliably ask it for a countrylist.
+				// Also, 'driver default' isn't a valid option, and iwinfo countrylist gives back '00' (world) as region
+				// which is not currently a valid selection.
+				for (const countryCode of Object.keys(channelMap)) {
+					this.value(countryCode, countryCode);
+				}
+
+				return form.Value.prototype.load.apply(this, [section_id]) || DEFAULT_S1G_COUNTRY;
+			});
+		} else {
+			return this.callCountryList(section_id).then(L.bind(function(countrylist) {
+				if (Array.isArray(countrylist) && countrylist.length > 0) {
+					this.value('', _('driver default'));
+
+					for (var i = 0; i < countrylist.length; i++) {
+						this.value(countrylist[i].iso3166, '%s - %s'.format(countrylist[i].iso3166, countrylist[i].country));
+					}
+				}
+
+				return form.Value.prototype.load.apply(this, [section_id]);
+			}, this));
+		}
+	},
+
+	validate: function(section_id, formvalue) {
+		if (formvalue != null && formvalue != '' && !/^[A-Z0-9][A-Z0-9]$/.test(formvalue))
+			return _('Use ISO/IEC 3166 alpha2 country codes.');
+
+		return true;
+	},
+
+	renderWidget: function(section_id, option_index, cfgvalue) {
+		var typeClass = (this.keylist && this.keylist.length) ? form.ListValue : form.Value;
+		return typeClass.prototype.renderWidget.apply(this, [section_id, option_index, cfgvalue]);
+	}
+});
 
 var CBIZoneSelect = form.ListValue.extend({
 	__name__: 'CBI.ZoneSelect',
@@ -626,4 +1146,7 @@ return L.Class.extend({
 	DeviceSelect: CBIDeviceSelect,
 	UserSelect: CBIUserSelect,
 	GroupSelect: CBIGroupSelect,
+	WifiFrequencyValue: CBIWifiFrequencyValue,
+	WifiTxPowerValue: CBIWifiTxPowerValue,
+	WifiCountryValue: CBIWifiCountryValue,
 });
