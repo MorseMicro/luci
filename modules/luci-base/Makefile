@@ -28,7 +28,8 @@ LUCI_DEPENDS:=\
 	+ucode-mod-ubus \
 	+ucode-mod-math \
 	+ucode-mod-html \
-	+liblucihttp-ucode
+	+liblucihttp-ucode \
+	+morse-regdb
 
 PKG_LICENSE:=Apache-2.0
 PKG_LICENSE_FILES:=LICENSE NOTICE

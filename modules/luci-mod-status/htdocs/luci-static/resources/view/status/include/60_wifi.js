@@ -105,6 +105,7 @@ return baseclass.extend({
 		var chan = null,
 		    freq = null,
 		    rate = null,
+		    frequencyUnit = null,
 		    badges = [];
 
 		for (var i = 0; i < networks.length; i++) {
@@ -160,6 +161,7 @@ return baseclass.extend({
 			chan = (chan != null) ? chan : net.getChannel();
 			freq = (freq != null) ? freq : net.getFrequency();
 			rate = (rate != null) ? rate : net.getBitRate();
+			frequencyUnit = (frequencyUnit != null) ? frequencyUnit : net.getFrequencyUnit();
 		}
 
 		return E('div', { class: 'ifacebox' }, [
@@ -168,8 +170,8 @@ return baseclass.extend({
 			E('div', { class: 'ifacebox-body left' }, [
 				L.itemlist(E('span'), [
 					_('Type'), radio.getI18n().replace(/^Generic | Wireless Controller .+$/g, ''),
-					_('Channel'), chan ? '%d (%.3f %s)'.format(chan, freq, _('GHz')) : '-',
-					_('Bitrate'), rate ? '%d %s'.format(rate, _('Mbit/s')) : '-',
+					_('Channel'), chan ? '%d (%s %s)'.format(chan, freq, frequencyUnit) : '-',
+					_('Bitrate'), rate ? '%f %s'.format(rate, _('Mbit/s')) : '-',
 				]),
 				E('div', {}, badges)
 			])
