@@ -15,6 +15,7 @@ if [ "$(uci -q get luci.diag)" != "internal" ]; then
 		set luci.diag.dns='${host:-openwrt.org}'
 		set luci.diag.ping='${host:-openwrt.org}'
 		set luci.diag.route='${host:-openwrt.org}'
+		set luci.diag.iperf3=''
 		commit luci
 	EOF
 fi
