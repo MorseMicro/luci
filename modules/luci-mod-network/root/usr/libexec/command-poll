@@ -1,0 +1,52 @@
+#!/bin/sh
+
+set -ue
+
+# Usage:
+#   command-poll <uniqueid> command args
+# 
+# This 'interesting' script either kicks off a command with the designated args,
+# OR, if the command (identified by uniqueid) is already running, returns any
+# new logs it's emitted. It's useful when you don't have websockets and want
+# to pretend to stream the output of a CLI command, but each poll has to be
+# within 2 seconds otherwise we automatically kill the spawned command.
+#
+# i.e. we keep running the command (if it doesn't terminate) until polling
+# stops, or until 5 minutes has elapsed.
+
+CMD="$1"
+ID="$2"
+shift 2
+
+FILE="/var/run/command-background-$ID"
+export LOGFILE="$FILE.log"
+export LOGFILE_READ="$LOGFILE.read"
+export LOGFILE_POS="$LOGFILE.pos"
+export LOGFILE_PIPE="$LOGFILE.pipe"
+export PIDFILE="$FILE.pid"
+
+
+# If the background process is currently running, just show us any logfile updates.
+if [ -e "$PIDFILE" ] && [ -d "/proc/$(cat "$PIDFILE")" ]; then
+    # Touch LOGFILE_READ so the background process doesn't kill itself.
+    touch "$LOGFILE_READ"
+    # Current position in logfile.
+    POS="$(cat "$LOGFILE_POS")"
+
+    # Record new line position (reading output via named pipe).
+    rm -f "$LOGFILE_PIPE" && mkfifo "$LOGFILE_PIPE"
+    ( # Record new position.
+        expr "$POS" + "$(cat "$LOGFILE_PIPE" | wc -l)" > "$LOGFILE_POS"
+        rm -f "$LOGFILE_PIPE"
+    ) &
+
+    # Output new lines.
+    tail -n +"$POS" "$LOGFILE" | tee "$LOGFILE_PIPE"
+    wait
+else
+    # Start our background process.
+
+    "$(dirname "$0")/command-background" "$CMD" "$@" > /dev/null &
+
+    echo "$CMD: started"
+fi
