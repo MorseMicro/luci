@@ -7,16 +7,17 @@ function isCIDR(value) {
 	return Array.isArray(value) || /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/(\d{1,2}|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$/.test(value);
 }
 
-function calculateBroadcast(s, use_cfgvalue) {
-	var readfn = use_cfgvalue ? 'cfgvalue' : 'formvalue',
-	    addropt = s.children.filter(function(o) { return o.option == 'ipaddr'})[0],
-	    addrvals = addropt ? L.toArray(addropt[readfn](s.section)) : [],
-	    maskopt = s.children.filter(function(o) { return o.option == 'netmask'})[0],
-	    maskval = maskopt ? maskopt[readfn](s.section) : null,
-	    firstsubnet = maskval ? addrvals[0] + '/' + maskval : addrvals.filter(function(a) { return a.indexOf('/') > 0 })[0];
+function getIPv4SubnetInfo(s, section_id) {
+	// Fall back to cfgvalue if formvalue not available in case
+	var ipaddr = s.formvalue(section_id, 'ipaddr') ?? s.cfgvalue(section_id, 'ipaddr'),
+	    ipaddrs = ipaddr ? L.toArray(ipaddr) : [],
+	    netmask = s.formvalue(section_id, 'netmask') ?? s.cfgvalue(section_id, 'netmask'),
+	    broadcast = s.formvalue(section_id, 'broadcast') ?? s.cfgvalue(section_id, 'broadcast');
+
+	var firstsubnet = netmask ? ipaddrs[0] + '/' + netmask : ipaddrs.find(a => a.includes('/'));
 
 	if (firstsubnet == null)
-		return null;
+		return {};
 
 	var addr_mask = firstsubnet.split('/'),
 	    addr = validation.parseIPv4(addr_mask[0]),
@@ -27,26 +28,58 @@ function calculateBroadcast(s, use_cfgvalue) {
 	else
 		mask = validation.parseIPv4(mask);
 
-	var bc = [
+	if (addr == null || mask == null)
+		return {};
+
+	var broadcast_default = [
 		addr[0] | (~mask[0] >>> 0 & 255),
 		addr[1] | (~mask[1] >>> 0 & 255),
 		addr[2] | (~mask[2] >>> 0 & 255),
 		addr[3] | (~mask[3] >>> 0 & 255)
-	];
+	].join('.');
 
-	return bc.join('.');
+	var networkid = [
+		addr[0] & mask[0],
+		addr[1] & mask[1],
+		addr[2] & mask[2],
+		addr[3] & mask[3]
+	].join('.');
+
+	return {
+		ipaddrs: ipaddrs.map(a => a.split('/')[0]),
+		netmask: mask.join('.'),
+		broadcast, broadcast_default, networkid
+	};
 }
 
-function validateBroadcast(section_id, value) {
+function validateIPv4SubnetInfo(section_id, value) {
 	var opt = this.map.lookupOption('broadcast', section_id),
 	    node = opt ? this.map.findElement('id', opt[0].cbid(section_id)) : null,
-	    addr = node ? calculateBroadcast(this.section, false) : null;
+	    {ipaddrs, netmask, broadcast, broadcast_default, networkid} = getIPv4SubnetInfo(this.section, section_id);
 
-	if (node != null) {
-		if (addr != null)
-			node.querySelector('input').setAttribute('placeholder', addr);
-		else
+	if (['255.255.255.254', '255.255.255.255'].includes(netmask)) {
+		if (node != null)
 			node.querySelector('input').removeAttribute('placeholder');
+
+		if (broadcast != null)
+			return _('Should not define broadcast address for /31 or /32 subnet');
+		else
+			return true;
+	}
+
+	var bc_input = node?.querySelector('input');
+	if (bc_input != null) {
+		if (broadcast_default != null)
+			bc_input.setAttribute('placeholder', bc_addr_default);
+		else
+			bc_input.removeAttribute('placeholder');
+	}
+
+	if (ipaddrs != null) {
+		if (ipaddrs.includes(broadcast && broadcast !== '' ? broadcast : broadcast_default))
+			return _('IP shouldn\'t be the same as broadcast address');
+		if (ipaddrs.includes(networkid))
+			return _('IP shouldn\'t be the same as network identifier (first address in subnet)');
 	}
 
 	return true;
@@ -108,7 +141,7 @@ return network.registerProtocol('static', {
 			return node;
 		},
 
-		validate: validateBroadcast
+		validate: validateIPv4SubnetInfo
 	}),
 
 	CBINetmaskValue: form.Value.extend({
@@ -127,7 +160,7 @@ return network.registerProtocol('static', {
 		},
 
 		datatype: 'ip4addr("true")',
-		validate: validateBroadcast
+		validate: validateIPv4SubnetInfo
 	}),
 
 	CBIGatewayValue: form.Value.extend({
@@ -164,9 +197,12 @@ return network.registerProtocol('static', {
 		datatype: 'ip4addr("nomask")',
 
 		render: function(option_index, section_id, in_table) {
-			this.placeholder = calculateBroadcast(this.section, true);
+			var {broadcast_default} = getIPv4SubnetInfo(this.section, section_id);
+			this.placeholder = broadcast_default;
 			return form.Value.prototype.render.apply(this, [ option_index, section_id, in_table ]);
-		}
+		},
+
+		validate: validateIPv4SubnetInfo
 	}),
 
 	getI18n: function() {
