@@ -727,11 +727,11 @@ msgstr ""
 msgid "Add ATM Bridge"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/protocol/static.js:92
+#: modules/luci-base/htdocs/luci-static/resources/protocol/static.js:125
 msgid "Add IPv4 address…"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/protocol/static.js:186
+#: modules/luci-base/htdocs/luci-static/resources/protocol/static.js:222
 msgid "Add IPv6 address…"
 msgstr ""
 
@@ -4371,6 +4371,15 @@ msgstr ""
 msgid "IP sets"
 msgstr ""
 
+#: modules/luci-base/htdocs/luci-static/resources/protocol/static.js:80
+msgid "IP shouldn't be the same as broadcast address"
+msgstr ""
+
+#: modules/luci-base/htdocs/luci-static/resources/protocol/static.js:82
+msgid ""
+"IP shouldn't be the same as network identifier (first address in subnet)"
+msgstr ""
+
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js:656
 msgid "IPs to override with {nxdomain}"
 msgstr ""
@@ -4410,7 +4419,7 @@ msgstr ""
 msgid "IPv4 Upstream"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/protocol/static.js:179
+#: modules/luci-base/htdocs/luci-static/resources/protocol/static.js:215
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js:39
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js:1010
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/40_dhcp.js:88
@@ -4422,15 +4431,15 @@ msgstr ""
 msgid "IPv4 assignment length"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/protocol/static.js:182
+#: modules/luci-base/htdocs/luci-static/resources/protocol/static.js:218
 msgid "IPv4 broadcast"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/protocol/static.js:181
+#: modules/luci-base/htdocs/luci-static/resources/protocol/static.js:217
 msgid "IPv4 gateway"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/protocol/static.js:180
+#: modules/luci-base/htdocs/luci-static/resources/protocol/static.js:216
 #: protocols/luci-proto-bonding/htdocs/luci-static/resources/protocol/bonding.js:170
 msgid "IPv4 netmask"
 msgstr ""
@@ -4550,7 +4559,7 @@ msgstr ""
 msgid "IPv6 Upstream"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/protocol/static.js:184
+#: modules/luci-base/htdocs/luci-static/resources/protocol/static.js:220
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js:58
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/40_dhcp.js:135
 msgid "IPv6 address"
@@ -4565,7 +4574,7 @@ msgstr ""
 msgid "IPv6 assignment length"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/protocol/static.js:189
+#: modules/luci-base/htdocs/luci-static/resources/protocol/static.js:225
 msgid "IPv6 gateway"
 msgstr ""
 
@@ -4595,7 +4604,7 @@ msgstr ""
 msgid "IPv6 prefix length"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/protocol/static.js:193
+#: modules/luci-base/htdocs/luci-static/resources/protocol/static.js:229
 #: protocols/luci-proto-ipv6/htdocs/luci-static/resources/protocol/6in4.js:57
 msgid "IPv6 routed prefix"
 msgstr ""
@@ -7824,7 +7833,7 @@ msgid ""
 "code> file into the input field."
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/protocol/static.js:193
+#: modules/luci-base/htdocs/luci-static/resources/protocol/static.js:229
 msgid "Public prefix routed to this device for distribution to clients."
 msgstr ""
 
@@ -8924,6 +8933,10 @@ msgstr ""
 msgid "Short Preamble"
 msgstr ""
 
+#: modules/luci-base/htdocs/luci-static/resources/protocol/static.js:65
+msgid "Should not define broadcast address for /31 or /32 subnet"
+msgstr ""
+
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:470
 msgid "Show current backup file list"
 msgstr ""
@@ -9460,7 +9473,7 @@ msgid "Static Leases"
 msgstr ""
 
 #: modules/luci-base/htdocs/luci-static/resources/network.js:2090
-#: modules/luci-base/htdocs/luci-static/resources/protocol/static.js:173
+#: modules/luci-base/htdocs/luci-static/resources/protocol/static.js:209
 #: modules/luci-compat/luasrc/model/network.lua:967
 msgid "Static address"
 msgstr ""
@@ -9562,8 +9575,8 @@ msgstr ""
 msgid "Switch protocol"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/protocol/static.js:103
-#: modules/luci-base/htdocs/luci-static/resources/protocol/static.js:104
+#: modules/luci-base/htdocs/luci-static/resources/protocol/static.js:136
+#: modules/luci-base/htdocs/luci-static/resources/protocol/static.js:137
 #: modules/luci-compat/luasrc/view/cbi/ipaddr.htm:26
 msgid "Switch to CIDR list notation"
 msgstr ""
@@ -9933,7 +9946,7 @@ msgstr ""
 msgid "The frequency is in direct proportion to 1-minute average CPU load."
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/protocol/static.js:155
+#: modules/luci-base/htdocs/luci-static/resources/protocol/static.js:188
 msgid "The gateway address must not be a local IP address"
 msgstr ""
 
