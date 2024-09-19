@@ -1102,6 +1102,8 @@ var CBIAbstractSection = CBIAbstractElement.extend(/** @lends LuCI.form.Abstract
 	 * If both the section ID and an option name are supplied, this function
 	 * returns the widget input value of the specified option only.
 	 *
+	 * If the formvalue is not currently rendered, it falls back to cfgvalue.
+	 *
 	 * @param {string} section_id
 	 * The configuration section ID
 	 *
@@ -1116,13 +1118,18 @@ var CBIAbstractSection = CBIAbstractElement.extend(/** @lends LuCI.form.Abstract
 	formvalue: function(section_id, option) {
 		var rv = (arguments.length == 1) ? {} : null;
 
-		for (var i = 0, o; (o = this.children[i]) != null; i++) {
-			var func = (this.map.root && this.map.root.children.length > 0) ? this.children[i].formvalue : this.children[i].cfgvalue;
+		const getValue = (o, section_id) => {
+			// Find if it's actually rendered (might be too early,
+			// or behind max_cols in a table).
+			var elem = this.map.root && this.map.children.length > 0 && o.getUIElement(section_id);
+			return elem ? o.formvalue(section_id) : o.cfgvalue(section_id);
+		}
 
+		for (var i = 0, o; (o = this.children[i]) != null; i++) {
 			if (rv)
-				rv[o.option] = func.call(o, section_id);
+				rv[o.option] = getValue(o, section_id);
 			else if (o.option == option)
-				return func.call(o, section_id);
+				return getValue(o, section_id);
 		}
 
 		return rv;
