@@ -70,7 +70,7 @@ function validateIPv4SubnetInfo(section_id, value) {
 	var bc_input = node?.querySelector('input');
 	if (bc_input != null) {
 		if (broadcast_default != null)
-			bc_input.setAttribute('placeholder', bc_addr_default);
+			bc_input.setAttribute('placeholder', broadcast_default);
 		else
 			bc_input.removeAttribute('placeholder');
 	}
