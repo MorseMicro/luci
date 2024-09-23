@@ -1024,7 +1024,7 @@ return view.extend({
 					o = ss.taboption('advanced', form.Value, 'dtim_period', _('DTIM Interval'), _('Delivery Traffic Indication Message Interval'));
 					o.optional = true;
 					o.placeholder = 2;
-					o.datatype = 'range(1,255)';
+					o.datatype = 'and(integer, range(1,255))';
 
 					o = ss.taboption('advanced', form.Value, 'wpa_group_rekey', _('Time interval for rekeying GTK'), _('sec'));
 					o.optional = true;
@@ -1109,7 +1109,7 @@ return view.extend({
 					o = ss.taboption('advanced', form.Value, 'dtim_period', _('DTIM Interval'), _('Delivery Traffic Indication Message Interval'));
 					o.optional = true;
 					o.placeholder = 2;
-					o.datatype = 'range(1,255)';
+					o.datatype = 'and(integer, range(1,255))';
 
 					o = ss.taboption('advanced', form.Value, 'max_inactivity', _('Station inactivity limit'), _('802.11v: BSS Max Idle. Units: seconds.'));
 					o.optional = true;
