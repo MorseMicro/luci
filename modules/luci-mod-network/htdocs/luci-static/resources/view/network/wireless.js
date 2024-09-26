@@ -748,12 +748,12 @@ return view.extend({
 					o.optional = true;
 					o.datatype = 'range(1,163830000)';
 
-					const getInitialBandwidth = (section_id) => {
+					const getInitialChannel = (section_id) => {
 						var country = uci.get('wireless', section_id, 'country'),
 							channel = uci.get('wireless', section_id, 'channel');
 
 						return halow.loadChannelMap().then(channelMap => {
-							return channelMap[country]?.[channel]?.bw;
+							return channelMap[country]?.[channel];
 						});
 					};
 
@@ -767,19 +767,18 @@ return view.extend({
 					const primChanIndex = ss.taboption('advanced', form.ListValue, 's1g_prim_1mhz_chan_index', _('Primary 1MHz channel index'))
 					primChanIndex.optional = true;
 					primChanIndex.placeholder = _('-- Not set --');
-					primChanIndex.updateOptions = bw => {
+					primChanIndex.updateOptions = (channel) => {
 						primChanIndex.clear();
-
-						for (let i = 0; i < Number(bw); ++i) {
+						for (let i in channel.s1g_prim_1mhz_chan_index) {
 							primChanIndex.value(i, String(i));
 						}
 					};
 					primChanIndex.load = function (section_id) {
-						getInitialBandwidth(section_id).then(bw => primChanIndex.updateOptions(bw));
+						getInitialChannel(section_id).then(chan => primChanIndex.updateOptions(chan));
 						return form.ListValue.prototype.load.apply(this, [section_id]);
 					};
 					primChanIndex.onchange = (ev, section_id, value) => {
-						primChanWidth.updateOptions(value, freqValue.s1gWidth(section_id));
+						primChanWidth.updateOptions(value, freqValue.s1gChan(section_id));
 						primChanWidth.renderUpdate(section_id);
 					};
 
@@ -788,14 +787,14 @@ return view.extend({
 						_('Setting a custom primary channel width requires setting a custom channel index (above).'));
 					primChanWidth.optional = true;
 					primChanWidth.placeholder = _('-- Not set --');
-					primChanWidth.updateOptions = (index, bw) => {
+					primChanWidth.updateOptions = (index, chan) => {
 						primChanWidth.clear();
 
 						// Must set the index to specify a width.
 						if (index) {
 							primChanWidth.value(1, '1MHz');
 
-							if (Number(bw) >= 2) {
+							if (Number(chan.bw) >= 2) {
 								primChanWidth.value(2, '2MHz');
 							}
 							// NB: netifd converts this to 0/1 to pass to hostapd.
@@ -803,13 +802,12 @@ return view.extend({
 					};
 					primChanWidth.load = function (section_id) {
 						const index = uci.get('wireless', section_id, 's1g_prim_1mhz_chan_index');
-						getInitialBandwidth(section_id).then(bw => primChanWidth.updateOptions(index, bw));
+						getInitialChannel(section_id).then(chan => primChanWidth.updateOptions(index, chan));
 						return form.ListValue.prototype.load.apply(this, [section_id]);
 					};
 
 					freqValue.onchange = (ev, section_id, value) => {
-						const bw = freqValue.s1gWidth(section_id);
-						primChanIndex.updateOptions(bw);
+						primChanIndex.updateOptions(freqValue.s1gChan(section_id));
 						primChanIndex.renderUpdate(section_id);
 					};
 
