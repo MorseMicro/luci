@@ -203,7 +203,7 @@ var CBIWifiFrequencyValue = form.Value.extend({
 
 	updateS1gWidths: function(elem) {
 		var s1gWidthEl = elem.querySelector('.s1g-width');
-		var s1gWidths = Array.from((new Set(Object.values(this.halowChannelMap[elem.dataset.country]).map(ch => ch.bw))).keys());
+		var s1gWidths = Array.from((new Set(Object.values(this.halowChannelMap[this.s1gCountry(elem)]).map(ch => ch.bw))).keys());
 
 		s1gWidths.sort((a, b) => Number(b) - Number(a));
 		var s1gWidthsValues = [];
@@ -235,7 +235,7 @@ var CBIWifiFrequencyValue = form.Value.extend({
 		var s1gWidth = elem.querySelector('.s1g-width')?.value;
 		if (s1gWidth) {
 			const channelValues = [];
-			for (const chanInfo of Object.values(this.halowChannelMap[elem.dataset.country])) {
+			for (const chanInfo of Object.values(this.halowChannelMap[this.s1gCountry(elem)])) {
 				if (chanInfo.bw === s1gWidth) {
 					channelValues.push(chanInfo.s1g_chan, this.formatChannel(chanInfo.s1g_chan, chanInfo.centre_freq_mhz), true);
 				}
@@ -420,14 +420,17 @@ var CBIWifiFrequencyValue = form.Value.extend({
 
 	s1gChan: function (section_id) {
 		if (this.map.root && this.map.root.children.length > 0) {
-			var elem = this.map.findElement('id', this.cbid(section_id));
-			const country = elem.dataset.country;
+			const country = this.s1gCountry(this.map.findElement('id', this.cbid(section_id)));
 			const channel = this.map.findElement('data-field', this.cbid(section_id)).querySelector('.channel').value;
 			return this.halowChannelMap[country]?.[channel];
 		}
 		var country = uci.get('wireless', section_id, 'country'),
 			channel = uci.get('wireless', section_id, 'channel');
 		return this.halowChannelMap[country]?.[channel];
+	},
+
+	s1gCountry: function (elem) {
+		return elem.dataset.country;
 	},
 
 	s1gWidth: function(section_id) {
