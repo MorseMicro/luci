@@ -2081,14 +2081,14 @@ return view.extend({
 					o = ss.taboption('encryption', form.Value, 'ieee80211w_max_timeout', _('802.11w maximum timeout'), _('802.11w Association SA Query maximum timeout'));
 					o.depends('ieee80211w', '1');
 					o.depends('ieee80211w', '2');
-					o.datatype = 'uinteger';
+					o.datatype = 'and(integer,range(1,4294967295))'; //uinteger type, but does not allow 0.
 					o.placeholder = '1000';
 					o.rmempty = true;
 
 					o = ss.taboption('encryption', form.Value, 'ieee80211w_retry_timeout', _('802.11w retry timeout'), _('802.11w Association SA Query retry timeout'));
 					o.depends('ieee80211w', '1');
 					o.depends('ieee80211w', '2');
-					o.datatype = 'uinteger';
+					o.datatype = 'and(integer,range(1,4294967295))'; //uinteger type, but does not allow 0.
 					o.placeholder = '201';
 					o.rmempty = true;
 				}
