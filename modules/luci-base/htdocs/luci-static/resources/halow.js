@@ -37,8 +37,9 @@ async function callLoadChannelMap() {
 
 	const availableChannels = channels.filter(channel => DRIVER_COUNTRIES.has(channel.country_code) && channel.usable_banff_c == 1);
 	const channelMap = {};
-	for (const channel of availableChannels) {
+	for (let channel of availableChannels) {
 		const {country_code, s1g_chan} = channel;
+		channel.s1g_prim_1mhz_chan_index = channel.s1g_prim_1mhz_chan_index.split('|');
 		channelMap[country_code] ??= {};
 		channelMap[country_code][s1g_chan] = channel;
 	}
