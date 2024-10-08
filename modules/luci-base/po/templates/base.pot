@@ -82,8 +82,8 @@ msgid "-- Additional Field --"
 msgstr ""
 
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:741
-#: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:769
-#: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:789
+#: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:771
+#: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:791
 msgid "-- Not set --"
 msgstr ""
 
@@ -1782,6 +1782,10 @@ msgstr ""
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:1572
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:1578
 msgid "Choose (if empty, default)"
+msgstr ""
+
+#: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:769
+msgid "Choose a Primary channel width before selecting a primary channel index"
 msgstr ""
 
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:427
@@ -7690,7 +7694,7 @@ msgid ""
 "packets without any VLAN tag (untagged packets)."
 msgstr ""
 
-#: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:767
+#: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:769
 msgid "Primary 1MHz channel index"
 msgstr ""
 
@@ -7708,7 +7712,7 @@ msgstr ""
 msgid "Primary becomes active slave whenever it comes back up (always, 0)"
 msgstr ""
 
-#: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:786
+#: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:768
 msgid "Primary channel width"
 msgstr ""
 
@@ -8886,12 +8890,6 @@ msgstr ""
 #: modules/luci-compat/luasrc/model/network/proto_qmi.lua:55
 #: protocols/luci-proto-qmi/htdocs/luci-static/resources/protocol/qmi.js:23
 msgid "Setting PLMN failed"
-msgstr ""
-
-#: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:787
-msgid ""
-"Setting a custom primary channel width requires setting a custom channel "
-"index (above)."
 msgstr ""
 
 #: modules/luci-compat/luasrc/model/network/proto_ncm.lua:68

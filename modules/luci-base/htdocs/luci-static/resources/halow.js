@@ -40,6 +40,7 @@ async function callLoadChannelMap() {
 	for (let channel of availableChannels) {
 		const {country_code, s1g_chan} = channel;
 		channel.s1g_prim_1mhz_chan_index = channel.s1g_prim_1mhz_chan_index.split('|');
+		channel.bw2m_s1g_prim_1mhz_chan_index = channel.bw2m_s1g_prim_1mhz_chan_index.split('|');
 		channelMap[country_code] ??= {};
 		channelMap[country_code][s1g_chan] = channel;
 	}
