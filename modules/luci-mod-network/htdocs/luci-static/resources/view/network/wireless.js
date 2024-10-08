@@ -753,51 +753,51 @@ return view.extend({
 					// | -0- | -1- | -2- | -3- |                         1 in 4 Primary Channel index
 					// | -2MHz op- |
 					// | -0- | -1- |                                     1 in 2 Primary Channel index
-					const primChanIndex = ss.taboption('advanced', form.ListValue, 's1g_prim_1mhz_chan_index', _('Primary 1MHz channel index'))
+					// Only 1MHz and 2MHz supported.
+					const primChanWidth = ss.taboption('advanced', form.ListValue, 's1g_prim_chwidth', _('Primary channel width'));
+					const primChanIndex = ss.taboption('advanced', form.ListValue, 's1g_prim_1mhz_chan_index', _('Primary 1MHz channel index'), _('Choose a Primary channel width before selecting a primary channel index'))
 					primChanIndex.optional = true;
 					primChanIndex.placeholder = _('-- Not set --');
-					primChanIndex.updateOptions = (channel) => {
+					primChanIndex.updateOptions = (channel, s1g_prim_chwidth) => {
 						primChanIndex.clear();
-						for (let i in channel.s1g_prim_1mhz_chan_index) {
-							primChanIndex.value(i, String(i));
+						if (s1g_prim_chwidth === '2') {
+							for (const i in channel.bw2m_s1g_prim_1mhz_chan_index) {
+								primChanIndex.value(i, String(i));
+							}
+						} else if (s1g_prim_chwidth === '1') {
+							for (const i in channel.s1g_prim_1mhz_chan_index) {
+								primChanIndex.value(i, String(i));
+							}
 						}
 					};
 					primChanIndex.load = function (section_id) {
-						getInitialChannel(section_id).then(chan => primChanIndex.updateOptions(chan));
+						const s1g_prim_chwidth = uci.get('wireless', section_id, 's1g_prim_chwidth');
+						getInitialChannel(section_id).then(chan => primChanIndex.updateOptions(chan, s1g_prim_chwidth));
 						return form.ListValue.prototype.load.apply(this, [section_id]);
 					};
-					primChanIndex.onchange = (ev, section_id, value) => {
-						primChanWidth.updateOptions(value, freqValue.s1gChan(section_id));
-						primChanWidth.renderUpdate(section_id);
-					};
 
-					// Only 1MHz and 2MHz supported.
-					const primChanWidth = ss.taboption('advanced', form.ListValue, 's1g_prim_chwidth', _('Primary channel width'),
-						_('Setting a custom primary channel width requires setting a custom channel index (above).'));
 					primChanWidth.optional = true;
 					primChanWidth.placeholder = _('-- Not set --');
-					primChanWidth.updateOptions = (index, chan) => {
+					primChanWidth.updateOptions = (chan) => {
 						primChanWidth.clear();
-
-						// Must set the index to specify a width.
-						if (index) {
-							primChanWidth.value(1, '1MHz');
-
-							if (Number(chan.bw) >= 2) {
-								primChanWidth.value(2, '2MHz');
-							}
-							// NB: netifd converts this to 0/1 to pass to hostapd.
+						primChanWidth.value(1, '1MHz');
+						if (Number(chan.bw) >= 2) {
+							primChanWidth.value(2, '2MHz');
 						}
+						// NB: netifd converts this to 0/1 to pass to hostapd.
 					};
 					primChanWidth.load = function (section_id) {
-						const index = uci.get('wireless', section_id, 's1g_prim_1mhz_chan_index');
-						getInitialChannel(section_id).then(chan => primChanWidth.updateOptions(index, chan));
+						getInitialChannel(section_id).then(chan => primChanWidth.updateOptions(chan));
 						return form.ListValue.prototype.load.apply(this, [section_id]);
+					};
+					primChanWidth.onchange = (ev, section_id, value) => {
+						primChanIndex.updateOptions(freqValue.s1gChan(section_id), value);
+						primChanIndex.renderUpdate(section_id);
 					};
 
 					freqValue.onchange = (ev, section_id, value) => {
-						primChanIndex.updateOptions(freqValue.s1gChan(section_id));
-						primChanIndex.renderUpdate(section_id);
+						primChanWidth.updateOptions(freqValue.s1gChan(section_id));
+						primChanWidth.renderUpdate(section_id);
 					};
 
 					countryValue.onchange = (ev, section_id, value) => {
