@@ -15,13 +15,17 @@
 var isReadonlyView = !L.hasViewPermission();
 
 function attachDHGroups(o) {
+	o.value(1, _('1 - 786-bit MODP group'));
+	o.value(2, _('2 - 1024-bit MODP group'));
+	o.value(5, _('5 - 1536-bit MODP group'));
+	o.value(14, _('14 - 2048-bit MODP group'));
 	o.value(15, _('15 - 3072-bit MODP group'));
 	o.value(16, _('16 - 4096-bit MODP group'));
 	o.value(17, _('17 - 6144-bit MODP group'));
 	o.value(18, _('18 - 8192-bit MODP group'));
-	o.value(19, _('19 - 256-bit random ECP group (NIST)'));
-	o.value(20, _('20 - 384-bit random ECP group (NIST)'));
-	o.value(21, _('21 - 512-bit random ECP group (NIST)'));
+	o.value(22, _('22 - 1024-bit MODP group with 160-bit Prime Order Subgroup'));
+	o.value(23, _('23 - 2048-bit MODP group with 224-bit Prime Order Subgroup'));
+	o.value(24, _('24 - 2048-bit MODP group with 256-bit Prime Order Subgroup'));
 }
 
 function count_changes(section_id) {
@@ -1553,7 +1557,7 @@ return view.extend({
 					o.value('none', '%s (%s)'.format(_('No Encryption'), _('open network')));
 				}
 
-				o = ss.taboption('encryption', form.DynamicList, 'sae_group', _('DH Groups'));
+				o = ss.taboption('encryption', form.ListValue, 'sae_group', _('DH Groups'));
 				o.optional = true;
 				o.depends('encryption', 'sae')
 				o.depends('encryption', 'sae-mixed')
@@ -1561,7 +1565,7 @@ return view.extend({
 				o.placeholder = _('Choose (if empty, default)')
 				attachDHGroups(o);
 
-				o = ss.taboption('encryption', form.DynamicList, 'owe_group', _('DH Groups'));
+				o = ss.taboption('encryption', form.ListValue, 'owe_group', _('DH Groups'));
 				o.optional = true;
 				o.depends('encryption', 'owe')
 				o.placeholder = _('Choose (if empty, default)')
