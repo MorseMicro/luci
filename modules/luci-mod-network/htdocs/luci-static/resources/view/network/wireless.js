@@ -1175,7 +1175,7 @@ return view.extend({
 					o = mesh_ss.option(form.Value, "mesh_ttl", _("Mesh TTL"), _("Specifies the value of Mesh TTL subfield (Range: 0 to 255)"));
 					o.rmempty = false;
 					o.default = "31";
-					o.datatype = "range(0,255)";
+					o.datatype = "and(uinteger, range(1,255))";
 
 					o = mesh_ss.option(form.ListValue, "mesh_hwmp_rootmode", _("Mesh Root Mode"));
 					o.value('0', _('Disabled'));
