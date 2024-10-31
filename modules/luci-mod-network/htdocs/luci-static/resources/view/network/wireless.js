@@ -1068,7 +1068,7 @@ return view.extend({
 					o.depends('mode', 'mesh');
 
 					o = ss.taboption('advanced', form.Value, 'beacon_int', _('Beacon Interval'));
-					o.datatype = 'range(15,65535)';
+					o.datatype = 'and(uinteger,range(15,10000))';
 					o.placeholder = 100;
 					o.rmempty = true;
 
@@ -1140,7 +1140,7 @@ return view.extend({
 					o.datatype = 'range(1,2147483647)';
 
 					o = ss.taboption('advanced', form.Value, 'beacon_int', _('Beacon Interval'));
-					o.datatype = 'range(15,65535)';
+					o.datatype = 'and(uinteger,range(15,10000))';
 					o.placeholder = 100;
 					o.rmempty = true;
 				}
