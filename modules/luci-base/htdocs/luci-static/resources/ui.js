@@ -2794,7 +2794,16 @@ var UIFileUpload = UIElement.extend(/** @lends LuCI.ui.FileUpload.prototype */ {
 			if (L.isObject(reply) && reply.failure)
 				alert(_('Upload request failed: %s').format(reply.message));
 
-			return this.handleSelect(path, null, ev);
+			/** Select the file uploaded recently by default **/
+			var uploadedFilePath = this.canonicalizePath(path + '/' + filename);
+
+			return this.selectDirectory(path, ev)
+				.then(fileList => {
+				const fileStat = fileList.find(file => file.name === filename);
+				if(fileStat) {
+					this.selectFile(uploadedFilePath, fileStat, ev)
+				}
+			});
 		}, this, path, ev));
 	},
 
@@ -2821,7 +2830,7 @@ var UIFileUpload = UIElement.extend(/** @lends LuCI.ui.FileUpload.prototype */ {
 			}
 
 			return fs.remove(path).then(L.bind(function(parent, ev) {
-				return this.handleSelect(parent, null, ev);
+				this.handleSelect(parent, null, ev);
 			}, this, parent, ev)).catch(function(err) {
 				alert(_('Delete request failed: %s').format(err.message));
 			});
@@ -2901,7 +2910,7 @@ var UIFileUpload = UIElement.extend(/** @lends LuCI.ui.FileUpload.prototype */ {
 						'href': '#',
 						'style': selected ? 'font-weight:bold' : null,
 						'click': UI.prototype.createHandlerFn(this, 'handleSelect',
-							entrypath, list[i].type != 'directory' ? list[i] : null)
+							entrypath, list[i])
 					}, '%h'.format(list[i].name))
 				]),
 				E('div', { 'class': 'mtime hide-xs' }, [
@@ -2982,31 +2991,45 @@ var UIFileUpload = UIElement.extend(/** @lends LuCI.ui.FileUpload.prototype */ {
 	},
 
 	/** @private */
-	handleSelect: function(path, fileStat, ev) {
+	selectDirectory: function(path, ev) {
 		var browser = dom.parent(ev.target, '.cbi-filebrowser'),
-		    ul = browser.querySelector('ul');
+			ul = browser.querySelector('ul');
+		dom.content(ul, E('em', { 'class': 'spinning' }, _('Loading directory contents…')));
+		return L.resolveDefault(fs.list(path), []).then(L.bind(function (fileList) {
+			// Render the directory listing
+			this.renderListing(browser, path, fileList);
+			return fileList;
+		}, this));
+	},
 
-		if (fileStat == null) {
-			dom.content(ul, E('em', { 'class': 'spinning' }, _('Loading directory contents…')));
-			L.resolveDefault(fs.list(path), []).then(L.bind(this.renderListing, this, browser, path));
+	/** @private */
+	selectFile: function (path, fileStat) {
+		var button = this.node.firstElementChild,
+			hidden = this.node.lastElementChild;
+
+		path = this.canonicalizePath(path);
+
+		dom.content(button, [
+			this.iconForType(fileStat.type),
+			' %s (%1000mB)'.format(this.truncatePath(path), fileStat.size)
+		]);
+
+		var browser = button.nextElementSibling;
+		browser.classList.remove('open');
+		button.style.display = '';
+		hidden.value = path;
+
+		this.stat = Object.assign({ path: path }, fileStat);
+		this.node.dispatchEvent(new CustomEvent('cbi-fileupload-select', { detail: this.stat }));
+	},
+
+	/** @private */
+	handleSelect: function(path, fileStat, ev) {
+		if (fileStat == null || fileStat.type == "directory") {
+			return this.selectDirectory(path, ev);
 		}
 		else {
-			var button = this.node.firstElementChild,
-			    hidden = this.node.lastElementChild;
-
-			path = this.canonicalizePath(path);
-
-			dom.content(button, [
-				this.iconForType(fileStat.type),
-				' %s (%1000mB)'.format(this.truncatePath(path), fileStat.size)
-			]);
-
-			browser.classList.remove('open');
-			button.style.display = '';
-			hidden.value = path;
-
-			this.stat = Object.assign({ path: path }, fileStat);
-			this.node.dispatchEvent(new CustomEvent('cbi-fileupload-select', { detail: this.stat }));
+			this.selectFile(path, fileStat);
 		}
 	},
 
