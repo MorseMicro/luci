@@ -515,6 +515,9 @@ var CBIWifiCountryValue = form.Value.extend({
 
 		if (s1g) {
 			return halow.loadChannelMap().then(channelMap => {
+				delete this.keylist;
+				delete this.vallist;
+
 				// The s1g driver won't come up until we have a valid region, so we can't reliably ask it for a countrylist.
 				// Also, 'driver default' isn't a valid option, and iwinfo countrylist gives back '00' (world) as region
 				// which is not currently a valid selection.
@@ -526,6 +529,9 @@ var CBIWifiCountryValue = form.Value.extend({
 			});
 		} else {
 			return this.callCountryList(section_id).then(L.bind(function(countrylist) {
+				delete this.keylist;
+				delete this.vallist;
+
 				if (Array.isArray(countrylist) && countrylist.length > 0) {
 					this.value('', _('driver default'));
 
