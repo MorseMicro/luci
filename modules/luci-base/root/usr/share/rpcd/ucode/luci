@@ -240,6 +240,7 @@ const methods = {
 				wifi:       access('/sbin/wifi') == true,
 				vrf:        access('/sys/module/vrf/refcnt') == true, // vrf.ko is loaded
 				netifd_vrf: false,
+				morsefwtlm: access('/lib/firmware/morse/mm6108-tlm.bin') == true,
 			};
 
 			const wifi_features = [ 
