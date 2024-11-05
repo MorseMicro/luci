@@ -12,6 +12,13 @@
 'require halow';
 'require tools.widgets as widgets';
 
+const THIN_LMAC_EXPLANATION = _(`
+Reducing the per-station table size in the chip to allow a large number of associations in AP mode.<br>
+By enabling this, encryption and decryption of unicast frames will be done in the host processor instead of the chip.
+Also, MBSS (802.11s) will not work.<br>If enabled, make sure to disable IPv6 on your interface, reduce ARP garbage collection
+frequency and increase the number of connections supported per second. For more information please refer to the User Guide.
+`).trim();
+
 var isReadonlyView = !L.hasViewPermission();
 
 function attachDHGroups(o) {
@@ -823,6 +830,16 @@ return view.extend({
 					o.enabled = '1';
 					o.disabled = '0';
 					o.default = o.disabled;
+
+					o = ss.taboption('advanced', form.Flag, 'vfem_4v3', _('4.3V VFEM'), _('Enables a 4.3V VFEM on the HaLow module'));
+					o.enabled = '1';
+					o.disabled = '0';
+					o.default = o.disabled;
+
+					if(L.hasSystemFeature('morsefwtlm'))
+					{
+						o = ss.taboption('advanced', form.Flag, 'thin_lmac', _('Thin LMAC'), THIN_LMAC_EXPLANATION);
+					}
 				}
 
 				o = s.option(form.SectionValue, '_device', form.NamedSection, radioNet.getName(), 'wifi-iface', _('Interface Configuration'));
