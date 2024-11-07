@@ -15,8 +15,18 @@
 const THIN_LMAC_EXPLANATION = _(`
 Reducing the per-station table size in the chip to allow a large number of associations in AP mode.<br>
 By enabling this, encryption and decryption of unicast frames will be done in the host processor instead of the chip.
-Also, MBSS (802.11s) will not work.<br>If enabled, make sure to disable IPv6 on your interface, reduce ARP garbage collection
-frequency and increase the number of connections supported per second. For more information please refer to the User Guide.
+Also, MBSS (802.11s) will not work.<br>If enabled, If enabled, we recommend selecting Thin LMAC Optimization below.
+`).trim();
+const THIN_LMAC_OPTIMIZATION_EXPLANATION = _(`
+If enabled,
+<var data-tooltip="sysctl net.ipv6.conf.all.disable_ipv6=1"> IPv6 will be disabled</var>,
+<var data-tooltip="sysctl -w net.ipv4.neigh.default.gc_thresh1=2048&#10;sysctl -w net.ipv4.neigh.default.gc_thresh2=2048&#10;sysctl -w net.ipv4.neigh.default.gc_thresh3=2048"> ARP garbage collection frequency will be reduced</var>,
+<var data-tooltip="sysctl -w net.ipv4.neigh.default.base_reachable_time_ms=3600000">ARP table entry timeout will be increased</var>,
+<var data-tooltip="sysctl -w net.ipv4.conf.all.arp_ignore=1&#10;sysctl -w net.ipv4.conf.all.arp_announce=2">Unnecessary ARP responses will be disabled</var>,
+<var data-tooltip="sysctl -w net.ipv4.ip_local_port_range=&quot;32768 65535&quot;">the number of connections supported per second will be increased</var> and
+the station inactivity limit (ap_max_inactivity) will be set to 600 seconds (if not specified).
+<br>
+If you previously had this enabled and now want to disable it, you must save and apply then reboot your device to restore the default settings.
 `).trim();
 
 var isReadonlyView = !L.hasViewPermission();
@@ -828,6 +838,8 @@ return view.extend({
 					if(L.hasSystemFeature('morsefwtlm'))
 					{
 						o = ss.taboption('advanced', form.Flag, 'thin_lmac', _('Thin LMAC'), THIN_LMAC_EXPLANATION);
+						o = ss.taboption('advanced', form.Flag, 'thin_lmac_optimization', _('Thin LMAC Optimization'), THIN_LMAC_OPTIMIZATION_EXPLANATION);
+						o.depends('thin_lmac', '1');
 					}
 				}
 
