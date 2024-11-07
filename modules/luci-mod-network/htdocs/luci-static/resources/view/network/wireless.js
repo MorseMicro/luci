@@ -1185,10 +1185,10 @@ return view.extend({
 					o.rmempty = false;
 					o.default = "1";
 
-					o = mesh_ss.option(form.Value, "mesh_rssi_threshold", _("RSSI threshold for joining"), _("0 = not using RSSI threshold, 1 = do not change driver default"));
+					o = mesh_ss.option(form.Value, "mesh_rssi_threshold", _("RSSI threshold for joining"), _("0 = not using RSSI threshold"));
 					o.rmempty = false;
 					o.default = "0";
-					o.datatype = "range(-255,1)";
+					o.datatype = "and(integer, range(-255,0))";
 
 					o = mesh_ss.option(form.Value, "mesh_ttl", _("Mesh TTL"), _("Specifies the value of Mesh TTL subfield (Range: 0 to 255)"));
 					o.rmempty = false;
