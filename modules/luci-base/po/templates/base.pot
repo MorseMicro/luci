@@ -126,8 +126,11 @@ msgctxt "sstp log level value"
 msgid "0"
 msgstr ""
 
-#: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:1081
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:1187
+msgid "0 = not using RSSI threshold"
+msgstr ""
+
+#: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:1081
 msgid "0 = not using RSSI threshold, 1 = do not change driver default"
 msgstr ""
 
