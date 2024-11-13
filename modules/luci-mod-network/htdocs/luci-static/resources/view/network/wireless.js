@@ -522,6 +522,9 @@ return view.extend({
 		m = new form.Map('wireless');
 		m.chain('network');
 		m.chain('firewall');
+		if (L.hasSystemFeature('morsesmartmanager')) {
+			m.chain('smart_manager');
+		}
 
 		s = m.section(form.GridSection, 'wifi-device', _('Wireless Overview'));
 		s.anonymous = true;
@@ -702,48 +705,42 @@ return view.extend({
 
 					const freqValue = ss.taboption('general', widgets.WifiFrequencyValue, '_freq', '<br />' + _('Operating frequency'));
 
-					ss.tab("dcs", _("Dynamic Channel Selection"));
-					const dcsEnable = o = ss.taboption('general', form.Flag, 'dcs', _('Dynamic Channel Selection'));
-					o.onchange = function (ev, sid, val) {
-						if (val == dcsEnable.enabled) {
-							this.map.data.add('wireless', 'dcs', radioNet.getWifiDeviceName() + '_dcs');
-							return this.map.save(null, true);
-						}
+					if (L.hasSystemFeature('morsesmartmanager')) {
+						ss.tab("dcs", _("Dynamic Channel Selection"));
+						o = ss.taboption('dcs', form.SectionValue, '_dcs', form.NamedSection, radioNet.getWifiDeviceName() + '_dcs', 'dcs');
+						let dcsSec = o.subsection;
+						dcsSec.addremove = true;
+						dcsSec.uciconfig = 'smart_manager';
 
-						this.map.data.remove('wireless', radioNet.getWifiDeviceName() + '_dcs');
-						return this.map.save(null, true);
+						o = dcsSec.option(form.Flag, 'enabled', _('Enable Dynamic Channel Selection'));
+						o.rmempty = false;
+
+						o = dcsSec.option(form.ListValue, 'algorithm', _('Algorithm'));
+						o.value('ewma', _('EWMA'));
+						o.value('sample_and_hold', _('Sample and Hold'));
+						o.default = 'ewma';
+
+						o = dcsSec.option(form.Value, 'ewma_alpha', _('EWMA Alpha'), _('Weight factor for the exponential moving average algorithm'));
+						o.placeholder = '30'
+						o.datatype = 'range(0, 100)';
+						o.depends('algorithm', 'ewma');
+
+						o = dcsSec.option(form.Value, 'rounds', _('Rounds'), _('Number of scans before determining if a channel switch should be triggered.'));
+						o.placeholder = '10'
+						o.datatype = 'range(0, 65535)';
+
+						o = dcsSec.option(form.Value, 'threshold', _('Threshold'), _('A quality improvement percentage for a channel to be considered "better"'));
+						o.placeholder = '5'
+						o.datatype = 'range(0, 100)';
+
+						o = dcsSec.option(form.Value, 'scan_int', _('Scan interval (s)'), _('Interval between subsequent channel scans in a round'));
+						o.placeholder = '2'
+						o.datatype = 'range(0, 65535)';
+
+						o = dcsSec.option(form.Value, 'round_int', _('Round interval (s)'), _('Interval between quality assessment rounds'));
+						o.placeholder = '10'
+						o.datatype = 'range(0, 65535)';
 					}
-
-					o = ss.taboption('dcs', form.SectionValue, '_dcs', form.NamedSection, radioNet.getWifiDeviceName() + '_dcs', 'dcs');
-					o.depends('dcs', '1');
-					let dcsSec = o.subsection;
-					dcsSec.addremove = true;
-
-					o = dcsSec.option(form.ListValue, 'algorithm', _('Algorithm'));
-					o.value('ewma', _('EWMA'));
-					o.value('sample_and_hold', _('Sample and Hold'));
-					o.default = 'ewma';
-
-					o = dcsSec.option(form.Value, 'ewma_alpha', _('EWMA Alpha'), _('Weight factor for the exponential moving average algorithm'));
-					o.placeholder = '30'
-					o.datatype = 'range(0, 100)';
-					o.depends('algorithm', 'ewma');
-
-					o = dcsSec.option(form.Value, 'rounds', _('Rounds'), _('Number of scans before determining if a channel switch should be triggered.'));
-					o.placeholder = '10'
-					o.datatype = 'range(0, 65535)';
-
-					o = dcsSec.option(form.Value, 'threshold', _('Threshold'), _('A quality improvement percentage for a channel to be considered "better"'));
-					o.placeholder = '5'
-					o.datatype = 'range(0, 100)';
-
-					o = dcsSec.option(form.Value, 'scan_int', _('Scan interval (s)'), _('Interval between subsequent channel scans in a round'));
-					o.placeholder = '2'
-					o.datatype = 'range(0, 65535)';
-
-					o = dcsSec.option(form.Value, 'round_int', _('Round interval (s)'), _('Interval between quality assessment rounds'));
-					o.placeholder = '10'
-					o.datatype = 'range(0, 65535)';
 
 					o = ss.taboption('advanced', form.Flag, 's1g_capab', _('Short Guard Interval'));
 					o.disabled = '[SHORT-GI-NONE]';
