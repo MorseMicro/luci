@@ -1101,9 +1101,14 @@ return view.extend({
 				} else if (hwtype == 'morse') {
 
 					var mode = ss.children[0];
+					var bssid = ss.children[3];
 					mode.value('mesh', '802.11s');
 					mode.value('ap-wds', '%s (%s)'.format(_('Access Point'), _('WDS')));
 					mode.value('sta-wds', '%s (%s)'.format(_('Client'), _('WDS')));
+
+					bssid.depends('mode', 'adhoc');
+					bssid.depends('mode', 'sta');
+					bssid.depends('mode', 'sta-wds');
 
 					mode.write = function (section_id, value) {
 						switch (value) {
