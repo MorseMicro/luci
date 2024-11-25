@@ -9906,10 +9906,13 @@ msgstr ""
 msgid "The submitted security token is invalid or already expired!"
 msgstr ""
 
+<<<<<<< HEAD
 #: modules/luci-base/htdocs/luci-static/resources/tools/views.js:27
 msgid "The syslog output, pre-filtered for messages related to:"
 msgstr ""
 
+=======
+>>>>>>> c1d2f74ec238 (Update base.pot)
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:98
 msgid ""
 "The system is erasing the configuration partition now and will reboot itself "
