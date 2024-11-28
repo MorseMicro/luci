@@ -3900,10 +3900,11 @@ const CBIValue = CBIAbstractValue.extend(/** @lends LuCI.form.Value.prototype */
 					oldOptionEl = oldOptionEl.parentElement;
 				}
 
+				// Any custom classes that have been added by some other process are kept.
+				optionEl.className = oldOptionEl.className;
 				oldOptionEl.parentNode.replaceChild(optionEl, oldOptionEl);
 				// Report a widget-change to kick off onchange events
-				// (sometimes this might not be appropriate, but onchange handlers shouldn't
-				// care if they're calling and it hasn't really changed).
+				// (since a widget rerender may have forced our value to change).
 				optionEl.dispatchEvent(new CustomEvent('widget-change', { bubble: true }));
 			});
 	},

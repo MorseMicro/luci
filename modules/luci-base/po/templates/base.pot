@@ -89,7 +89,7 @@ msgstr ""
 
 #: modules/luci-base/htdocs/luci-static/resources/cbi.js:275
 #: modules/luci-base/htdocs/luci-static/resources/form.js:3765
-#: modules/luci-base/htdocs/luci-static/resources/form.js:4192
+#: modules/luci-base/htdocs/luci-static/resources/form.js:4193
 #: modules/luci-base/htdocs/luci-static/resources/ui.js:800
 #: modules/luci-base/htdocs/luci-static/resources/ui.js:1038
 #: modules/luci-base/htdocs/luci-static/resources/ui.js:2031
@@ -6513,7 +6513,7 @@ msgstr ""
 msgid "Next »"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/form.js:4129
+#: modules/luci-base/htdocs/luci-static/resources/form.js:4130
 #: protocols/luci-proto-bonding/htdocs/luci-static/resources/protocol/bonding.js:298
 #: protocols/luci-proto-bonding/htdocs/luci-static/resources/protocol/bonding.js:346
 msgid "No"
@@ -6970,7 +6970,7 @@ msgid "Operator Name"
 msgstr ""
 
 #: modules/luci-base/htdocs/luci-static/resources/form.js:2026
-#: modules/luci-base/htdocs/luci-static/resources/form.js:4141
+#: modules/luci-base/htdocs/luci-static/resources/form.js:4142
 msgid "Option \"%s\" contains an invalid input value."
 msgstr ""
 
@@ -11478,7 +11478,7 @@ msgstr ""
 msgid "XOR policy (balance-xor, 2)"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/form.js:4129
+#: modules/luci-base/htdocs/luci-static/resources/form.js:4130
 #: protocols/luci-proto-bonding/htdocs/luci-static/resources/protocol/bonding.js:297
 #: protocols/luci-proto-bonding/htdocs/luci-static/resources/protocol/bonding.js:345
 msgid "Yes"
