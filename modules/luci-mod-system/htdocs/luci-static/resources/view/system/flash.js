@@ -245,7 +245,7 @@ return view.extend({
 						res[2].stderr ? res[2].stderr : '',
 						res[2].stderr ? E('br') : '',
 						res[2].stderr ? E('br') : '',
-						_('The uploaded image file does not contain a supported format. Make sure that you choose the generic image format for your platform.')
+						_('The uploaded image file does not contain a supported format. Make sure that you choose the generic image format for your platform and haven\'t decompressed the image before uploading.')
 					]));
 
 				if (!allow_backup) {
