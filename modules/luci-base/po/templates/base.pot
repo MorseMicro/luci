@@ -88,7 +88,7 @@ msgid "-- Not set --"
 msgstr ""
 
 #: modules/luci-base/htdocs/luci-static/resources/cbi.js:275
-#: modules/luci-base/htdocs/luci-static/resources/form.js:3765
+#: modules/luci-base/htdocs/luci-static/resources/form.js:3766
 #: modules/luci-base/htdocs/luci-static/resources/form.js:4193
 #: modules/luci-base/htdocs/luci-static/resources/ui.js:800
 #: modules/luci-base/htdocs/luci-static/resources/ui.js:1038
@@ -4038,7 +4038,7 @@ msgid "Go to password configuration..."
 msgstr ""
 
 #: modules/luci-base/htdocs/luci-static/resources/form.js:2616
-#: modules/luci-base/htdocs/luci-static/resources/form.js:3729
+#: modules/luci-base/htdocs/luci-static/resources/form.js:3730
 #: modules/luci-compat/luasrc/view/cbi/full_valueheader.htm:4
 #: modules/luci-compat/luasrc/view/cbi/tblsection.htm:58
 msgid "Go to relevant configuration page"
@@ -11981,7 +11981,7 @@ msgstr ""
 msgid "unlimited"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/form.js:3765
+#: modules/luci-base/htdocs/luci-static/resources/form.js:3766
 #: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:617
 #: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:679
 #: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:912
