@@ -711,24 +711,24 @@ return view.extend({
 
 						o = dcsSec.option(form.Value, 'ewma_alpha', _('EWMA Alpha'), _('Weight factor for the exponential moving average algorithm'));
 						o.placeholder = '30'
-						o.datatype = 'range(0, 100)';
+						o.datatype = 'and(uinteger, range(1, 100))';
 						o.depends('algorithm', 'ewma');
 
 						o = dcsSec.option(form.Value, 'rounds', _('Rounds'), _('Number of scans before determining if a channel switch should be triggered.'));
 						o.placeholder = '10'
-						o.datatype = 'range(0, 65535)';
+						o.datatype = 'and(uinteger, range(1, 65535))';
 
 						o = dcsSec.option(form.Value, 'threshold', _('Threshold'), _('A quality improvement percentage for a channel to be considered "better"'));
 						o.placeholder = '5'
-						o.datatype = 'range(0, 100)';
+						o.datatype = 'and(uinteger, range(0, 100))';
 
 						o = dcsSec.option(form.Value, 'scan_int', _('Scan interval (s)'), _('Interval between subsequent channel scans in a round'));
 						o.placeholder = '2'
-						o.datatype = 'range(0, 65535)';
+						o.datatype = 'and(uinteger, range(0, 65535))';
 
 						o = dcsSec.option(form.Value, 'round_int', _('Round interval (s)'), _('Interval between quality assessment rounds'));
 						o.placeholder = '10'
-						o.datatype = 'range(0, 65535)';
+						o.datatype = 'and(uinteger, range(0, 65535))';
 					}
 
 					o = ss.taboption('advanced', form.Flag, 's1g_capab', _('Short Guard Interval'));
