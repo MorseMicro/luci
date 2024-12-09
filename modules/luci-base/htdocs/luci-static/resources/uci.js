@@ -150,12 +150,12 @@ return baseclass.extend(/** @lends LuCI.uci.prototype */ {
 	},
 
 	/* private */
-	reorderSections() {
-		const v = this.state.values;
-		const n = this.state.creates;
-		const d = this.state.deletes;
-		const r = this.state.reorder;
-		const tasks = [];
+	reorderSections: function() {
+		var v = this.state.values,
+		    n = this.state.creates,
+		    d = this.state.deletes,
+		    r = this.state.reorder,
+		    tasks = [];
 
 		if (Object.keys(r).length === 0)
 			return Promise.resolve();
@@ -177,7 +177,7 @@ return baseclass.extend(/** @lends LuCI.uci.prototype */ {
 					o.push(n[c][s]);
 
 			// push values
-			for (const s in v[c])
+			for (var s in v[c])
 				o.push(v[c][s]);
 
 			if (o.length > 0) {
