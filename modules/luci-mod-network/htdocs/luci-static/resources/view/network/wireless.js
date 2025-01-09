@@ -1392,11 +1392,6 @@ return view.extend({
 						var e = this.section.children.filter(function (o) { return o.option == 'encryption' })[0].formvalue(section_id);
 
 						uci.set('wireless', section_id, 'encryption', e);
-						if (e == 'sae')
-							uci.set('wireless', section_id, 'sae_pwe', 1);
-						else
-							uci.unset('wireless', section_id, 'sae_pwe');
-
 					};
 
 
@@ -1588,11 +1583,6 @@ return view.extend({
 						var e = this.section.children.filter(function (o) { return o.option == 'mesh_encryption' })[0].formvalue(section_id);
 
 						uci.set('wireless', section_id, 'encryption', e);
-						if (e == 'sae')
-							uci.set('wireless', section_id, 'sae_pwe', 1);
-						else
-							uci.unset('wireless', section_id, 'sae_pwe');
-
 					};
 
 					o.value('sae', '%s (%s)'.format('WPA3-SAE', _('strong security')));
