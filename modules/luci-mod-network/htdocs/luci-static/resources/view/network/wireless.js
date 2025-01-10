@@ -885,7 +885,6 @@ return view.extend({
 				o.depends('mode', 'sta');
 				o.depends('mode', 'adhoc');
 				o.depends('mode', 'ahdemo');
-				o.depends('mode', 'monitor');
 				o.depends('mode', 'ap-wds');
 				o.depends('mode', 'sta-wds');
 				o.depends('mode', 'wds');
@@ -1094,6 +1093,7 @@ return view.extend({
 					mode.value('mesh', '802.11s');
 					mode.value('ap-wds', '%s (%s)'.format(_('Access Point'), _('WDS')));
 					mode.value('sta-wds', '%s (%s)'.format(_('Client'), _('WDS')));
+					mode.value('monitor', _('Monitor'));
 
 					bssid.depends('mode', 'adhoc');
 					bssid.depends('mode', 'sta');
