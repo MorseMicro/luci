@@ -31,18 +31,22 @@ If you previously had this enabled and now want to disable it, you must save and
 
 var isReadonlyView = !L.hasViewPermission();
 
-function attachDHGroups(o) {
-	o.value(1, _('1 - 786-bit MODP group'));
-	o.value(2, _('2 - 1024-bit MODP group'));
-	o.value(5, _('5 - 1536-bit MODP group'));
-	o.value(14, _('14 - 2048-bit MODP group'));
+function attachMODPDHGroups(o) {
+	// Only groups that are suitable for WPA3-SAE - see 'Suitable Diffie-Hellman Groups'
+	// in 'WPA3 Security Considerations'.
 	o.value(15, _('15 - 3072-bit MODP group'));
 	o.value(16, _('16 - 4096-bit MODP group'));
-	o.value(17, _('17 - 6144-bit MODP group'));
-	o.value(18, _('18 - 8192-bit MODP group'));
-	o.value(22, _('22 - 1024-bit MODP group with 160-bit Prime Order Subgroup'));
-	o.value(23, _('23 - 2048-bit MODP group with 224-bit Prime Order Subgroup'));
-	o.value(24, _('24 - 2048-bit MODP group with 256-bit Prime Order Subgroup'));
+	// These seem to be broken in hostapd, so don't let the user select.
+	// o.value(17, _('17 - 6144-bit MODP group'));
+	// o.value(18, _('18 - 8192-bit MODP group'));
+}
+
+function attachECPDHGroups(o) {
+	// Only groups that are suitable for WPA3-SAE - see 'Suitable Diffie-Hellman Groups'
+	// in 'WPA3 Security Considerations'.
+	o.value(19, _('19 - 256-bit random ECP group (NIST)'));
+	o.value(20, _('20 - 384-bit random ECP group (NIST)'));
+	o.value(21, _('21 - 512-bit random ECP group (NIST)'));
 }
 
 function count_changes(section_id) {
@@ -1578,20 +1582,6 @@ return view.extend({
 					o.value('none', '%s (%s)'.format(_('No Encryption'), _('open network')));
 				}
 
-				o = ss.taboption('encryption', form.ListValue, 'sae_group', _('DH Groups'));
-				o.optional = true;
-				o.depends('encryption', 'sae')
-				o.depends('encryption', 'sae-mixed')
-				o.depends('mesh_encryption', 'sae');
-				o.placeholder = _('Choose (if empty, default)')
-				attachDHGroups(o);
-
-				o = ss.taboption('encryption', form.ListValue, 'owe_group', _('DH Groups'));
-				o.optional = true;
-				o.depends('encryption', 'owe')
-				o.placeholder = _('Choose (if empty, default)')
-				attachDHGroups(o);
-
 				o = ss.taboption('encryption', form.DummyValue, 'helptxt');
 				add_dependency_permutations(o, { mode: ['ap', 'ap-wds'], encryption: ['wpa', 'wpa2', 'wpa3', 'wpa3-mixed'] });
 				o.rawhtml = true;
@@ -2012,6 +2002,7 @@ return view.extend({
 						o.depends('encryption', 'sae-mixed');
 					}
 				}
+
 				if (hwtype == 'morse') {
 					o = ss.taboption('encryption', form.ListValue, 'eap_type', _('EAP-Method'));
 					o.value('tls', 'TLS');
@@ -2102,6 +2093,21 @@ return view.extend({
 					o.datatype = 'and(integer,range(1,4294967295))'; //uinteger type, but does not allow 0.
 					o.placeholder = '201';
 					o.rmempty = true;
+
+					o = ss.taboption('encryption', form.MultiValue, 'sae_group', _('Custom Diffie-Hellman Groups'));
+					o.optional = true;
+					o.placeholder = _('Choose (if empty, default)');
+					o.depends('encryption', 'sae')
+					o.depends('encryption', 'sae-mixed')
+					o.depends('mesh_encryption', 'sae');
+					attachMODPDHGroups(o);
+					attachECPDHGroups(o);
+
+					o = ss.taboption('encryption', form.MultiValue, 'owe_group', _('Custom Diffie-Hellman Groups'));
+					o.optional = true;
+					o.placeholder = _('Choose (if empty, default)');
+					o.depends('encryption', 'owe')
+					attachECPDHGroups(o);
 				}
 			});
 		};
