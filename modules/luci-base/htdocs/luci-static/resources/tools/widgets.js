@@ -39,6 +39,13 @@ var CBIWifiFrequencyValue = form.Value.extend({
 		expect: { results: [] }
 	}),
 
+	callCountryList: rpc.declare({
+		object: 'iwinfo',
+		method: 'countrylist',
+		params: [ 'device' ],
+		expect: { results: [] }
+	}),
+
 	load: function(section_id) {
 		if (this.ucisection) {
 			section_id = this.ucisection;
@@ -47,9 +54,10 @@ var CBIWifiFrequencyValue = form.Value.extend({
 		return Promise.all([
 			network.getWifiDevice(section_id),
 			this.callFrequencyList(section_id),
+			this.callCountryList(section_id),
 			halow.loadChannelMap(),
 		]).then(L.bind(function(data) {
-			this.halowChannelMap = data[2];
+			this.halowChannelMap = data[3];
 			this.channels = {
 				'2g': L.hasSystemFeature('hostapd', 'acs') ? [ 'auto', 'auto', true ] : [],
 				'5g': L.hasSystemFeature('hostapd', 'acs') ? [ 'auto', 'auto', true ] : [],
@@ -58,13 +66,30 @@ var CBIWifiFrequencyValue = form.Value.extend({
 				's1g': []
 			};
 
-			// s1g is a problem because the driver doesn't like telling us information until it's loaded.
-			// For now, we just use the channel map.
+			// s1g is a problem because the driver doesn't like telling us information until it's loaded
+			// with the correct country, and there's a lot of variability between countries.
+			// For now, we just use the channel map, and filter on available channels if presented
+			// to cover them being disabled by the BCF (based on the current country).
 			// Note that if no s1g channels were added here, we'd also have the issue that
 			// s1g would be added to the <select> so that setting band.value to s1g would fail,
 			// which leads to defaulting to 11a (see write:).
+			// WARNING: the available channels presented may also be affected by
+			// by CONFIG_MORSE_REGDB_COUNTRY_CODE_FILTER and CONFIG_MORSE_REGDB_CHANNEL_NEGATIVE_FILTER,
+			// as well as DRIVER_COUNTRIES (defined in halow.js).
 			if (uci.get('wireless', section_id, 'type') == 'morse') {
 				// All our info is in this.halowChannelMap.
+				const activeCountry = data[2].find(c => c.active);
+				if (activeCountry) {
+					const activeCountryMap = this.halowChannelMap[activeCountry.code];
+					if (activeCountryMap) {
+						const activeChannels = new Set(data[1].map(chanInfo => chanInfo.channel));
+						for (const channel of Object.keys(activeCountryMap)) {
+							if (!activeChannels.has(Number(channel))) {
+								delete activeCountryMap[channel];
+							}
+						}
+					}
+				}
 				return;
 			}
 
@@ -243,16 +268,17 @@ var CBIWifiFrequencyValue = form.Value.extend({
 		var s1gWidth = elem.querySelector('.s1g-width')?.value;
 		if (s1gWidth) {
 			const channelValues = [];
-			for (const chanInfo of Object.values(this.halowChannelMap[this.s1gCountry(elem)])) {
+			const country = this.s1gCountry(elem);
+			for (const chanInfo of Object.values(this.halowChannelMap[country])) {
 				if (chanInfo.bw === s1gWidth) {
 					channelValues.push(chanInfo.s1g_chan, this.formatChannel(chanInfo.s1g_chan, chanInfo.centre_freq_mhz), true);
 				}
 			}
 			this.setValues(chanEl, channelValues, true);
 
-			if (existingChannel) {
+			if (existingChannel && this.halowChannelMap[country][existingChannel]) {
 				// i.e. after we've initially created the input widget, set the channel
-				// to whatever is in UCI.
+				// to whatever is in UCI as long as that channel is in the channel map.
 				chanEl.value = existingChannel;
 			}
 		} else {
