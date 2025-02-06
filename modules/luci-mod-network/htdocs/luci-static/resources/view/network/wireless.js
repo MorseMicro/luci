@@ -707,7 +707,16 @@ return view.extend({
 					const countryValue = ss.taboption('general', widgets.WifiCountryValue, 'country', _('Country Code'));
 					countryValue.wifiNetwork = radioNet;
 
-					const freqValue = ss.taboption('general', widgets.WifiFrequencyValue, '_freq', '<br />' + _('Operating frequency'));
+					const freqValue = ss.taboption('general', widgets.WifiFrequencyValue, '_freq', '<br />' + _('Operating frequency'), _(`
+						Prim Width and Prim Index are the Primary Channel Width and the Primary 1mhz Channel Index respectively.
+						These options will vary depending on the main channel.
+					`));
+					freqValue.primChanSelect = true;
+
+					countryValue.onchange = (ev, section_id, value) => {
+						// This makes sure we update the frequency widget when the country changes.
+						freqValue.toggleS1gCountry(section_id, value);
+					};
 
 					if (L.hasSystemFeature('morsesmartmanager')) {
 						ss.tab("dcs", _("Dynamic Channel Selection"));
@@ -769,73 +778,6 @@ return view.extend({
 						_('Forces the listen interval in all cases (unlike max_listen_interval, which is a cap that only applies to the AP). The unified scaling factor and unscaled interval are automatically determined from this value.'));
 					o.optional = true;
 					o.datatype = 'range(1,163830000)';
-
-					const getInitialChannel = (section_id) => {
-						var country = uci.get('wireless', section_id, 'country'),
-							channel = uci.get('wireless', section_id, 'channel');
-
-						return halow.loadChannelMap().then(channelMap => {
-							return channelMap[country]?.[channel];
-						});
-					};
-
-					// Sub-1 GHz primary 1MHz channel index
-					// | <--------- 8MHz operating channel ----------> |
-					// | -0- | -1- | -2- | -3- | -4- | -5- | -6- | -7- | 1 in 8 Primary Channel index
-					// | ----4MHz operating--- |
-					// | -0- | -1- | -2- | -3- |                         1 in 4 Primary Channel index
-					// | -2MHz op- |
-					// | -0- | -1- |                                     1 in 2 Primary Channel index
-					// Only 1MHz and 2MHz supported.
-					const primChanWidth = ss.taboption('advanced', form.ListValue, 's1g_prim_chwidth', _('Primary channel width'));
-					const primChanIndex = ss.taboption('advanced', form.ListValue, 's1g_prim_1mhz_chan_index', _('Primary 1MHz channel index'), _('Choose a Primary channel width before selecting a primary channel index'))
-					primChanIndex.optional = true;
-					primChanIndex.placeholder = _('-- Not set --');
-					primChanIndex.updateOptions = (channel, s1g_prim_chwidth) => {
-						primChanIndex.clear();
-						if (s1g_prim_chwidth === '2') {
-							for (const i in channel.bw2m_s1g_prim_1mhz_chan_index) {
-								primChanIndex.value(i, String(i));
-							}
-						} else if (s1g_prim_chwidth === '1') {
-							for (const i in channel.s1g_prim_1mhz_chan_index) {
-								primChanIndex.value(i, String(i));
-							}
-						}
-					};
-					primChanIndex.load = function (section_id) {
-						const s1g_prim_chwidth = uci.get('wireless', section_id, 's1g_prim_chwidth');
-						getInitialChannel(section_id).then(chan => primChanIndex.updateOptions(chan, s1g_prim_chwidth));
-						return form.ListValue.prototype.load.apply(this, [section_id]);
-					};
-
-					primChanWidth.optional = true;
-					primChanWidth.placeholder = _('-- Not set --');
-					primChanWidth.updateOptions = (chan) => {
-						primChanWidth.clear();
-						primChanWidth.value(1, '1MHz');
-						if (Number(chan.bw) >= 2) {
-							primChanWidth.value(2, '2MHz');
-						}
-						// NB: netifd converts this to 0/1 to pass to hostapd.
-					};
-					primChanWidth.load = function (section_id) {
-						getInitialChannel(section_id).then(chan => primChanWidth.updateOptions(chan));
-						return form.ListValue.prototype.load.apply(this, [section_id]);
-					};
-					primChanWidth.onchange = (ev, section_id, value) => {
-						primChanIndex.updateOptions(freqValue.s1gChan(section_id), value);
-						primChanIndex.renderUpdate(section_id);
-					};
-
-					freqValue.onchange = (ev, section_id, value) => {
-						primChanWidth.updateOptions(freqValue.s1gChan(section_id));
-						primChanWidth.renderUpdate(section_id);
-					};
-
-					countryValue.onchange = (ev, section_id, value) => {
-						freqValue.toggleS1gCountry(section_id, value);
-					};
 
 					o = ss.taboption('advanced', form.Flag, 'vendor_keep_alive_offload', _('Keep alive offload'), _('Offload IPv4 keep alive frames to hardware'));
 					o.enabled = '1';
