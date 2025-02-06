@@ -58,6 +58,7 @@ var CBIWifiFrequencyValue = form.Value.extend({
 			halow.loadChannelMap(),
 		]).then(L.bind(function(data) {
 			this.halowChannelMap = data[3];
+			this.allowedKhzByCountry = {};
 			this.channels = {
 				'2g': L.hasSystemFeature('hostapd', 'acs') ? [ 'auto', 'auto', true ] : [],
 				'5g': L.hasSystemFeature('hostapd', 'acs') ? [ 'auto', 'auto', true ] : [],
@@ -207,6 +208,8 @@ var CBIWifiFrequencyValue = form.Value.extend({
 
 		this.updateS1gCountry(elem, country);
 		this.updateS1gWidths(elem);
+		this.updateS1gPrimChanWidths(elem);
+		this.updateS1gPrim1mhzChanIndices(elem);
 
 		elem.querySelector('.s1g-width').dispatchEvent(new CustomEvent('change'));
 	},
@@ -220,6 +223,21 @@ var CBIWifiFrequencyValue = form.Value.extend({
 
 	toggleWifiS1gWidth: function(elem) {
 		this.updateWifiChannel(elem);
+		this.updateS1gPrimChanWidths(elem);
+		this.updateS1gPrim1mhzChanIndices(elem);
+
+		this.map.checkDepends();
+	},
+
+	toggleWifiS1gChannel: function(elem) {
+		this.updateS1gPrimChanWidths(elem);
+		this.updateS1gPrim1mhzChanIndices(elem);
+
+		this.map.checkDepends();
+	},
+
+	toggleWifiS1gPrimChanWidth: function(elem) {
+		this.updateS1gPrim1mhzChanIndices(elem);
 
 		this.map.checkDepends();
 	},
@@ -245,6 +263,75 @@ var CBIWifiFrequencyValue = form.Value.extend({
 		}
 
 		this.setValues(s1gWidthEl, s1gWidthsValues, true);
+	},
+
+	updateS1gPrimChanWidths: function(elem, initialVal) {
+		if (!this.primChanSelect) {
+			return;
+		}
+
+		var s1gChanWidth = elem.querySelector('.s1g-prim-chan-width');
+		var options = elem.querySelector('.s1g-width').value === '1' ? [
+			'auto', 'auto', true,
+			'1', '1mhz', true,
+		] : [
+			'auto', 'auto', true,
+			'2', '2mhz', true,
+			'1', '1mhz', true,
+		];
+
+		this.setValues(s1gChanWidth, options, true);
+		if (initialVal) {
+			s1gChanWidth.value = initialVal;
+		}
+	},
+
+	allowedS1gChanIndex: function(chanInfo, chanWidth, chanIndex) {
+		if (chanInfo.bw === '1') {
+			return true;
+		}
+
+		let allowedKhz = this.allowedKhzByCountry[chanInfo.country_code];
+
+		if (!allowedKhz) {
+			allowedKhz = new Set(
+				Object.values(this.halowChannelMap[chanInfo.country_code])
+					.map(ch => Math.round(ch.centre_freq_mhz * 1000)));
+			this.allowedKhzByCountry[chanInfo.country_code] = allowedKhz;
+		}
+
+		let offsetMhz;
+		if (chanWidth === '2') {
+			offsetMhz = -chanInfo.bw / 2 + 1 + Math.floor(chanIndex / 2) * 2;
+		} else if (chanWidth === '1') {
+			offsetMhz = -chanInfo.bw / 2 + 0.5 + chanIndex;
+		} else {
+			return false;
+		}
+
+		return allowedKhz.has(Math.round(1000 * (Number(chanInfo.centre_freq_mhz) + offsetMhz)));
+	},
+
+	updateS1gPrim1mhzChanIndices: function(elem, initialVal) {
+		if (!this.primChanSelect) {
+			return;
+		}
+
+		var s1gChanWidth = elem.querySelector('.s1g-prim-chan-width');
+		var s1gChanIndex = elem.querySelector('.s1g-prim-1mhz-chan-index');
+		var chanInfo = this.halowChannelMap[this.s1gCountry(elem)][elem.querySelector('.channel').value];
+
+		var options = ['auto', 'auto', true];
+		for (var i = 0; i < Number(chanInfo.bw); ++i) {
+			if (this.allowedS1gChanIndex(chanInfo, s1gChanWidth.value, i)) {
+				options.push(String(i), String(i), true);
+			}
+		}
+
+		this.setValues(s1gChanIndex, options, true);
+		if (initialVal) {
+			s1gChanIndex.value = initialVal;
+		}
 	},
 
 	updateWifiHTMode: function(elem) {
@@ -316,6 +403,8 @@ var CBIWifiFrequencyValue = form.Value.extend({
 			band.value = 's1g';
 
 			this.updateWifiChannel(elem, chval);
+			this.updateS1gPrim1mhzChanIndices(elem, uci.get('wireless', section_id, 's1g_prim_1mhz_chan_index'));
+			this.updateS1gPrimChanWidths(elem, uci.get('wireless', section_id, 's1g_prim_chwidth'))
 			this.map.checkDepends();
 
 			return elem;
@@ -398,6 +487,7 @@ var CBIWifiFrequencyValue = form.Value.extend({
 				E('select', {
 					'class': 'channel',
 					'style': 'width:auto',
+					'change': L.bind(this.toggleWifiS1gChannel, this, elem),
 					'disabled': (this.disabled != null) ? this.disabled : this.map.readonly
 				})
 			]),
@@ -405,6 +495,31 @@ var CBIWifiFrequencyValue = form.Value.extend({
 				_('Width'), E('br'),
 				E('select', {
 					'class': 'htmode',
+					'style': 'width:auto',
+					'disabled': (this.disabled != null) ? this.disabled : this.map.readonly
+				})
+			]),
+			// Sub-1 GHz primary 1MHz channel index
+			// | <--------- 8MHz operating channel ----------> |
+			// | -0- | -1- | -2- | -3- | -4- | -5- | -6- | -7- | 1 in 8 Primary Channel index
+			// | ----4MHz operating--- |
+			// | -0- | -1- | -2- | -3- |                         1 in 4 Primary Channel index
+			// | -2MHz op- |
+			// | -0- | -1- |                                     1 in 2 Primary Channel index
+			// Only 1MHz and 2MHz supported.
+			E('label', { 'style': 'float:left; margin-right:3px; display:none;' }, [
+				_('Prim Width'), E('br'),
+				E('select', {
+					'class': 's1g-prim-chan-width',
+					'style': 'width:auto',
+					'change': L.bind(this.toggleWifiS1gPrimChanWidth, this, elem),
+					'disabled': (this.disabled != null) ? this.disabled : this.map.readonly
+				})
+			]),
+			E('label', { 'style': 'float:left; margin-right:3px; display:none;' }, [
+				_('Prim Index'), E('br'),
+				E('select', {
+					'class': 's1g-prim-1mhz-chan-index',
 					'style': 'width:auto',
 					'disabled': (this.disabled != null) ? this.disabled : this.map.readonly
 				})
@@ -435,6 +550,8 @@ var CBIWifiFrequencyValue = form.Value.extend({
 		    uci.get('wireless', section_id, 'htmode'),
 		    uci.get('wireless', section_id, 'hwmode') || uci.get('wireless', section_id, 'band'),
 		    uci.get('wireless', section_id, 'channel'),
+		    uci.get('wireless', section_id, 's1g_prim_1mhz_chan_index'),
+		    uci.get('wireless', section_id, 's1g_prim_chwidth'),
 		    // We put country here (and in formvalue) to make sure if the country has changed
 		    // this counts for causing handleValueChange.
 		    uci.get('wireless', section_id, 'country'),
@@ -443,11 +560,16 @@ var CBIWifiFrequencyValue = form.Value.extend({
 
 	formvalue: function(section_id) {
 		var node = this.map.findElement('data-field', this.cbid(section_id));
+		var removeAuto = function (val) {
+			return val === 'auto' ? null : val;
+		};
 
 		return [
 		    node.querySelector('.htmode').value,
 		    node.querySelector('.band').value,
 		    node.querySelector('.channel').value,
+		    removeAuto(node.querySelector('.s1g-prim-1mhz-chan-index').value),
+		    removeAuto(node.querySelector('.s1g-prim-chan-width').value),
 		    node.dataset.country,
 		];
 	},
@@ -492,6 +614,11 @@ var CBIWifiFrequencyValue = form.Value.extend({
 			uci.set('wireless', section_id, 'hwmode', (value[1] == '2g') ? '11g' : '11a');
 
 		uci.set('wireless', section_id, 'channel', value[2]);
+
+		if (this.primChanSelect && value[1] === 's1g') {
+			uci.set('wireless', section_id, 's1g_prim_1mhz_chan_index', value[3]);
+			uci.set('wireless', section_id, 's1g_prim_chwidth', value[4]);
+		}
 	},
 
 	formatChannel: function(chanNum, freqMHz) {
