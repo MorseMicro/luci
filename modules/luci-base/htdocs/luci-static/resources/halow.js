@@ -11,7 +11,7 @@
 
 // Driver doesn't support the same set of country codes as a regulatory information
 // (notably, EU is not split out into individual countries in the driver).
-const DRIVER_COUNTRIES = new Set(['US', 'AU', 'NZ', 'EU', 'IN', 'JP', 'KR', 'SG']);
+const DRIVER_COUNTRIES = new Set(['US', 'AU', 'NZ', 'EU', 'IN', 'JP', 'KR', 'SG', 'CA']);
 
 let loadChannelMapPromise;
 async function loadChannelMap() {
