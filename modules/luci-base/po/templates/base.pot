@@ -56,16 +56,16 @@ msgstr ""
 msgid "(Max 1h == 3600)"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:812
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:818
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:954
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:978
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:813
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:819
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:955
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:979
 #: modules/luci-compat/luasrc/view/cbi/firewall_zonelist.htm:88
 #: modules/luci-compat/luasrc/view/cbi/firewall_zonelist.htm:91
 msgid "(empty)"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:1047
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:1048
 #: modules/luci-compat/luasrc/view/cbi/network_netinfo.htm:23
 #: modules/luci-compat/luasrc/view/cbi/network_netlist.htm:58
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/29_ports.js:271
@@ -597,9 +597,9 @@ msgstr ""
 msgid "ATM device number"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:961
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:1243
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:1247
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:962
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:1244
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:1248
 msgid "Absent Interface"
 msgstr ""
 
@@ -1116,9 +1116,9 @@ msgctxt "nft match any traffic"
 msgid "Any packet"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:778
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:868
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:890
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:779
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:869
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:891
 #: modules/luci-compat/luasrc/view/cbi/firewall_zonelist.htm:60
 msgid "Any zone"
 msgstr ""
@@ -2106,8 +2106,8 @@ msgstr ""
 msgid "Custom Diffie-Hellman Groups"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:1268
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:1270
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:1269
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:1271
 #: modules/luci-compat/luasrc/view/cbi/network_ifacelist.htm:51
 #: modules/luci-compat/luasrc/view/cbi/network_ifacelist.htm:53
 #: modules/luci-compat/luasrc/view/cbi/network_ifacelist.htm:82
@@ -2421,13 +2421,13 @@ msgctxt "nft ip dport"
 msgid "Destination port"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:753
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:859
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:754
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:860
 msgid "Destination zone"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:761
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:886
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:762
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:887
 #: modules/luci-compat/luasrc/view/cbi/firewall_zonelist.htm:43
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/interfaces.js:46
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/interfaces.js:81
@@ -7125,8 +7125,8 @@ msgstr ""
 msgid "Output Interface"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:753
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:859
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:754
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:860
 msgid "Output zone"
 msgstr ""
 
@@ -10886,7 +10886,7 @@ msgstr ""
 msgid "Use DNS servers advertised by peer"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:703
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:704
 msgid "Use ISO/IEC 3166 alpha2 country codes."
 msgstr ""
 
@@ -11583,8 +11583,8 @@ msgstr ""
 msgid "bridged"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:840
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:1101
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:841
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:1102
 #: modules/luci-compat/luasrc/view/cbi/firewall_zonelist.htm:35
 #: modules/luci-compat/luasrc/view/cbi/firewall_zonelist.htm:99
 #: modules/luci-compat/luasrc/view/cbi/network_netlist.htm:31
@@ -11652,7 +11652,7 @@ msgid "disabled"
 msgstr ""
 
 #: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:635
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:689
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:690
 msgid "driver default"
 msgstr ""
 
@@ -11688,8 +11688,8 @@ msgstr ""
 msgid "forced"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:779
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:890
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:780
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:891
 #: modules/luci-compat/luasrc/view/cbi/firewall_zonelist.htm:61
 msgid "forward"
 msgstr ""
@@ -11733,8 +11733,8 @@ msgstr ""
 msgid "infinite (lease does not expire)"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:763
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:886
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:764
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:887
 #: modules/luci-compat/luasrc/view/cbi/firewall_zonelist.htm:46
 msgid "input"
 msgstr ""
@@ -11843,7 +11843,7 @@ msgstr ""
 msgid "other config (O)"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:763
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:764
 #: modules/luci-compat/luasrc/view/cbi/firewall_zonelist.htm:46
 msgid "output"
 msgstr ""
@@ -11966,13 +11966,13 @@ msgid "unlimited"
 msgstr ""
 
 #: modules/luci-base/htdocs/luci-static/resources/form.js:3766
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:770
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:832
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:1065
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:1092
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:1128
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:1165
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:1261
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:771
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:833
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:1066
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:1093
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:1129
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:1166
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:1262
 #: modules/luci-compat/luasrc/view/cbi/firewall_zonelist.htm:53
 #: modules/luci-compat/luasrc/view/cbi/network_netlist.htm:38
 msgid "unspecified"
