@@ -379,7 +379,7 @@ var CBIWifiFrequencyValue = form.Value.extend({
 		    type = uci.get('wireless', section_id, 'type');
 
 		if (type === 'morse') {
-			this.updateS1gCountry(elem, country || DEFAULT_S1G_COUNTRY);
+			this.updateS1gCountry(elem, this.halowChannelMap[country] ? country : DEFAULT_S1G_COUNTRY);
 			this.updateS1gWidths(elem);
 
 			// If we have an existing channel, set the bw appropriately
@@ -678,7 +678,8 @@ var CBIWifiCountryValue = form.Value.extend({
 					this.value(countryCode, countryCode);
 				}
 
-				return form.Value.prototype.load.apply(this, [section_id]) || DEFAULT_S1G_COUNTRY;
+				const proposedCountry = form.Value.prototype.load.apply(this, [section_id])
+				return channelMap[proposedCountry] ? proposedCountry : DEFAULT_S1G_COUNTRY;
 			});
 		} else {
 			return this.callCountryList(section_id).then(L.bind(function(countrylist) {
