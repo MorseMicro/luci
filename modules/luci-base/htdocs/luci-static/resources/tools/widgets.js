@@ -395,8 +395,8 @@ var CBIWifiFrequencyValue = form.Value.extend({
 			band.value = 's1g';
 
 			this.updateWifiChannel(elem, chval);
-			this.updateS1gPrim1mhzChanIndices(elem, uci.get('wireless', section_id, 's1g_prim_1mhz_chan_index'));
 			this.updateS1gPrimChanWidths(elem, uci.get('wireless', section_id, 's1g_prim_chwidth'))
+			this.updateS1gPrim1mhzChanIndices(elem, uci.get('wireless', section_id, 's1g_prim_1mhz_chan_index'));
 			this.map.checkDepends();
 
 			return elem;
