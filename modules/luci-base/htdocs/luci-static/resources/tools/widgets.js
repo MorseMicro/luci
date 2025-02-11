@@ -220,7 +220,7 @@ var CBIWifiFrequencyValue = form.Value.extend({
 
 	toggleWifiS1gWidth: function(elem) {
 		this.updateWifiChannel(elem);
-		this.toggleWifiS1gChannel();
+		this.toggleWifiS1gChannel(elem);
 	},
 
 	toggleWifiS1gChannel: function(elem) {
