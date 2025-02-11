@@ -532,28 +532,32 @@ var CBIWifiFrequencyValue = form.Value.extend({
 
 		return [
 		    uci.get('wireless', section_id, 'htmode'),
-		    uci.get('wireless', section_id, 'hwmode') || uci.get('wireless', section_id, 'band'),
+		    uci.get('wireless', section_id, 'band') || uci.get('wireless', section_id, 'hwmode'),
 		    uci.get('wireless', section_id, 'channel'),
-		    uci.get('wireless', section_id, 's1g_prim_1mhz_chan_index'),
-		    uci.get('wireless', section_id, 's1g_prim_chwidth'),
+		    // If primChanSelect is _not_ set, any change to another value will clear the chan_index/chwidth.
+		    // This is critical as the valid values for this vary between channels, and if the user can't
+		    // see them at all they can easily end up in an invalid configuration by mistake.
+		    this.primChanSelect ? uci.get('wireless', section_id, 's1g_prim_1mhz_chan_index') : undefined,
+		    this.primChanSelect ? uci.get('wireless', section_id, 's1g_prim_chwidth') : undefined,
 		    // We put country here (and in formvalue) to make sure if the country has changed
-		    // this counts for causing handleValueChange.
-		    uci.get('wireless', section_id, 'country'),
+		    // this counts for causing handleValueChange. Currently, this is only relevant
+		    // for 'morse' devices.
+		    uci.get('wireless', section_id, 'type') === 'morse' ?  uci.get('wireless', section_id, 'country') : undefined,
 		];
 	},
 
 	formvalue: function(section_id) {
-		var node = this.map.findElement('data-field', this.cbid(section_id));
+		var node = this.map.findElement('id', this.cbid(section_id));
 		var removeAuto = function (val) {
-			return val === 'auto' ? null : val;
+			return val === 'auto' ? undefined : val;
 		};
 
 		return [
-		    node.querySelector('.htmode').value,
-		    node.querySelector('.band').value,
-		    node.querySelector('.channel').value,
-		    removeAuto(node.querySelector('.s1g-prim-1mhz-chan-index').value),
-		    removeAuto(node.querySelector('.s1g-prim-chan-width').value),
+		    node.querySelector('.htmode').value || undefined,
+		    node.querySelector('.band').value || undefined,
+		    node.querySelector('.channel').value || undefined,
+		    removeAuto(node.querySelector('.s1g-prim-1mhz-chan-index').value || undefined),
+		    removeAuto(node.querySelector('.s1g-prim-chan-width').value || undefined),
 		    node.dataset.country,
 		];
 	},
