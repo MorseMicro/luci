@@ -200,10 +200,7 @@ var CBIWifiFrequencyValue = form.Value.extend({
 
 		this.updateS1gCountry(elem, country);
 		this.updateS1gWidths(elem);
-		this.updateS1gPrimChanWidths(elem);
-		this.updateS1gPrim1mhzChanIndices(elem);
-
-		elem.querySelector('.s1g-width').dispatchEvent(new CustomEvent('change'));
+		this.toggleWifiS1gWidth(elem);
 	},
 
 	toggleWifiMode: function(elem) {
@@ -215,17 +212,12 @@ var CBIWifiFrequencyValue = form.Value.extend({
 
 	toggleWifiS1gWidth: function(elem) {
 		this.updateWifiChannel(elem);
-		this.updateS1gPrimChanWidths(elem);
-		this.updateS1gPrim1mhzChanIndices(elem);
-
-		this.map.checkDepends();
+		this.toggleWifiS1gChannel();
 	},
 
 	toggleWifiS1gChannel: function(elem) {
 		this.updateS1gPrimChanWidths(elem);
-		this.updateS1gPrim1mhzChanIndices(elem);
-
-		this.map.checkDepends();
+		this.toggleWifiS1gPrimChanWidth(elem);
 	},
 
 	toggleWifiS1gPrimChanWidth: function(elem) {
