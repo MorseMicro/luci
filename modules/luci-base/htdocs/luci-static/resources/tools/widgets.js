@@ -570,29 +570,8 @@ var CBIWifiFrequencyValue = form.Value.extend({
 		];
 	},
 
-	s1gChan: function (section_id) {
-		if (this.map.root && this.map.root.children.length > 0) {
-			const country = this.s1gCountry(this.map.findElement('id', this.cbid(section_id)));
-			const channel = this.map.findElement('data-field', this.cbid(section_id)).querySelector('.channel').value;
-			return this.halowChannelMap[country]?.[channel];
-		}
-		var country = uci.get('wireless', section_id, 'country'),
-			channel = uci.get('wireless', section_id, 'channel');
-		return this.halowChannelMap[country]?.[channel];
-	},
-
 	s1gCountry: function (elem) {
 		return elem.dataset.country;
-	},
-
-	s1gWidth: function(section_id) {
-		if (this.map.root && this.map.root.children.length > 0) {
-			return this.map.findElement('data-field', this.cbid(section_id)).querySelector('.s1g-width').value;
-		} else {
-			var country = uci.get('wireless', section_id, 'country'),
-			    channel = uci.get('wireless', section_id, 'channel');
-			return this.halowChannelMap[country]?.[channel]?.bw;
-		}
 	},
 
 	write: function(section_id, value) {
