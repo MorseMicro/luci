@@ -582,7 +582,7 @@ var CBIWifiFrequencyValue = form.Value.extend({
 
 		uci.set('wireless', section_id, 'channel', value[2]);
 
-		if (this.primChanSelect && value[1] === 's1g') {
+		if (value[1] === 's1g') {
 			uci.set('wireless', section_id, 's1g_prim_1mhz_chan_index', value[3]);
 			uci.set('wireless', section_id, 's1g_prim_chwidth', value[4]);
 		}
