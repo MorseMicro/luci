@@ -1084,6 +1084,10 @@ return view.extend({
 					o.optional = true;
 					o.placeholder = 2;
 					o.datatype = 'and(integer, range(1,255))';
+					o.depends('mode', 'ap');
+					o.depends('mode', 'sta');
+					o.depends('mode', 'ap-wds');
+					o.depends('mode', 'sta-wds');
 
 					o = ss.taboption('advanced', form.Value, 'max_inactivity', _('Station inactivity limit'), _('802.11v: BSS Max Idle. Units: seconds.'));
 					o.optional = true;
