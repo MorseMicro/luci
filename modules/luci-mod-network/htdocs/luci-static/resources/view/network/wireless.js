@@ -1298,10 +1298,10 @@ return view.extend({
 				o.depends('mode', 'sta');
 				o.depends('mode', 'ap-wds');
 				o.depends('mode', 'sta-wds');
-				if (hwtype != "morse") {
+				o.depends('mode', 'mesh');
+				if (hwtype != 'morse') {
 					o.depends('mode', 'adhoc');
 					o.depends('mode', 'ahdemo');
-					o.depends('mode', 'mesh');
 				}
 
 				o.cfgvalue = function (section_id) {
@@ -1313,25 +1313,18 @@ return view.extend({
 					return v;
 				};
 
-				if (hwtype != 'morse')
-					o.write = function (section_id, value) {
-						var e = this.section.children.filter(function (o) { return o.option == 'encryption' })[0].formvalue(section_id),
-							co = this.section.children.filter(function (o) { return o.option == 'cipher' })[0], c = co.formvalue(section_id);
+				o.write = function (section_id, value) {
+					var e = this.section.children.filter(function (o) { return o.option == 'encryption' })[0].formvalue(section_id),
+						co = this.section.children.filter(function (o) { return o.option == 'cipher' })[0], c = co.formvalue(section_id);
 
-						if (value == 'wpa' || value == 'wpa2' || value == 'wpa3' || value == 'wpa3-mixed')
-							uci.unset('wireless', section_id, 'key');
+					if (value == 'wpa' || value == 'wpa2' || value == 'wpa3' || value == 'wpa3-mixed')
+						uci.unset('wireless', section_id, 'key');
 
-						if (co.isActive(section_id) && e && (c == 'tkip' || c == 'ccmp' || c == 'tkip+ccmp'))
-							e += '+' + c;
+					if (co.isActive(section_id) && e && (c == 'tkip' || c == 'ccmp' || c == 'tkip+ccmp'))
+						e += '+' + c;
 
-						uci.set('wireless', section_id, 'encryption', e);
-					};
-				else
-					o.write = function (section_id, value) {
-						var e = this.section.children.filter(function (o) { return o.option == 'encryption' })[0].formvalue(section_id);
-
-						uci.set('wireless', section_id, 'encryption', e);
-					};
+					uci.set('wireless', section_id, 'encryption', e);
+				};
 
 
 				o = ss.taboption('encryption', form.ListValue, 'cipher', _('Cipher'));
@@ -1364,34 +1357,39 @@ return view.extend({
 
 				var crypto_modes = [];
 
-				if (hwtype == 'mac80211') {
-					var has_supplicant = L.hasSystemFeature('wpasupplicant'),
-						has_hostapd = L.hasSystemFeature('hostapd');
+				if (['mac80211', 'morse'].includes(hwtype)) {
+					var wpasupplicant = hwtype === 'morse' ? 'wpasupplicant_s1g' : 'wpasupplicant',
+						hostapd = hwtype === 'morse' ? 'hostapd_s1g' : 'hostapd';
+
+					var has_supplicant = L.hasSystemFeature(wpasupplicant),
+						has_hostapd = L.hasSystemFeature(hostapd);
 
 					// Probe EAP support
-					var has_ap_eap = L.hasSystemFeature('hostapd', 'eap'),
-						has_sta_eap = L.hasSystemFeature('wpasupplicant', 'eap');
+					var has_ap_eap = L.hasSystemFeature(hostapd, 'eap'),
+						has_sta_eap = L.hasSystemFeature(wpasupplicant, 'eap');
 
 					// Probe SAE support
-					var has_ap_sae = L.hasSystemFeature('hostapd', 'sae'),
-						has_sta_sae = L.hasSystemFeature('wpasupplicant', 'sae');
+					var has_ap_sae = L.hasSystemFeature(hostapd, 'sae'),
+						has_sta_sae = L.hasSystemFeature(wpasupplicant, 'sae');
 
 					// Probe OWE support
-					var has_ap_owe = L.hasSystemFeature('hostapd', 'owe'),
-						has_sta_owe = L.hasSystemFeature('wpasupplicant', 'owe');
+					var has_ap_owe = L.hasSystemFeature(hostapd, 'owe'),
+						has_sta_owe = L.hasSystemFeature(wpasupplicant, 'owe');
 
 					// Probe Suite-B support
-					var has_ap_eap192 = L.hasSystemFeature('hostapd', 'suiteb192'),
-						has_sta_eap192 = L.hasSystemFeature('wpasupplicant', 'suiteb192');
+					var has_ap_eap192 = L.hasSystemFeature(hostapd, 'suiteb192'),
+						has_sta_eap192 = L.hasSystemFeature(wpasupplicant, 'suiteb192');
 
 					// Probe WEP support
-					var has_ap_wep = L.hasSystemFeature('hostapd', 'wep'),
-						has_sta_wep = L.hasSystemFeature('wpasupplicant', 'wep');
+					var has_ap_wep = L.hasSystemFeature(hostapd, 'wep'),
+						has_sta_wep = L.hasSystemFeature(wpasupplicant, 'wep');
 
 					if (has_hostapd || has_supplicant) {
 						crypto_modes.push(['psk2', 'WPA2-PSK', 35]);
-						crypto_modes.push(['psk-mixed', 'WPA-PSK/WPA2-PSK Mixed Mode', 22]);
-						crypto_modes.push(['psk', 'WPA-PSK', 12]);
+						if (hwtype !== 'morse') {
+							crypto_modes.push(['psk-mixed', 'WPA-PSK/WPA2-PSK Mixed Mode', 22]);
+							crypto_modes.push(['psk', 'WPA-PSK', 12]);
+						}
 					}
 					else {
 						encr.description = _('WPA-Encryption requires wpa_supplicant (for client mode) or hostapd (for AP and ad-hoc mode) to be installed.');
@@ -1408,13 +1406,17 @@ return view.extend({
 					}
 
 					if (has_ap_eap || has_sta_eap) {
-						if (has_ap_eap192 || has_sta_eap192) {
+						if (hwtype === 'morse') {
 							crypto_modes.push(['wpa3', 'WPA3-EAP', 33]);
-							crypto_modes.push(['wpa3-mixed', 'WPA2-EAP/WPA3-EAP Mixed Mode', 32]);
-						}
+						} else {
+							if (has_ap_eap192 || has_sta_eap192) {
+								crypto_modes.push(['wpa3', 'WPA3-EAP', 33]);
+								crypto_modes.push(['wpa3-mixed', 'WPA2-EAP/WPA3-EAP Mixed Mode', 32]);
+							}
 
-						crypto_modes.push(['wpa2', 'WPA2-EAP', 34]);
-						crypto_modes.push(['wpa', 'WPA-EAP', 20]);
+							crypto_modes.push(['wpa2', 'WPA2-EAP', 34]);
+							crypto_modes.push(['wpa', 'WPA-EAP', 20]);
+						}
 					}
 
 					if (has_ap_owe || has_sta_owe) {
@@ -1495,11 +1497,6 @@ return view.extend({
 					crypto_modes.push(['wep-open', _('WEP Open System'), 11]);
 					crypto_modes.push(['wep-shared', _('WEP Shared Key'), 10]);
 				}
-				else if (hwtype == 'morse') {
-					crypto_modes.push(["wpa3", "WPA3-EAP", 33]);
-					crypto_modes.push(['sae', 'WPA3-SAE', 31]);
-					crypto_modes.push(['owe', 'OWE', 1]);
-				}
 
 				crypto_modes.push(['none', _('No Encryption'), 0]);
 
@@ -1511,21 +1508,6 @@ return view.extend({
 							: (crypto_modes[i][2] >= 10) ? _('weak security') : _('open network');
 
 					encr.value(crypto_modes[i][0], '%s (%s)'.format(crypto_modes[i][1], security_level));
-				}
-
-				if (hwtype == 'morse') {
-					o = ss.taboption('encryption', form.ListValue, 'mesh_encryption', _('Encryption'));
-					o.depends('mode', 'mesh');
-
-					o.cfgvalue = encr.cfgvalue;
-					o.write = function (section_id, value) {
-						var e = this.section.children.filter(function (o) { return o.option == 'mesh_encryption' })[0].formvalue(section_id);
-
-						uci.set('wireless', section_id, 'encryption', e);
-					};
-
-					o.value('sae', '%s (%s)'.format('WPA3-SAE', _('strong security')));
-					o.value('none', '%s (%s)'.format(_('No Encryption'), _('open network')));
 				}
 
 				o = ss.taboption('encryption', form.DummyValue, 'helptxt');
@@ -1622,7 +1604,6 @@ return view.extend({
 				o.depends('encryption', 'psk-mixed');
 				o.depends('encryption', 'sae');
 				o.depends('encryption', 'sae-mixed');
-				o.depends('mesh_encryption', 'sae');
 				o.datatype = 'wpakey';
 				o.rmempty = true;
 				o.password = true;
@@ -2045,7 +2026,6 @@ return view.extend({
 					o.placeholder = _('Choose (if empty, default)');
 					o.depends('encryption', 'sae')
 					o.depends('encryption', 'sae-mixed')
-					o.depends('mesh_encryption', 'sae');
 					attachMODPDHGroups(o);
 					attachECPDHGroups(o);
 

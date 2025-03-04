@@ -212,18 +212,16 @@ const methods = {
 
 			const wifi_features = [ 'eap', '11ac', '11ax', '11r', 'acs', 'sae', 'owe', 'suiteb192', 'wep', 'wps' ];
 
-			if (access('/usr/sbin/hostapd')) {
-				result.hostapd = { cli: access('/usr/sbin/hostapd_cli') == true };
+			for (let hostap_binary in ['hostapd', 'wpa_supplicant']) {
+				for (let suffix in ['', '_s1g']) {
+					if (access(`/usr/sbin/${hostap_binary}${suffix}`)) {
+						const feature_group = replace(hostap_binary, '_', '') + suffix;
+						result[feature_group] = { cli: access(`${hostap_binary}_cli{$suffix}`) == true };
 
-				for (let feature in wifi_features)
-					result.hostapd[feature] = system(`/usr/sbin/hostapd -v${feature} >/dev/null 2>/dev/null`) == 0;
-			}
-
-			if (access('/usr/sbin/wpa_supplicant')) {
-				result.wpasupplicant = { cli: access('/usr/sbin/wpa_cli') == true };
-
-				for (let feature in wifi_features)
-					result.wpasupplicant[feature] = system(`/usr/sbin/wpa_supplicant -v${feature} >/dev/null 2>/dev/null`) == 0;
+						for (let feature in wifi_features)
+							result[feature_group][feature] = system(`${hostap_binary}${suffix} -v${feature} >/dev/null 2>/dev/null`) == 0;
+					}
+				}
 			}
 
 			let fd = popen('dnsmasq --version 2>/dev/null');
