@@ -13,9 +13,10 @@
 'require tools.widgets as widgets';
 
 const THIN_LMAC_EXPLANATION = _(`
-Reducing the per-station table size in the chip to allow a large number of associations in AP mode.<br>
+Reduces the per-station table size in the chip to allow a large number of associations in AP mode.<br>
 By enabling this, encryption and decryption of unicast frames will be done in the host processor instead of the chip.
-Also, MBSS (802.11s) will not work.<br>If enabled, If enabled, we recommend selecting Thin LMAC Optimization below.
+Also, MBSS (802.11s) will not work.<br>
+If enabled, we recommend selecting Thin LMAC Optimization below.
 `).trim();
 const THIN_LMAC_OPTIMIZATION_EXPLANATION = _(`
 If enabled,
