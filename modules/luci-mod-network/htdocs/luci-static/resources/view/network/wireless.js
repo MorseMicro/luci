@@ -1410,10 +1410,8 @@ return view.extend({
 						if (hwtype === 'morse') {
 							crypto_modes.push(['wpa3', 'WPA3-EAP', 33]);
 						} else {
-							if (has_ap_eap192 || has_sta_eap192) {
-								crypto_modes.push(['wpa3', 'WPA3-EAP', 33]);
-								crypto_modes.push(['wpa3-mixed', 'WPA2-EAP/WPA3-EAP Mixed Mode', 32]);
-							}
+							crypto_modes.push(['wpa3', 'WPA3-EAP', 33]);
+							crypto_modes.push(['wpa3-mixed', 'WPA2-EAP/WPA3-EAP Mixed Mode', 32]);
 
 							crypto_modes.push(['wpa2', 'WPA2-EAP', 34]);
 							crypto_modes.push(['wpa', 'WPA-EAP', 20]);
@@ -1435,8 +1433,8 @@ return view.extend({
 							'sae-mixed': has_ap_sae || _('Requires hostapd with SAE support'),
 							'wpa': has_ap_eap || _('Requires hostapd with EAP support'),
 							'wpa2': has_ap_eap || _('Requires hostapd with EAP support'),
-							'wpa3': has_ap_eap192 || _('Requires hostapd with EAP Suite-B support'),
-							'wpa3-mixed': has_ap_eap192 || _('Requires hostapd with EAP Suite-B support'),
+							'wpa3': has_ap_eap || _('Requires hostapd with EAP support'),
+							'wpa3-mixed': has_ap_eap || _('Requires hostapd with EAP support'),
 							'owe': has_ap_owe || _('Requires hostapd with OWE support')
 						},
 						'sta': {
@@ -1449,8 +1447,8 @@ return view.extend({
 							'sae-mixed': has_sta_sae || _('Requires wpa-supplicant with SAE support'),
 							'wpa': has_sta_eap || _('Requires wpa-supplicant with EAP support'),
 							'wpa2': has_sta_eap || _('Requires wpa-supplicant with EAP support'),
-							'wpa3': has_sta_eap192 || _('Requires wpa-supplicant with EAP Suite-B support'),
-							'wpa3-mixed': has_sta_eap192 || _('Requires wpa-supplicant with EAP Suite-B support'),
+							'wpa3': has_sta_eap || _('Requires wpa-supplicant with EAP support'),
+							'wpa3-mixed': has_sta_eap || _('Requires wpa-supplicant with EAP support'),
 							'owe': has_sta_owe || _('Requires wpa-supplicant with OWE support')
 						},
 						'adhoc': {
