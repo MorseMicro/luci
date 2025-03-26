@@ -149,6 +149,7 @@ return baseclass.extend({
 					 is_assoc = (net.getBSSID() != '00:00:00:00:00:00' && net.getChannel() && !net.isDisabled()),
 					 chan = net.getChannel(),
 					 freq = net.getFrequency(),
+					 frequnit = net.getFrequencyUnit(),
 					 rate = net.getBitRate();
 
 				 this.params.wifi.radios.push(
@@ -168,7 +169,7 @@ return baseclass.extend({
 						chan : {
 							title: _('Channel'),
 							visible: true,
-							value: chan ? '%d (%.3f %s)'.format(chan, freq, _('GHz')) : '-'
+							value: chan ? '%d (%.3f %s)'.format(chan, freq, frequnit) : '-'
 						},
 
 						rate : {
