@@ -221,7 +221,7 @@ function render_modal_status(node, radioNet) {
 		is_mesh ? _('Mesh ID') : _('SSID'), (is_mesh ? radioNet.getMeshID() : radioNet.getSSID()) || '?',
 		_('BSSID'), is_assoc ? bssid : null,
 		_('Encryption'), is_assoc ? radioNet.getActiveEncryption() || _('None') : null,
-		_('Channel'), is_assoc ? '%d (%s %s)'.format(radioNet.getChannel(), radioNet.getFrequency() || 0, _('GHz')) : null,
+		_('Channel'), is_assoc ? '%d (%s %s)'.format(radioNet.getChannel(), radioNet.getFrequency() || 0, radioNet.getFrequencyUnit() || '') : null,
 		_('Tx-Power'), is_assoc ? '%d %s'.format(radioNet.getTXPower(), _('dBm')) : null,
 		_('Signal'), is_assoc ? '%d %s'.format(radioNet.getSignal(), _('dBm')) : null,
 		_('Noise'), (is_assoc && noise != null) ? '%d %s'.format(noise, _('dBm')) : null,

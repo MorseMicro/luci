@@ -3868,7 +3868,6 @@ msgid "GBP"
 msgstr ""
 
 #: modules/luci-base/htdocs/luci-static/resources/network.js:4149
-#: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:224
 msgid "GHz"
 msgstr ""
 
