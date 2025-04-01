@@ -3907,7 +3907,7 @@ const UI = baseclass.extend(/** @lends LuCI.ui.prototype */ {
 	/** @private */
 	cancelModal(ev) {
 		if (ev.key == 'Escape') {
-			const btn = modalDiv.querySelector('.right > button, .right > .btn, .button-row > .btn');
+			var btn = modalDiv.querySelector('.modal > .right:last-of-type :is(button, .btn)');
 
 			if (btn)
 				btn.click();
