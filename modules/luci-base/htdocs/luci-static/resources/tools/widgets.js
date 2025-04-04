@@ -265,11 +265,11 @@ var CBIWifiFrequencyValue = form.Value.extend({
 		var s1gChanWidth = elem.querySelector('.s1g-prim-chan-width');
 		var options = elem.querySelector('.s1g-width').value === '1' ? [
 			'auto', 'auto', true,
-			'1', '1mhz', true,
+			'1', '1 MHz', true,
 		] : [
 			'auto', 'auto', true,
-			'2', '2mhz', true,
-			'1', '1mhz', true,
+			'2', '2 MHz', true,
+			'1', '1 MHz', true,
 		];
 
 		this.setValues(s1gChanWidth, options, true);
