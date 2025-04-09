@@ -1112,7 +1112,10 @@ return view.extend({
 
 					o = ss.taboption('advanced', form.Value, 'beacon_int', _('Beacon Interval'));
 					o.datatype = 'and(uinteger,range(15,10000))';
-					o.placeholder = 100;
+					o.defaults = {
+						'1000': [{'mode': 'mesh'}],
+						'100': [],
+					};
 					o.rmempty = true;
 				}
 
