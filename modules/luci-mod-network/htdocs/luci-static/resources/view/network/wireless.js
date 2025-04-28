@@ -709,7 +709,7 @@ return view.extend({
 					countryValue.wifiNetwork = radioNet;
 
 					const freqValue = ss.taboption('general', widgets.WifiFrequencyValue, '_freq', '<br />' + _('Operating frequency'), _(`
-						Prim Width and Prim Index are the Primary Channel Width and the Primary 1mhz Channel Index respectively.
+						Prim Width and Prim Index are the Primary Channel Width and the Primary 1 MHz Channel Index respectively.
 						These options will vary depending on the main channel.
 					`));
 					freqValue.primChanSelect = true;

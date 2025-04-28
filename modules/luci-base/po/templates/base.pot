@@ -7727,9 +7727,9 @@ msgstr ""
 
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:711
 msgid ""
-"Prim Width and Prim Index are the Primary Channel Width and the Primary 1mhz "
-"Channel Index respectively. These options will vary depending on the main "
-"channel."
+"Prim Width and Prim Index are the Primary Channel Width and the Primary 1 "
+"MHz Channel Index respectively. These options will vary depending on the "
+"main channel."
 msgstr ""
 
 #: protocols/luci-proto-bonding/htdocs/luci-static/resources/protocol/bonding.js:213
