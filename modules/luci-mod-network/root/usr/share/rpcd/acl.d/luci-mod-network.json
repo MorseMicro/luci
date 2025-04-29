@@ -22,6 +22,7 @@
 		"write": {
 			"cgi-io": [ "exec" ],
 			"file": {
+				"/lib/firmware/morse/*": [ "write" ],
 				"/sbin/ifup": [ "exec" ],
 				"/sbin/ifdown": [ "exec" ],
 				"/sbin/wifi": [ "exec" ]
