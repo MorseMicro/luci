@@ -242,7 +242,8 @@ const methods = {
 				netifd_vrf: false,
 				morsefwtlm: access('/lib/firmware/morse/mm6108-tlm.bin') == true,
 				morsesmartmanager: access('/sbin/smart_manager') == true,
-				morsedppd: access('/usr/bin/dppd') == true,
+				morsedppd:  access('/usr/bin/dppd') == true,
+				morsectrl:  access('/sbin/morsectrl') == true,
 			};
 
 			const wifi_features = [ 
