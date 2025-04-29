@@ -756,6 +756,21 @@ return view.extend({
 						o.datatype = 'and(uinteger, range(0, 65535))';
 					}
 
+					// We use the presence of morsectrl as a sign that a user can do dangerous things anyway,
+					// so it's reasonable to present them with an option for BCF selection.
+					if (L.hasSystemFeature('morsectrl')) {
+						o = ss.taboption('advanced', form.FileUpload, 'bcf', _('Board Configuration File'),
+								_('Force the Morse module configuration. This is dangerous: most options here won\'t make sense for your module.'));
+						o.root_directory = '/lib/firmware/morse';
+						o.load = function (section_id) {
+							var value = this.super('load', [section_id]);
+							return value && `/lib/firmware/morse/${value}`;
+						}
+						o.write = function (section_id, value) {
+							return this.super('write', [section_id, value && value.replace('/lib/firmware/morse/', '')]);
+						};
+					}
+
 					o = ss.taboption('advanced', form.Flag, 's1g_capab', _('Short Guard Interval'));
 					o.disabled = '[SHORT-GI-NONE]';
 					o.enabled = '[SHORT-GI-ALL]';
