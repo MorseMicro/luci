@@ -1178,6 +1178,10 @@ return view.extend({
 					o.rmempty = false;
 					o.default = "0";
 
+					o = mesh_ss.option(form.Flag, "mesh_nolearn", _("Disable Mesh Path Learning"), _("Disables automatic HWMP path discovery which reduces the control overhead. Recommended for large fixed mesh networks where self-healing is not critical."));
+					o.rmempty = false;
+					o.default = "0";
+
 					o = mesh_ss.option(form.ListValue, "mbca_config", _("MBCA Configuration"));
 					o.ucisection = "mbca";
 					o.value('1', _('Enable TBTT selection only'));
