@@ -279,28 +279,34 @@ static void * iw_open(void)
  * and access points.
  */
 static void mcs_update(struct iwinfo_ops *backend, const char *ifname, int8_t *max_rx_mcs, int8_t *max_tx_mcs) {
-	// This sort of nonsense makes me pretty unhappy, but the currently iwinfo
-	// assoclist API just expects an infinite buffer.
-	struct iwinfo_assoclist_entry assoclist[1000];
 	int len;
+	struct iwinfo_assoclist_entry *assoclist = malloc(IWINFO_ASSOCLIST_BUFSIZE);
+	if (!assoclist)
+	{
+		fprintf(stderr, "Failed to allocate memory for assoclist\n");
+		goto exit;
+	}
 
 	*max_rx_mcs = *max_tx_mcs = -1;
 
 	if (NULL == backend->assoclist)
 	{
-		return;
+		goto exit;
 	}
 
 	if (0 != backend->assoclist(ifname, (char *)assoclist, &len))
 	{
-		return;
+		goto exit;
 	}
+	int num = len / sizeof(struct iwinfo_assoclist_entry);
 
-	for (int i = 0; i < len; ++i)
+	for (int i = 0; i < num; ++i)
 	{
 		if (assoclist[i].rx_rate.mcs > *max_rx_mcs) *max_rx_mcs = assoclist[i].rx_rate.mcs;
 		if (assoclist[i].tx_rate.mcs > *max_tx_mcs) *max_tx_mcs = assoclist[i].tx_rate.mcs;
 	}
+exit:
+	free(assoclist);
 }
 
 static int iw_update(
