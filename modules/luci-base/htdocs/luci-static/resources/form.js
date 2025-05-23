@@ -430,7 +430,7 @@ var CBIMap = CBIAbstractElement.extend(/** @lends LuCI.form.Map.prototype */ {
 		else
 			L.error('InternalError', 'Expecting one or two arguments to findElements()');
 
-		return this.root.querySelectorAll(q);
+		return this.root ? this.root.querySelectorAll(q) : [];
 	},
 
 	/**
@@ -1871,7 +1871,7 @@ var CBIAbstractValue = CBIAbstractElement.extend(/** @lends LuCI.form.AbstractVa
 	 */
 	formvalue: function(section_id) {
 		var elem = this.getUIElement(section_id);
-		return elem ? elem.getValue() : null;
+		return elem ? elem.getValue() : this.cfgvalue(section_id);
 	},
 
 	/**
