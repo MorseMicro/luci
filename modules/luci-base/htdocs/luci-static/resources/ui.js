@@ -2899,6 +2899,16 @@ const UIFileUpload = UIElement.extend(/** @lends LuCI.ui.FileUpload.prototype */
 	 * prevented by the widget. Note that this is not a security feature.
 	 * Whether remote directories are browsable or not solely depends on the
 	 * ACL setup for the current session.
+	 *
+	 * @property {object} [filter_info=null]
+	 * This property is an object where the keys are the full path to the
+	 * files that can be shown, and the values are another object containing
+	 * a set of k/v pairs to be shown in a tooltip. This lets the FileUpload
+	 * dialog restrict the user to a particular set of files. For instance:
+	 * { '/lib/firmware/myfirmware.bin': { 'version': 27, 'chip': 'a123' } }
+	 * Usually you would set enable_upload to false with this option.
+	 */
+
 	 */
 	__init__(value, options) {
 		this.value = value;
@@ -2906,6 +2916,7 @@ const UIFileUpload = UIElement.extend(/** @lends LuCI.ui.FileUpload.prototype */
 			browser: false,
 			show_hidden: false,
 			enable_upload: true,
+			filter_info: null,
 			enable_remove: true,
 			enable_download: false,
 			root_directory: '/etc/luci-uploads'
@@ -3166,9 +3177,14 @@ const UIFileUpload = UIElement.extend(/** @lends LuCI.ui.FileUpload.prototype */
 			if (!this.options.show_hidden && list[i].name.charAt(0) == '.')
 				continue;
 
-			const entrypath = this.canonicalizePath(`${path}/${list[i].name}`);
-			const selected = (entrypath == this.node.lastElementChild.value);
-			const mtime = new Date(list[i].mtime * 1000);
+			var entrypath = this.canonicalizePath(path + '/' + list[i].name),
+			    selected = (entrypath == this.node.lastElementChild.value),
+			    info = this.options.filter_info && this.options.filter_info[entrypath],
+			    mtime = new Date(list[i].mtime * 1000);
+
+			if (this.options.filter_info && !info) {
+				continue;
+			}
 
 			rows.appendChild(E('li', [
 				E('div', { 'class': 'name' }, [
@@ -3177,6 +3193,7 @@ const UIFileUpload = UIElement.extend(/** @lends LuCI.ui.FileUpload.prototype */
 					E('a', {
 						'href': '#',
 						'style': selected ? 'font-weight:bold' : null,
+						'data-tooltip': info ? Object.entries(info).map(([k, v]) => `${k}: ${JSON.stringify(v)}`).join('\n') : null,
 						'click': UI.prototype.createHandlerFn(this, 'handleSelect',
 							entrypath, list[i])
 					}, '%h'.format(list[i].name))

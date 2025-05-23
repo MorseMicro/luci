@@ -4977,6 +4977,7 @@ const CBIFileUpload = CBIValue.extend(/** @lends LuCI.form.FileUpload.prototype 
 		this.enable_upload = true;
 		this.enable_remove = true;
 		this.enable_download = false;
+		this.filter_info = null;
 		this.root_directory = '/etc/luci-uploads';
 	},
 
@@ -5057,6 +5058,23 @@ const CBIFileUpload = CBIValue.extend(/** @lends LuCI.form.FileUpload.prototype 
 	 * @default /etc/luci-uploads
 	 */
 
+	/**
+	 * Specify filter_info for file browsing.
+	 *
+	 * This property is an object where the keys are the full path to the
+	 * files that can be shown, and the values are another object containing
+	 * a set of k/v pairs to be shown in a tooltip. This lets the FileUpload
+	 * dialog restrict the user to a particular set of files. For instance:
+	 * { '/lib/firmware/myfirmware.bin': { 'version': 27, 'chip': 'a123' } }
+	 * Usually you would set enable_upload to false with this option.
+	 *
+	 * If null, no filtering will be applied.
+	 *
+	 * @name LuCI.form.FileUpload.prototype#filter_info
+	 * @type object
+	 * @default null
+	 */
+
 	/** @private */
 	renderWidget(section_id, option_index, cfgvalue) {
 		const browserEl = new ui.FileUpload((cfgvalue != null) ? cfgvalue : this.default, {
@@ -5068,6 +5086,7 @@ const CBIFileUpload = CBIValue.extend(/** @lends LuCI.form.FileUpload.prototype 
 			enable_remove: this.enable_remove,
 			enable_download: this.enable_download,
 			root_directory: this.root_directory,
+			filter_info: this.filter_info,
 			disabled: (this.readonly != null) ? this.readonly : this.map.readonly
 		});
 
