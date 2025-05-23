@@ -459,6 +459,7 @@ return view.extend({
 
 	load: function () {
 		return Promise.all([
+			fs.exec('/usr/bin/morse-bcf-info').catch(error => ({error})),
 			uci.changes(),
 			uci.load('wireless'),
 			uci.load('system'),
@@ -482,11 +483,11 @@ return view.extend({
 		params: ['config', 'section', 'name']
 	}),
 
-	render: function () {
+	render: function (data) {
 		if (this.checkAnonymousSections())
 			return this.renderMigration();
 		else
-			return this.renderOverview();
+			return this.renderOverview(data);
 	},
 
 	handleMigration: function (ev) {
@@ -521,8 +522,23 @@ return view.extend({
 		]);
 	},
 
-	renderOverview: function () {
+	loadBcfInfo: function(response) {
+		if (response.code !== 0) {
+			console.error('Unable to load Morse BCF data: ', response);
+			return {};
+		}
+
+		try {
+			return JSON.parse(response.stdout);
+		} catch (e) {
+			console.error('Unable to load Morse BCF data: ', data[0].stdout, e);
+			return {};
+		}
+	},
+
+	renderOverview: function (data) {
 		var m, s, o;
+		var bcfInfo = this.loadBcfInfo(data[0]);
 
 		m = new form.Map('wireless');
 		m.chain('network');
@@ -745,12 +761,20 @@ return view.extend({
 						o.datatype = 'and(uinteger, range(0, 65535))';
 					}
 
+					let bcfOpt;
 					// We use the presence of morsectrl as a sign that a user can do dangerous things anyway,
 					// so it's reasonable to present them with an option for BCF selection.
 					if (L.hasSystemFeature('morsectrl')) {
-						o = ss.taboption('advanced', form.FileUpload, 'bcf', _('Board Configuration File'),
-								_('Force the Morse module configuration. This is dangerous: most options here won\'t make sense for your module.'));
+						bcfOpt = o = ss.taboption('advanced', form.FileUpload, 'bcf', _('Board Configuration File'),
+								_('Current Board Configuration File. If unset, will default to bcf_boardtype_xxxx.bin, where xxxx is the board type in OTP, or bcf_default.bin if no OTP bits are set.') + ' ' +
+								_('This is dangerous; most options here won\'t make sense for your module.'));
 						o.root_directory = '/lib/firmware/morse';
+						if (Object.keys(bcfInfo).length > 0) {
+							// If morse-bcf-info has successfully run and given us info, filter based on that.
+							// If it hasn't (it's not an explicit dependency!), let's just be permissive as a fallback.
+							o.filter_info = Object.fromEntries(Object.entries(bcfInfo).filter(([fname, info]) => !info.error_message));
+						}
+						o.optional = true;
 						o.load = function (section_id) {
 							var value = this.super('load', [section_id]);
 							return value && `/lib/firmware/morse/${value}`;
@@ -758,6 +782,55 @@ return view.extend({
 						o.write = function (section_id, value) {
 							return this.super('write', [section_id, value && value.replace('/lib/firmware/morse/', '')]);
 						};
+					} else {
+						bcfOpt = o = ss.taboption('advanced', form.Value, 'bcf', _('Board Configuration File'),
+								_('Current Board Configuration File. If unset, will default to bcf_boardtype_xxxx.bin, where xxxx is the board type in OTP, or bcf_default.bin if no OTP bits are set.'));
+						o.optional = true;
+						o.readonly = true;
+					}
+
+					if (L.hasSystemFeature('morsectrl')) {
+						function renderBcfInfo(filename) {
+							if (!filename) {
+								return _("The default BCF is bcf_boardtype_xxxx.bin, where xxxx is the board type in OTP, or bcf_default.bin if no OTP bits are set.");
+							}
+
+							const info = bcfInfo[filename];
+							if (!info) {
+								return _("No information about current BCF available.");
+							}
+							if (info.error_message) {
+								return _("Unable to determine BCF info: ") + info.error_message;
+							}
+
+							const table = E('table', {'class': 'table'}, E('tr', {'class': 'tr table-titles'}, [
+								E('th', {'class': 'th'}, _('Version')),
+								E('th', {'class': 'th'}, _('Board')),
+								E('th', {'class': 'th'}, _('Build')),
+								E('th', {'class': 'th'}, _('Chips')),
+								E('th', {'class': 'th'}, _('Regdoms')),
+							]));
+
+							cbi_update_table(table, [[
+								info.semver ? `${info.semver?.major}.${info.semver?.minor}.${info.semver?.patch}` : 'N/A',
+								info.board_desc ?? 'N/A',
+								(info.build_ver ?? []).join('; '),
+								(info.chips ?? []).join(', '),
+								(info.regdoms ?? []).join(', '),
+							]]);
+
+							return table;
+
+						};
+
+						const bcfInfoOpt = o = ss.taboption('advanced', form.DummyValue, '_bcf_info', _('Board Configuration File Info'));
+						o.rawhtml = true;
+						o.cfgvalue = function (sectionId) {
+							return renderBcfInfo(`${bcfOpt.root_directory}/${uci.get('wireless', sectionId, 'bcf')}`);
+						}
+						bcfOpt.onchange = function (ev, sid, val) {
+							bcfInfoOpt.renderUpdate(sid, renderBcfInfo(val));
+						}
 					}
 
 					o = ss.taboption('advanced', form.Flag, 's1g_capab', _('Short Guard Interval'));
