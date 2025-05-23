@@ -433,7 +433,7 @@ const CBIMap = CBIAbstractElement.extend(/** @lends LuCI.form.Map.prototype */ {
 		else
 			L.error('InternalError', 'Expecting one or two arguments to findElements()');
 
-		return this.root.querySelectorAll(q);
+		return this.root ? this.root.querySelectorAll(q) : [];
 	},
 
 	/**
@@ -1877,9 +1877,9 @@ const CBIAbstractValue = CBIAbstractElement.extend(/** @lends LuCI.form.Abstract
 	 * @returns {*}
 	 * Returns the current input value.
 	 */
-	formvalue(section_id) {
-		const elem = this.getUIElement(section_id);
-		return elem ? elem.getValue() : null;
+	formvalue: function(section_id) {
+		var elem = this.getUIElement(section_id);
+		return elem ? elem.getValue() : this.cfgvalue(section_id);
 	},
 
 	/**
