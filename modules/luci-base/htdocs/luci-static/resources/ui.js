@@ -2909,7 +2909,6 @@ const UIFileUpload = UIElement.extend(/** @lends LuCI.ui.FileUpload.prototype */
 	 * Usually you would set enable_upload to false with this option.
 	 */
 
-	 */
 	__init__(value, options) {
 		this.value = value;
 		this.options = Object.assign({
