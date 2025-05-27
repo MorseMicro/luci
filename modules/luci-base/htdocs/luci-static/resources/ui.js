@@ -2659,8 +2659,6 @@ var UIFileUpload = UIElement.extend(/** @lends LuCI.ui.FileUpload.prototype */ {
 	 * { '/lib/firmware/myfirmware.bin': { 'version': 27, 'chip': 'a123' } }
 	 * Usually you would set enable_upload to false with this option.
 	 */
-
-	 */
 	__init__: function(value, options) {
 		this.value = value;
 		this.options = Object.assign({
