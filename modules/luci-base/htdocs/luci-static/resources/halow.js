@@ -9,10 +9,6 @@
 'use strict';
 'require request';
 
-// Driver doesn't support the same set of country codes as a regulatory information
-// (notably, EU is not split out into individual countries in the driver).
-const DRIVER_COUNTRIES = new Set(['US', 'AU', 'NZ', 'EU', 'IN', 'JP', 'KR', 'SG', 'CA']);
-
 let loadChannelMapPromise;
 async function loadChannelMap() {
 	if (!loadChannelMapPromise) {
@@ -35,9 +31,8 @@ async function callLoadChannelMap() {
 		return channel_obj;
 	}, {}));
 
-	const availableChannels = channels.filter(channel => DRIVER_COUNTRIES.has(channel.country_code));
 	const channelMap = {};
-	for (let channel of availableChannels) {
+	for (let channel of channels) {
 		const {country_code, s1g_chan} = channel;
 		channelMap[country_code] ??= {};
 		channelMap[country_code][s1g_chan] = channel;
