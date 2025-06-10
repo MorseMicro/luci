@@ -651,18 +651,30 @@ var CBIWifiCountryValue = form.Value.extend({
 
 		if (s1g) {
 			return halow.loadChannelMap().then(channelMap => {
-				delete this.keylist;
-				delete this.vallist;
+				return this.callCountryList(section_id).then(countryList => {
+					delete this.keylist;
+					delete this.vallist;
 
-				// The s1g driver won't come up until we have a valid region, so we can't reliably ask it for a countrylist.
-				// Also, 'driver default' isn't a valid option, and iwinfo countrylist gives back '00' (world) as region
-				// which is not currently a valid selection.
-				for (const countryCode of Object.keys(channelMap)) {
-					this.value(countryCode, countryCode);
-				}
+					const validCodes = new Set();
+					for (const country of L.toArray(countryList)) {
+						if (channelMap[country.iso3166]) {
+							validCodes.add(country.iso3166);
+							this.value(country.iso3166, '%s - %s'.format(country.iso3166, country.country));
+						}
+					}
 
-				const proposedCountry = form.Value.prototype.load.apply(this, [section_id])
-				return channelMap[proposedCountry] ? proposedCountry : DEFAULT_S1G_COUNTRY;
+					const proposedCountry = form.Value.prototype.load.apply(this, [section_id])
+					if (validCodes.size === 0) {
+						// No codes are valid. This means that we will just show
+						// an editable box here.
+						return proposedCountry;
+					} else {
+						// If the country in UCI is not in the valid codes or there is no country in UCI,
+						// prefer DEFAULT_S1G. If DEFAULT_S1G itself is not in the validCodes, setting it
+						// is a no-op (as the dropdown will force another country).
+						return validCodes.has(proposedCountry) ? proposedCountry : DEFAULT_S1G_COUNTRY;
+					}
+				});
 			});
 		} else {
 			return this.callCountryList(section_id).then(L.bind(function(countrylist) {
