@@ -15,7 +15,7 @@
 const THIN_LMAC_EXPLANATION = _(`
 Reduces the per-station table size in the chip to allow a large number of associations in AP mode.<br>
 By enabling this, encryption and decryption of unicast frames will be done in the host processor instead of the chip.
-Also, MBSS (802.11s) will not work.<br>
+Also, only AP mode will work, not Mesh/Client/etc.
 If enabled, we recommend selecting Thin LMAC Optimization below.
 `).trim();
 const THIN_LMAC_OPTIMIZATION_EXPLANATION = _(`
@@ -28,6 +28,21 @@ If enabled,
 the station inactivity limit (ap_max_inactivity) will be set to 600 seconds (if not specified).
 <br>
 If you previously had this enabled and now want to disable it, you must save and apply then reboot your device to restore the default settings.
+`).trim();
+
+const FULLMAC_EXPLANATION = _(`
+Offload the MAC layer and part of the processing to the Morse chip
+so that the mac80211 kernel module is not used.
+If enabled, only Client/Station mode will work, and some options will not take effect.
+This is primarily intended for evaluation; you would usually use FullMAC
+mode when the host-processor is limited or can be temporarily turned off.
+`).trim();
+
+const SOFTMAC_EXPLANATION = _(`
+This is the default firmware which supports all the normal
+interface modes (i.e. AP/Client/Mesh/Ad-Hoc/Monitor) and uses the Linux
+mac80211 module. Unless you have specific requirements, you should use
+this firmware.
 `).trim();
 
 var isReadonlyView = !L.hasViewPermission();
@@ -867,11 +882,35 @@ return view.extend({
 					o.disabled = '0';
 					o.default = o.disabled;
 
-					if(L.hasSystemFeature('morsefwtlm'))
-					{
-						o = ss.taboption('advanced', form.Flag, 'thin_lmac', _('Thin LMAC'), THIN_LMAC_EXPLANATION);
+					if (L.hasSystemFeature('morsefwtlm') || L.hasSystemFeature('morsefwflm')) {
+						o = ss.taboption('advanced', form.ListValue, 'firmware_type', _('Firmware Type'));
+						o.optional = true;
+						o.default = '';
+						o.value('', 'SoftMAC (standard mode)');
+						if (L.hasSystemFeature('morsefwtlm')) {
+							o.value('thin_lmac', 'Thin LMAC (AP only, supporting many stations)');
+						}
+						if (L.hasSystemFeature('morsefwflm')) {
+							o.value('fullmac', 'FullMAC (Client/Station only, with MAC offload)');
+						}
+
+						o = ss.taboption('advanced', form.DummyValue, '_default_help');
+						o.depends('firmware_type', '');
+						o.rawhtml = true;
+						o.default = `<label class="cbi-value-title"></label><div class="cbi-value-description">${SOFTMAC_EXPLANATION}</div>`;
+
+						o = ss.taboption('advanced', form.DummyValue, '_thin_lmac_help');
+						o.depends('firmware_type', 'thin_lmac');
+						o.rawhtml = true;
+						o.default = `<label class="cbi-value-title"></label><div class="cbi-value-description">${THIN_LMAC_EXPLANATION}</div>`;
+
+						o = ss.taboption('advanced', form.DummyValue, '_enable_wiphy_help');
+						o.depends('firmware_type', 'fullmac');
+						o.rawhtml = true;
+						o.default = `<label class="cbi-value-title"></label><div class="cbi-value-description">${FULLMAC_EXPLANATION}</div>`;
+
 						o = ss.taboption('advanced', form.Flag, 'thin_lmac_optimization', _('Thin LMAC Optimization'), THIN_LMAC_OPTIMIZATION_EXPLANATION);
-						o.depends('thin_lmac', '1');
+						o.depends('firmware_type', 'thin_lmac');
 					}
 				}
 
