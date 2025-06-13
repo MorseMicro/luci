@@ -668,6 +668,7 @@ return view.extend({
 		s.addModalOptions = function (s) {
 			return network.getWifiNetwork(s.section).then(function (radioNet) {
 				var hwtype = uci.get('wireless', radioNet.getWifiDeviceName(), 'type');
+				var path = uci.get('wireless', radioNet.getWifiDeviceName(), 'path');
 				var o, ss;
 
 				o = s.option(form.SectionValue, '_device', form.NamedSection, radioNet.getWifiDeviceName(), 'wifi-device', _('Device Configuration'));
@@ -1170,7 +1171,6 @@ return view.extend({
 					o.datatype = 'and(uinteger,range(15,10000))';
 					o.placeholder = 100;
 					o.rmempty = true;
-
 				} else if (hwtype == 'morse') {
 
 					var mode = ss.children[0];
@@ -1337,7 +1337,9 @@ return view.extend({
 					o.datatype = "range(10,600)";
 
 					o = ss.taboption('powersave', form.Flag, 'powersave', _('Enable Powersave'));
-					o.default = o.enabled;
+					o.optional = true;
+					o.rmempty = false;
+					o.default = path.includes("usb") ? o.disabled : o.enabled;
 					o.depends('mode', 'sta');
 					o.depends('mode', 'sta-wds');
 
