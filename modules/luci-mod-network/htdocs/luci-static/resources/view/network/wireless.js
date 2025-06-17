@@ -781,6 +781,8 @@ return view.extend({
 						o = dcsSec.option(form.Flag, 'enabled', _('Enable Dynamic Channel Selection'));
 						o.rmempty = false;
 
+						o = dcsSec.option(form.Flag, 'enable_datalog', _('Log metrics to /var/log/[startdate]/dcs.log'));
+
 						o = dcsSec.option(form.ListValue, 'algorithm', _('Algorithm'));
 						o.value('ewma', _('EWMA'));
 						o.value('sample_and_hold', _('Sample and Hold'));
