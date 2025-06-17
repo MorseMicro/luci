@@ -18,7 +18,7 @@
 				"iwinfo": [ "assoclist", "countrylist", "freqlist", "txpowerlist" ],
 				"luci": [ "getSwconfigFeatures", "getSwconfigPortState" ]
 			},
-			"uci": [ "dhcp", "firewall", "network", "wireless" ]
+			"uci": [ "dhcp", "firewall", "network", "wireless", "mesh11sd", "smart_manager" ]
 		},
 		"write": {
 			"cgi-io": [ "exec" ],
@@ -33,7 +33,7 @@
 				"hostapd.*": [ "del_client" ],
 				"iwinfo": [ "scan" ]
 			},
-			"uci": [ "dhcp", "firewall", "network", "wireless" ]
+			"uci": [ "dhcp", "firewall", "network", "wireless", "mesh11sd", "smart_manager" ]
 		}
 	},
 
