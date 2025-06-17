@@ -943,19 +943,20 @@ return view.extend({
 				o.value('sta', _('Client'));
 				o.value('adhoc', _('Ad-Hoc'));
 				o.onchange = function (ev, sid, val) {
-					// If changing to mesh, set the beacon_int to 1000.
-					// If changing to non-mesh, set the beacon_int to 100.
-					// Do not do that if the user has touched the value.
-					// Do not do that if the value is not the 'expected' value (100 or 1000).
+					// Mesh and non-mesh have different default beacon_ints in the backend.
+					// However, because of past times when we explicitly set this in uci,
+					// we should remove the beacon_int if it's one of the default vals
+					// (to avoid people having the wrong beacon_int on mesh/normal mode),
+					// but do not do this if the user has touched the value.
 					const beaconEl = ss.getUIElement(ss.section, 'beacon_int');
 					if (!beaconEl.isChanged()) {
 						if (val === 'mesh') {
-							if (beaconEl.getValue() === '100' || !beaconEl.getValue()) {
-								beaconEl.setValue('1000');
+							if (beaconEl.getValue() === '100') {
+								beaconEl.setValue('');
 							}
 						} else {
 							if (beaconEl.getValue() === '1000') {
-								beaconEl.setValue('100');
+								beaconEl.setValue('');
 							}
 						}
 					}
@@ -1250,11 +1251,15 @@ return view.extend({
 
 					o = ss.taboption('advanced', form.Value, 'beacon_int', _('Beacon Interval'));
 					o.datatype = 'and(uinteger,range(15,10000))';
-					o.defaults = {
-						'1000': [{'mode': 'mesh'}],
-						'100': [],
+					o.validate = function (section_id, value) {
+						const uielem = this.getUIElement(section_id);
+						if (uielem) {
+							uielem.setPlaceholder(mode.formvalue(section_id) === 'mesh' ? '1000' : '100');
+						}
+						return form.Value.prototype.validate.apply(this, [section_id, value])
 					};
 					o.rmempty = true;
+
 				}
 
 				if (hwtype == 'morse') {
