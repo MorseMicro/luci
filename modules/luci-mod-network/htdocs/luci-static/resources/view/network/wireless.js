@@ -45,6 +45,21 @@ mac80211 module. Unless you have specific requirements, you should use
 this firmware.
 `).trim();
 
+const DCS_EXPLANATION = (`
+<p style="padding:0">Dynamic Channel Selection (DCS) is managed by the <strong>smart_manager</strong>
+daemon on Morse Micro Wi-Fi devices.
+If you have no specific DCS configuration here, by default DCS is <strong>on if the
+channel is auto</strong> (i.e. ACS is enabled), and <strong>off if the channel is
+specified</strong> (i.e. you're using a fixed channel).
+
+<p style="padding:0">If you want to configure any of the DCS parameters, or use DCS even with
+a fixed initial channel, adding a section here will let you modify them.
+Make sure you tick the 'Enable' checkbox.
+
+<p style="padding:0"><strong>WARNING:</strong> in EU and GB, ACS and DCS must be enabled for an Access Point for regulatory
+reasons. If you configure your device without either of these, any configured Access Point will not be started.
+`).trim();
+
 var isReadonlyView = !L.hasViewPermission();
 
 function attachMODPDHGroups(o) {
@@ -753,6 +768,11 @@ return view.extend({
 
 					if (L.hasSystemFeature('morsesmartmanager')) {
 						ss.tab("dcs", _("Dynamic Channel Selection"));
+
+						o = ss.taboption('dcs', form.DummyValue, '_default_help');
+						o.rawhtml = true;
+						o.default = DCS_EXPLANATION;
+
 						o = ss.taboption('dcs', form.SectionValue, '_dcs', form.NamedSection, radioNet.getWifiDeviceName() + '_dcs', 'dcs');
 						let dcsSec = o.subsection;
 						dcsSec.addremove = true;
