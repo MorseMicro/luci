@@ -679,6 +679,11 @@ var CBIWifiTxPowerValue = form.ListValue.extend({
 });
 
 var CBIWifiCountryValue = form.Value.extend({
+	__init__: function() {
+		this.super('__init__', arguments);
+		this.default = DEFAULT_S1G_COUNTRY;
+	},
+
 	callCountryList: rpc.declare({
 		object: 'iwinfo',
 		method: 'countrylist',
@@ -703,17 +708,7 @@ var CBIWifiCountryValue = form.Value.extend({
 						}
 					}
 
-					const proposedCountry = form.Value.prototype.load.apply(this, [section_id])
-					if (validCodes.size === 0) {
-						// No codes are valid. This means that we will just show
-						// an editable box here.
-						return proposedCountry;
-					} else {
-						// If the country in UCI is not in the valid codes or there is no country in UCI,
-						// prefer DEFAULT_S1G. If DEFAULT_S1G itself is not in the validCodes, setting it
-						// is a no-op (as the dropdown will force another country).
-						return validCodes.has(proposedCountry) ? proposedCountry : DEFAULT_S1G_COUNTRY;
-					}
+					return form.Value.prototype.load.apply(this, [section_id])
 				});
 			});
 		} else {
