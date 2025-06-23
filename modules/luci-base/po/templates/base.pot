@@ -9181,7 +9181,7 @@ msgid ""
 msgstr ""
 
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:1303
-msgid "Specifies the value of Mesh TTL subfield (Range: 0 to 255)"
+msgid "Specifies the value of Mesh TTL subfield (Range: 1 to 255)"
 msgstr ""
 
 #: modules/luci-mod-network/htdocs/luci-static/resources/tools/network.js:548
