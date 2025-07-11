@@ -10482,6 +10482,10 @@ msgstr "送信されたセキュリティトークンは無効または期限切
 msgid "The syslog output, pre-filtered for messages related to:"
 msgstr ""
 
+#: modules/luci-base/htdocs/luci-static/resources/tools/views.js:27
+msgid "The syslog output, pre-filtered for messages related to:"
+msgstr ""
+
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:102
 msgid ""
 "The system is erasing the configuration partition now and will reboot itself "
