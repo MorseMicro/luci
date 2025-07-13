@@ -52,12 +52,16 @@ If you have no specific DCS configuration here, by default DCS is <strong>on if 
 channel is auto</strong> (i.e. ACS is enabled), and <strong>off if the channel is
 specified</strong> (i.e. you're using a fixed channel).
 
-<p style="padding:0">If you want to configure any of the DCS parameters, or use DCS even with
-a fixed initial channel, adding a section here will let you modify them.
-Make sure you tick the 'Enable' checkbox.
+<p style="padding:0">In all cases, if there is more
+than one interface attached to the radio (e.g. two APs, or an AP and a Client),
+it will be automatically disabled.
 
 <p style="padding:0"><strong>WARNING:</strong> in EU and GB, ACS and DCS must be enabled for an Access Point for regulatory
 reasons. If you configure your device without either of these, any configured Access Point will not be started.
+
+<p style="padding:0">If you want to configure any of the DCS parameters, or use DCS even with
+a fixed initial channel, adding a section here will let you modify them.
+Make sure you tick the 'Enable' checkbox.
 `).trim();
 
 var isReadonlyView = !L.hasViewPermission();
