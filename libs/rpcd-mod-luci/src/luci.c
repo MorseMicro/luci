@@ -1077,6 +1077,34 @@ static bool rpc_luci_get_iwinfo(struct blob_buf *buf, const char *devname,
 	return true;
 }
 
+static void rpc_luci_get_vendor_devinfo(struct blob_buf *buf, const char *dev)
+{
+	struct uci_context *uci = uci_alloc_context();
+	struct uci_ptr ptr = { 0 };
+	char uci_path[128];
+
+	if (!uci)
+		return;
+
+	/* Construct UCI path: wireless.<dev>.path */
+	snprintf(uci_path, sizeof(uci_path), "wireless.%s.path", dev);
+
+	if (uci_lookup_ptr(uci, &ptr, uci_path, true) == UCI_OK &&
+	    ptr.o && ptr.o->type == UCI_TYPE_STRING) {
+
+		/* Include mm_4v3_fem when exist */
+		const char *val = readstr("/sys/devices/%s/mm_4v3_fem", ptr.o->v.string);
+		if(strlen(val))
+			blobmsg_add_u32(buf, "mm_4v3_fem", atoi(val));
+
+		/* Include board_type when exist */
+		val = readstr("/sys/devices/%s/board_type", ptr.o->v.string);
+		if(strlen(val))
+			blobmsg_add_string(buf, "board_type", val);
+	}
+	uci_free_context(uci);
+}
+
 static void rpc_luci_get_wireless_devices_cb(struct ubus_request *req,
                                              int type, struct blob_attr *msg)
 {
@@ -1145,6 +1173,8 @@ static void rpc_luci_get_wireless_devices_cb(struct ubus_request *req,
 		rpc_luci_get_iwinfo(&rctx->blob,
 		                    first_ifname ? first_ifname : blobmsg_name(wifi),
 		                    true);
+
+		rpc_luci_get_vendor_devinfo(&rctx->blob, blobmsg_name(wifi));
 
 		blobmsg_close_table(&rctx->blob, o);
 	}

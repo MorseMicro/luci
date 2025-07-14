@@ -4240,6 +4240,17 @@ WifiNetwork = baseclass.extend(/** @lends LuCI.network.WifiNetwork.prototype */ 
 	},
 
 	/**
+	 * Check whether the 4.3V FEM feature is supported by the device.
+	 *
+	 * @returns {boolean}
+	 * Returns true if the mm_4v3_fem attribute is present in the radio's UBus data,
+	 * otherwise returns false.
+	 */
+	is4v3FemSupported: function() {
+		return this.ubus('dev', 'mm_4v3_fem') !== null;
+	},
+
+	/**
 	 * Calculate the current signal.
 	 *
 	 * @deprecated

@@ -915,10 +915,42 @@ return view.extend({
 					o.disabled = '0';
 					o.default = o.disabled;
 
-					o = ss.taboption('advanced', form.Flag, 'vfem_4v3', _('4.3V VFEM'), _('Enables a 4.3V VFEM on the HaLow module'));
-					o.enabled = '1';
-					o.disabled = '0';
-					o.default = o.disabled;
+					if (radioNet.is4v3FemSupported()) {
+						let vFemOpt;
+						vFemOpt = o = ss.taboption('advanced', form.Flag, 'vfem_4v3', _('4.3V VFEM'), _('Enables a 4.3V VFEM on the HaLow module'));
+						o.enabled = '1';
+						o.disabled = '0';
+						o.default = o.disabled;
+						o.onchange = function (ev, section_id, val) {
+							const bcfEl   = bcfOpt.getUIElement(section_id);
+							const curBcf  = bcfEl.getValue(section_id);
+							const enable  = (val === '1');
+							const hasSuf  = /_4v3\.bin$/.test(curBcf);
+
+							// Only touch the field if state ⇔ suffix are out of sync
+							if (enable !== hasSuf) {
+								const newBcf = enable
+									? curBcf.replace(/\.bin$/, '_4v3.bin')
+									: curBcf.replace(/_4v3\.bin$/, '.bin');
+									if (bcfInfo[`/lib/firmware/morse/${newBcf}`])
+										bcfEl.setValue(newBcf);
+							}
+						};
+						o.validate = function (section_id, value) {
+							const curBcf   = bcfOpt.getUIElement(section_id).getValue(section_id);
+							const enable   = this.getUIElement(section_id).getValue() === '1';
+							const hasSuf   = /_4v3\.bin$/.test(curBcf);
+
+							if (enable && !hasSuf) {
+								const newBcf = curBcf.replace(/\.bin$/, '_4v3.bin');
+								if (!bcfInfo[`/lib/firmware/morse/${newBcf}`]) {
+									return _(`4.3v FEM compatible BCF '${newBcf}' is not found.`);
+								}
+							}
+
+							return true;
+						};
+					}
 
 					if (L.hasSystemFeature('morsefwtlm') || L.hasSystemFeature('morsefwflm')) {
 						o = ss.taboption('advanced', form.ListValue, 'firmware_type', _('Firmware Type'));
