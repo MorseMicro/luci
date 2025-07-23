@@ -764,7 +764,18 @@ return view.extend({
 						These options will vary depending on the main channel.
 					`));
 					freqValue.primChanSelect = true;
+					countryValue.validate = function (sectionId, value) {
+						const country = this.getUIElement(sectionId).getValue();
+						if (country == 'EU' || country == "GB") {
+							if (!L.hasSystemFeature('morsesmartmanager'))
+								return 'Install smart_manager package to use EU/GB';
 
+							const dcs_enabled = uci.get('smart_manager', `${sectionId}_dcs`, 'enabled');
+							if (dcs_enabled && dcs_enabled === '0')
+								return 'DCS required for EU/GB. Enable Dynamic Channel Selection.';
+						}
+						return true;
+					};
 					countryValue.onchange = (ev, section_id, value) => {
 						// This makes sure we update the frequency widget when the country changes.
 						freqValue.toggleS1gCountry(section_id, value);
@@ -784,7 +795,20 @@ return view.extend({
 
 						o = dcsSec.option(form.Flag, 'enabled', _('Enable Dynamic Channel Selection'));
 						o.rmempty = false;
-
+						o.validate = function (section_id, value) {
+							const country = countryValue.formvalue(radioNet.getWifiDeviceName());
+							const enabled   = this.getUIElement(section_id).getValue() === '1';
+							if ((country == 'EU' || country == 'GB') && enabled == '0') {
+								return "DCS is mandatory for the EU/GB regulatory domain.";
+							}
+							return true;
+						};
+						o.parse = function (section_id) {
+							const config = this.uciconfig || this.section.uciconfig || this.map.config;
+							if (!uci.get(config, section_id))
+								return Promise.resolve();
+							return form.Flag.prototype.parse.call(this, section_id);
+						};
 						o = dcsSec.option(form.Flag, 'enable_datalog', _('Log metrics to /var/log/[startdate]/dcs.log'));
 
 						o = dcsSec.option(form.ListValue, 'algorithm', _('Algorithm'));
