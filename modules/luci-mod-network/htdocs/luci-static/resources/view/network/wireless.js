@@ -1366,6 +1366,11 @@ return view.extend({
 					o.rmempty = false;
 					o.default = "1";
 
+					o = mesh_ss.option(form.Value, "mesh_max_peer_links", _("Maximum number of mesh peers"), _("The allowed maximum number of peer links that may be established."));
+					o.rmempty = false;
+					o.default = "10";
+					o.datatype = "and(integer, range(1,10))";
+
 					o = mesh_ss.option(form.Value, "mesh_rssi_threshold", _("RSSI threshold for joining"), _("0 = not using RSSI threshold"));
 					o.rmempty = false;
 					o.default = "0";
