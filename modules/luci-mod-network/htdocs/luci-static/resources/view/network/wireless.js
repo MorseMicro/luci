@@ -1449,16 +1449,31 @@ return view.extend({
 					o.default = '0';
 					o.depends('twt', '1');
 
+					o = ss.taboption('powersave', form.ListValue, 'raw_sta_priority', _('RAW priority'));
+					for (let i = 0; i <= 7; i++)
+						o.value(i.toString());
+					o.value('', 'None');
+					o.default = '';
+					o.depends('mode', 'sta');
+					o.depends('mode', 'sta-wds');
+
 					o = ss.taboption('powersave', form.Flag, 'wnm_sleep_mode', _('WNM-Sleep Mode'), _('Enables extended sleep mode for stations. Prevents deauthentication if a station goes to sleep for multiple DTIM periods.'));
 					o.default = o.enabled;
+					o.depends('mode', 'ap');
+					o.depends('mode', 'ap-wds');
+
+					o = ss.taboption('powersave', form.Flag, 'raw', _('Enable RAW'), _('Enables Restricted Access Window for this AP interface.'));
+					o.enabled = '1';
+					o.disabled = '0';
+					o.default = o.disabled;
 					o.depends('mode', 'ap');
 					o.depends('mode', 'ap-wds');
 
 					let wifi_iface_section_name = ss.section;
 					let raws_title = _('RAWs on %s').format(wifi_iface_section_name);
 					o = ss.taboption('powersave', form.SectionValue, 'raws', form.TableSection, 'raw', raws_title);
-					o.depends('mode', 'ap');
-					o.depends('mode', 'ap-wds');
+					o.depends({ mode: "ap", raw: '1' });
+					o.depends({ mode: "ap-wds", raw: '1' });
 					let os = o.subsection;
 					os.addremove = true;
 
