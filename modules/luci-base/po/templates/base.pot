@@ -418,7 +418,7 @@ msgstr ""
 msgid "A directory with the same name already exists."
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/luci.js:2675
+#: modules/luci-base/htdocs/luci-static/resources/luci.js:2692
 msgid "A new login is required since the authentication session expired."
 msgstr ""
 
@@ -5729,7 +5729,7 @@ msgstr ""
 msgid "Log in"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/luci.js:2683
+#: modules/luci-base/htdocs/luci-static/resources/luci.js:2700
 msgid "Log in…"
 msgstr ""
 
@@ -7546,7 +7546,7 @@ msgstr ""
 msgid "Path to inner Private Key"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/luci.js:2736
+#: modules/luci-base/htdocs/luci-static/resources/luci.js:2753
 msgid "Paused"
 msgstr ""
 
@@ -8197,7 +8197,7 @@ msgstr ""
 msgid "Refresh Channels"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/luci.js:2730
+#: modules/luci-base/htdocs/luci-static/resources/luci.js:2747
 msgid "Refreshing"
 msgstr ""
 
@@ -8929,7 +8929,7 @@ msgstr ""
 msgid "Services"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/luci.js:2673
+#: modules/luci-base/htdocs/luci-static/resources/luci.js:2690
 msgid "Session expired"
 msgstr ""
 
