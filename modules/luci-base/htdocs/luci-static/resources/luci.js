@@ -2547,7 +2547,24 @@
 			};
 
 			/* Request class file */
-			classes[name] = Request.get(url, { cache: true }).then(compileClass);
+
+			function loadClass() {
+				return Request.get(url, { cache: true });
+			};
+
+			classes[name] = loadClass().catch(function () {
+				// Sometimes on initial load a request can fail, most likely because the device
+				// is being reconfigured (so possibility of transient ethernet drop).
+				// Ideally, this would be handled by luci.apply.hold_off, but on slow
+				// devices complex reconfigurations can be very slow (i.e. >10secs),
+				// and we wouldn't want to slow the device down all the time for this.
+				// Note that this can't be done with an interceptor on Request, because
+				// the usual failure mode is an aborted request which doesn't get passed to the
+				// interceptors.
+				// We wait 3 secs to try to avoid whatever transient connectivity issue happened.
+				console.log('Retrying GET of ', url);
+				return new Promise(resolve => setTimeout(resolve, 3000)).then(loadClass);
+			}).then(compileClass);
 
 			return classes[name];
 		},
