@@ -418,7 +418,7 @@ msgstr ""
 msgid "A directory with the same name already exists."
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/luci.js:2675
+#: modules/luci-base/htdocs/luci-static/resources/luci.js:2692
 msgid "A new login is required since the authentication session expired."
 msgstr ""
 
@@ -936,7 +936,7 @@ msgstr ""
 msgid "Allocate IPs sequentially"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/dropbear.js:25
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/dropbear.js:30
 msgid "Allow <abbr title=\"Secure Shell\">SSH</abbr> password authentication"
 msgstr ""
 
@@ -968,11 +968,11 @@ msgstr ""
 msgid "Allow rebooting the device"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/dropbear.js:36
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/dropbear.js:41
 msgid "Allow remote hosts to connect to local SSH forwarded ports"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/dropbear.js:31
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/dropbear.js:36
 msgid "Allow root logins with password"
 msgstr ""
 
@@ -980,7 +980,7 @@ msgstr ""
 msgid "Allow system feature probing"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/dropbear.js:31
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/dropbear.js:36
 msgid "Allow the <em>root</em> user to log in with password"
 msgstr ""
 
@@ -2977,6 +2977,7 @@ msgstr ""
 
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:670
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:711
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/dropbear.js:17
 msgid "Enable"
 msgstr ""
 
@@ -3195,6 +3196,10 @@ msgstr ""
 
 #: modules/luci-mod-network/htdocs/luci-static/resources/tools/network.js:766
 msgid "Enable unicast flooding"
+msgstr ""
+
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/dropbear.js:17
+msgid "Enable/Disable this instance"
 msgstr ""
 
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:1537
@@ -3861,7 +3866,7 @@ msgstr ""
 msgid "Gateway Mode"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/dropbear.js:36
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/dropbear.js:41
 msgid "Gateway Ports"
 msgstr ""
 
@@ -4910,7 +4915,7 @@ msgstr ""
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/routes.js:41
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/routes.js:190
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/routes.js:216
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/dropbear.js:17
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/dropbear.js:22
 msgid "Interface"
 msgstr ""
 
@@ -5434,7 +5439,7 @@ msgstr ""
 msgid "Listen interfaces"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/dropbear.js:17
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/dropbear.js:22
 msgid "Listen only on the given interface or, if unspecified, on all"
 msgstr ""
 
@@ -5594,7 +5599,7 @@ msgstr ""
 msgid "Log in"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/luci.js:2683
+#: modules/luci-base/htdocs/luci-static/resources/luci.js:2700
 msgid "Log in…"
 msgstr ""
 
@@ -7291,7 +7296,7 @@ msgstr ""
 msgid "Password"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/dropbear.js:25
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/dropbear.js:30
 msgid "Password authentication"
 msgstr ""
 
@@ -7365,7 +7370,7 @@ msgstr ""
 msgid "Path to inner Private Key"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/luci.js:2736
+#: modules/luci-base/htdocs/luci-static/resources/luci.js:2753
 msgid "Paused"
 msgstr ""
 
@@ -7503,7 +7508,7 @@ msgid "Policy: <strong>%h</strong> (%h)"
 msgstr ""
 
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js:831
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/dropbear.js:21
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/dropbear.js:26
 #: protocols/luci-proto-yggdrasil/htdocs/luci-static/resources/protocol/yggdrasil.js:253
 msgid "Port"
 msgstr ""
@@ -8011,7 +8016,7 @@ msgstr ""
 msgid "Refresh Channels"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/luci.js:2730
+#: modules/luci-base/htdocs/luci-static/resources/luci.js:2747
 msgid "Refreshing"
 msgstr ""
 
@@ -8724,7 +8729,7 @@ msgstr ""
 msgid "Services"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/luci.js:2673
+#: modules/luci-base/htdocs/luci-static/resources/luci.js:2690
 msgid "Session expired"
 msgstr ""
 
