@@ -14,7 +14,9 @@ return view.extend({
 		s.addremove = true;
 		s.addbtntitle = _('Add instance');
 
-		o = s.option(form.Flag, 'enable', _('Enable Instance'), _('Enable <abbr title="Secure Shell">SSH</abbr> service instance'));
+		o = s.option(form.Flag, 'enable', _('Enable'), _('Enable/Disable this instance'));
+		o.enabled  = '1';
+		o.disabled = '0';
 		o.default  = o.enabled;
 
 		o = s.option(widgets.NetworkSelect, 'Interface', _('Interface'), _('Listen only on the given interface or, if unspecified, on all'));
