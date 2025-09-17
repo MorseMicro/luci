@@ -1019,6 +1019,7 @@ return view.extend({
 				ss.tab('roaming', _('WLAN roaming'), _('Settings for assisting wireless clients in roaming between multiple APs: 802.11r, 802.11k and 802.11v'));
 				ss.tab('powersave', _('Power Save'));
 				ss.tab("mesh", _("Mesh Settings"));
+				ss.tab("raw", _("RAW Settings"));
 
 				o = ss.taboption('general', form.ListValue, 'mode', _('Mode'));
 				o.value('ap', _('Access Point'));
@@ -1465,7 +1466,12 @@ return view.extend({
 					o.default = '0';
 					o.depends('twt', '1');
 
-					o = ss.taboption('powersave', form.ListValue, 'raw_sta_priority', _('RAW priority'));
+					o = ss.taboption('powersave', form.Flag, 'wnm_sleep_mode', _('WNM-Sleep Mode'), _('Enables extended sleep mode for stations. Prevents deauthentication if a station goes to sleep for multiple DTIM periods.'));
+					o.default = o.enabled;
+					o.depends('mode', 'ap');
+					o.depends('mode', 'ap-wds');
+
+					o = ss.taboption('raw', form.ListValue, 'raw_sta_priority', _('RAW priority'));
 					for (let i = 0; i <= 7; i++)
 						o.value(i.toString());
 					o.value('', 'None');
@@ -1473,79 +1479,109 @@ return view.extend({
 					o.depends('mode', 'sta');
 					o.depends('mode', 'sta-wds');
 
-					o = ss.taboption('powersave', form.Flag, 'wnm_sleep_mode', _('WNM-Sleep Mode'), _('Enables extended sleep mode for stations. Prevents deauthentication if a station goes to sleep for multiple DTIM periods.'));
-					o.default = o.enabled;
-					o.depends('mode', 'ap');
-					o.depends('mode', 'ap-wds');
-
-					o = ss.taboption('powersave', form.Flag, 'raw', _('Enable RAW'), _('Enables Restricted Access Window for this AP interface.'));
+					o = ss.taboption('raw', form.Flag, 'raw', _('Enable RAW'), _('Enables Restricted Access Window for this AP interface.'));
 					o.enabled = '1';
 					o.disabled = '0';
 					o.default = o.disabled;
 					o.depends('mode', 'ap');
 					o.depends('mode', 'ap-wds');
 
-					let wifi_iface_section_name = ss.section;
-					let raws_title = _('RAWs on %s').format(wifi_iface_section_name);
-					o = ss.taboption('powersave', form.SectionValue, 'raws', form.TableSection, 'raw', raws_title);
-					o.depends({ mode: "ap", raw: '1' });
-					o.depends({ mode: "ap-wds", raw: '1' });
-					let os = o.subsection;
-					os.addremove = true;
+					const MAX_RAW_CONFIG = 8;
+					for (let i = 0; i < MAX_RAW_CONFIG; i++) {
+						// Enabled checkbox (acts as title row)
+						let enabled = ss.taboption('raw', form.Flag, `raw${i}_enabled`,
+							_(`RAW Block Config for Priority ${i}`));
+						enabled.depends({ mode: 'ap', raw: '1' });
+						enabled.depends({ mode: 'ap-wds', raw: '1' });
 
-					os.filter = function (section_id) {
-						var raws = uci.get('wireless', wifi_iface_section_name, 'raws');
-						return raws.includes(section_id);
-					};
+						// Start time
+						o = ss.taboption('raw', form.Value, `raw${i}_start_time_us`, _('Start time (µs)'));
+						o.datatype = 'range(0,522240)';
+						o.placeholder = '4096';
+						o.depends(`raw${i}_enabled`, '1');
 
-					os.handleAdd = function (ev, name) {
-						var config_name = this.uciconfig || this.map.config;
+						// Duration
+						o = ss.taboption('raw', form.Value, `raw${i}_duration_us`, _('Duration (µs)'));
+						o.datatype = 'range(500,2867193)';
+						o.placeholder = '26900';
+						o.depends(`raw${i}_enabled`, '1');
 
-						this.map.data.add(config_name, this.sectiontype, name);
-						let ifaceRaws = this.map.data.get('wireless', wifi_iface_section_name, 'raws') ?? [];
-						ifaceRaws = ifaceRaws.filter(r => r !== name);
-						ifaceRaws.push(name);
-						this.map.data.set('wireless', wifi_iface_section_name, 'raws', ifaceRaws);
+						// Slots
+						o = ss.taboption('raw', form.Value, `raw${i}_slots`, _('Number of slots'));
+						o.datatype = 'range(0,63)';
+						o.placeholder = '1';
+						o.depends(`raw${i}_enabled`, '1');
 
-						return this.map.save(null, true);
+						// Cross slot
+						o = ss.taboption('raw', form.Flag, `raw${i}_cross_slot`, _('Cross slot'));
+						o.depends(`raw${i}_enabled`, '1');
+						o.default = o.disabled;
+
+						// Beacon Max spread
+						o = ss.taboption('raw', form.Value, `raw${i}_max_beacon_spread`, _('Beacon max spread'));
+						o.datatype = 'range(0,65535)';
+						o.placeholder = '0';
+						o.depends(`raw${i}_enabled`, '1');
+
+						// Nominal STAs per beacon
+						let nominal_stas_per_beacon = o = ss.taboption('raw', form.Value, `raw${i}_nominal_stas_per_beacon`, _('Nominal STAs per beacon'));
+						o.datatype = 'range(0,65535)';
+						o.placeholder = '0';
+						o.depends(`raw${i}_enabled`, '1');
+						// If beacon spreading is set, periodic_period and periodic_start_offset_us must NOT be set.
+						o.validate = function(section_id, value) {
+							let nominal_stas_per_beacon_value = parseInt(value);
+							let raw_period_value = parseInt(raw_period.formvalue(section_id)) || 0;
+							let start_offset_value = parseInt(start_offset.formvalue(section_id)) || 0;
+							if (nominal_stas_per_beacon_value && (raw_period_value || start_offset_value))
+								return _('Beacon spreading cannot be used with periodic RAW');
+							else
+								return true;
+						}
+
+						// Periodic start_offset
+						let start_offset = o = ss.taboption('raw', form.Value, `raw${i}_start_offset`, _('Periodic RAW start offset'));
+						o.datatype = 'range(0,255)';
+						o.placeholder = '0';
+						o.depends(`raw${i}_enabled`, '1');
+						o.depends(`raw${i}_nominal_stas_per_beacon`, '0');
+						o.depends(`raw${i}_beacon_max_spread_us`, '0');
+						// Custom validation: start_offset < raw_period
+						o.validate = function(section_id, value) {
+							let start_offset_val = parseInt(value);
+							let nominal_stas_per_beacon_value = parseInt(nominal_stas_per_beacon.formvalue(section_id))	|| 0;
+							let raw_period_value = parseInt(raw_period.formvalue(section_id)) || 0;
+							if(start_offset_val && nominal_stas_per_beacon_value)
+								return _('Periodic RAW cannot be used with beacon spreading');
+							else if (start_offset_val && raw_period_value)
+								if (start_offset_val >= raw_period_value)
+									return _('Start offset must be less than period');
+
+							return true;
+						}
+
+						// Periodic period
+						let raw_period = o = ss.taboption('raw', form.Value, `raw${i}_period`, _('Periodic RAW period'));
+						o.datatype = 'range(0,255)';
+						o.placeholder = '0';
+						o.depends(`raw${i}_enabled`, '1');
+						o.depends(`raw${i}_nominal_stas_per_beacon`, '0');
+						o.depends(`raw${i}_beacon_max_spread_us`, '0');
+						// Custom validation: raw_period > start_offset_us
+						o.validate = function(section_id, value) {
+							let raw_period_value = parseInt(value);
+							let nominal_stas_per_beacon_value = parseInt(nominal_stas_per_beacon.formvalue(section_id)) || 0;
+							let start_offset_value = parseInt(start_offset.formvalue(section_id)) || 0;
+							if(raw_period_value && nominal_stas_per_beacon_value)
+								return _('Periodic RAW cannot be used with beacon spreading');
+							else if (raw_period_value && start_offset_value)
+								if (raw_period_value <= start_offset_value)
+									return _('Periodic period must be greater than start offset');
+
+							return true;
+						};
+
 					}
-
-					os.handleRemove = function (section_id, ev) {
-						var config_name = this.uciconfig || this.map.config;
-
-						this.map.data.remove(config_name, section_id);
-						let ifaceRaws = this.map.data.get('wireless', wifi_iface_section_name, 'raws') ?? [];
-						ifaceRaws = ifaceRaws.filter(r => r !== section_id);
-						if (ifaceRaws.length > 0)
-							this.map.data.set('wireless', wifi_iface_section_name, 'raws', ifaceRaws);
-						else
-							this.map.data.unset('wireless', wifi_iface_section_name, 'raws');
-
-						return this.map.save(null, true);
-					}
-
-					let oo = os.option(form.Value, 'priority', _('Priority'));
-					oo.datatype = 'range(0, 7)';
-					oo.default = 0;
-
-					oo = os.option(form.Value, 'start_time_us', _('Start time (us)'));
-					oo.placeholder = '4096';
-					oo.datatype = 'range(0, 522240)';
-					oo.default = 4096;
-
-					oo = os.option(form.Value, 'duration_us', _('Duration (us)'));
-					oo.placeholder = '21300';
-					oo.datatype = 'range(500, 2867193)';
-					oo.default = 21300;
-
-					oo = os.option(form.Value, 'slots', _('Number of slots'));
-					oo.placeholder = '4'
-					oo.datatype = 'range(0, 63)';
-					oo.default = 4;
-
-					oo = os.option(form.Flag, 'cross_slot', _('Cross Slot'));
-
-					oo = os.option(form.Flag, 'enabled', _('Enabled'));
 				}
 
 				encr = o = ss.taboption('encryption', form.ListValue, 'encryption', _('Encryption'));
