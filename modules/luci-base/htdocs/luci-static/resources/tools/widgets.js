@@ -37,8 +37,6 @@ var CBIWifiFrequencyValue = form.Value.extend({
 	__init__: function() {
 		this.super('__init__', arguments);
 		this.disableACS = false;
-
-		this.dataPromises = {};
 	},
 
 	callFrequencyList: rpc.declare({
@@ -55,30 +53,19 @@ var CBIWifiFrequencyValue = form.Value.extend({
 		expect: { results: [] }
 	}),
 
-	getCurrentHalowChannels: function(elem) {
-		return this.halowChannels.getMap(
-			this.s1gCountry(elem),
-			elem.querySelector('.s1g-channelization').value || 'current',
-		);
-	},
-
 	load: function(section_id) {
 		if (this.ucisection) {
 			section_id = this.ucisection;
 		}
 
-		// Only do the RPC calls once; subsequent loads should just
-		// redo the widget, and not hit the backend.
-		// This is useful because our config pages often assume that
-		// a load is a cheap operation that will just hit the UCI cache,
-		// and so it's 'safe' to do it quite frequently.
-		return (this.dataPromises[section_id] ??= Promise.all([
+		return Promise.all([
 			network.getWifiDevice(section_id),
 			this.callFrequencyList(section_id),
 			this.callCountryList(section_id),
-			halow.loadChannels(),
-		])).then(L.bind(function(data) {
-			this.halowChannels = data[3];
+			halow.loadChannelMap(),
+		]).then(L.bind(function(data) {
+			this.halowChannelMap = data[3];
+			this.allowedKhzByCountry = {};
 			this.channels = {
 				'2g': (L.hasSystemFeature('hostapd', 'acs') && !this.disableACS) ? [ 'auto', 'auto', true ] : [],
 				'5g': (L.hasSystemFeature('hostapd', 'acs')  && !this.disableACS) ? [ 'auto', 'auto', true ] : [],
@@ -95,12 +82,18 @@ var CBIWifiFrequencyValue = form.Value.extend({
 			// s1g would be added to the <select> so that setting band.value to s1g would fail,
 			// which leads to defaulting to 11a (see write:).
 			if (uci.get('wireless', section_id, 'type') == 'morse') {
+				// All our info is in this.halowChannelMap.
 				const activeCountry = data[2].find(c => c.active);
 				if (activeCountry) {
-					const activeChannels = new Set(data[1].map(chanInfo => chanInfo.channel));
-					this.halowChannels.restrict(
-						activeCountry.code, uci.get('wireless', section_id, 'channelization'), activeChannels
-					);
+					const activeCountryMap = this.halowChannelMap[activeCountry.code];
+					if (activeCountryMap) {
+						const activeChannels = new Set(data[1].map(chanInfo => chanInfo.channel));
+						for (const channel of Object.keys(activeCountryMap)) {
+							if (!activeChannels.has(Number(channel))) {
+								delete activeCountryMap[channel];
+							}
+						}
+					}
 				}
 				return;
 			}
@@ -218,11 +211,6 @@ var CBIWifiFrequencyValue = form.Value.extend({
 		var elem = this.map.findElement('id', this.cbid(section_id));
 
 		this.updateS1gCountry(elem, country);
-		this.updateS1gChannelization(elem);
-		this.toggleS1gChannelization(elem);
-	},
-
-	toggleS1gChannelization: function(elem) {
 		this.updateS1gWidths(elem);
 		this.toggleWifiS1gWidth(elem);
 	},
@@ -260,32 +248,9 @@ var CBIWifiFrequencyValue = form.Value.extend({
 		elem.dataset.country = country;
 	},
 
-	updateS1gChannelization: function(elem, initialVal) {
-		var s1gChznEl = elem.querySelector('.s1g-channelization');
-		var s1gChznValues = [];
-		var channelizations = this.halowChannels.getChannelizations(this.s1gCountry(elem));
-
-		if (channelizations.length <= 1) {
-			this.setValues(s1gChznEl, [], true);
-			return;
-		}
-
-		for (const chzn of this.halowChannels.getChannelizations(this.s1gCountry(elem))) {
-			s1gChznValues.push(chzn, chzn, true);
-		}
-
-		this.setValues(s1gChznEl, s1gChznValues, true);
-
-		if (initialVal) {
-			s1gChznEl.value = initialVal;
-		}
-	},
-
 	updateS1gWidths: function(elem) {
 		var s1gWidthEl = elem.querySelector('.s1g-width');
-		var s1gWidths = Array.from((new Set(
-			Object.values(this.getCurrentHalowChannels(elem)).map(ch => ch.bw)
-		)).keys());
+		var s1gWidths = Array.from((new Set(Object.values(this.halowChannelMap[this.s1gCountry(elem)]).map(ch => ch.bw))).keys());
 
 		s1gWidths.sort((a, b) => Number(b) - Number(a));
 		var s1gWidthsValues = [];
@@ -317,6 +282,32 @@ var CBIWifiFrequencyValue = form.Value.extend({
 		}
 	},
 
+	allowedS1gChanIndex: function(chanInfo, chanWidth, chanIndex) {
+		if (chanInfo.bw === '1') {
+			return true;
+		}
+
+		let allowedKhz = this.allowedKhzByCountry[chanInfo.country_code];
+
+		if (!allowedKhz) {
+			allowedKhz = new Set(
+				Object.values(this.halowChannelMap[chanInfo.country_code])
+					.map(ch => Math.round(ch.centre_freq_mhz * 1000)));
+			this.allowedKhzByCountry[chanInfo.country_code] = allowedKhz;
+		}
+
+		let offsetMhz;
+		if (chanWidth === '2') {
+			offsetMhz = -chanInfo.bw / 2 + 1 + Math.floor(chanIndex / 2) * 2;
+		} else if (chanWidth === '1') {
+			offsetMhz = -chanInfo.bw / 2 + 0.5 + chanIndex;
+		} else {
+			return false;
+		}
+
+		return allowedKhz.has(Math.round(1000 * (Number(chanInfo.centre_freq_mhz) + offsetMhz)));
+	},
+
 	updateS1gPrim1mhzChanIndices: function(elem, initialVal) {
 		if (!this.primChanSelect) {
 			return;
@@ -324,14 +315,15 @@ var CBIWifiFrequencyValue = form.Value.extend({
 
 		var s1gChanWidth = elem.querySelector('.s1g-prim-chan-width');
 		var s1gChanIndex = elem.querySelector('.s1g-prim-1mhz-chan-index');
-		var channels = this.getCurrentHalowChannels(elem);
-		var chanInfo = channels[elem.querySelector('.channel').value];
+		var chanInfo = this.halowChannelMap[this.s1gCountry(elem)][elem.querySelector('.channel').value];
 
 		var options = ['auto', 'auto', true];
 
-		if (chanInfo && s1gChanWidth.value != 'auto') {
-			for (const index of chanInfo[`prim_chan_indices_for_${s1gChanWidth.value}MHz`]) {
-				options.push(String(index), String(index), true);
+		if (chanInfo) {
+			for (var i = 0; i < Number(chanInfo.bw); ++i) {
+				if (this.allowedS1gChanIndex(chanInfo, s1gChanWidth.value, i)) {
+					options.push(String(i), String(i), true);
+				}
 			}
 		}
 
@@ -365,10 +357,8 @@ var CBIWifiFrequencyValue = form.Value.extend({
 			const hasAcs = L.hasSystemFeature('hostapd_s1g', 'acs') && !this.disableACS;
 			const channelValues = hasAcs ? [ 'auto', 'auto', true ] : [];
 			const chanList = [];
-			const haLowChannels = this.getCurrentHalowChannels(elem);
 			if (!S1G_AUTO_ONLY_COUNTRIES.has(country)) {
-				const chans = Object.values(haLowChannels).toSorted((a, b) => Number(a.centre_freq_mhz) - Number(b.centre_freq_mhz));
-				for (const chanInfo of chans) {
+				for (const chanInfo of Object.values(this.halowChannelMap[country])) {
 					if (chanInfo.bw === s1gWidth) {
 						channelValues.push(chanInfo.s1g_chan, this.formatChannel(chanInfo.s1g_chan, chanInfo.centre_freq_mhz), true);
 						chanList.push(chanInfo.s1g_chan);
@@ -378,7 +368,7 @@ var CBIWifiFrequencyValue = form.Value.extend({
 
 			this.setValues(chanEl, channelValues, true);
 
-			if (haLowChannels[existingChannel]) {
+			if (this.halowChannelMap[country][existingChannel]) {
 				// i.e. after we've initially created the input widget, set the channel
 				// to whatever is in UCI as long as that channel is in the channel map.
 				chanEl.value = existingChannel;
@@ -401,26 +391,22 @@ var CBIWifiFrequencyValue = form.Value.extend({
 		    band = elem.querySelector('.band'),
 		    chan = elem.querySelector('.channel'),
 		    bwdt = elem.querySelector('.htmode'),
-		    s1gchzn = elem.querySelector('.s1g-channelization'),
 		    s1gWidth = elem.querySelector('.s1g-width'),
 		    htval = uci.get('wireless', section_id, 'htmode'),
 		    hwval = uci.get('wireless', section_id, 'hwmode'),
 		    chval = uci.get('wireless', section_id, 'channel'),
 		    s1gchanbwval = uci.get('wireless', section_id, 's1g_chanbw'),
-		    chznval = uci.get('wireless', section_id, 'channelization') || 'current',
 		    bandval = uci.get('wireless', section_id, 'band'),
 		    country = uci.get('wireless', section_id, 'country'),
 		    type = uci.get('wireless', section_id, 'type');
 
 		if (type === 'morse') {
-			const halowChannels = this.halowChannels.getMap(country, chznval);
-			this.updateS1gCountry(elem, halowChannels ? country : DEFAULT_S1G_COUNTRY);
-			this.updateS1gChannelization(elem, chznval);
+			this.updateS1gCountry(elem, this.halowChannelMap[country] ? country : DEFAULT_S1G_COUNTRY);
 			this.updateS1gWidths(elem);
 
 			// If we have an existing channel, set the bw appropriately
 			// and do _not_ trigger change events (it's a load!).
-			const bw = halowChannels?.[chval]?.bw;
+			const bw = this.halowChannelMap[country]?.[chval]?.bw;
 			if (bw) {
 				s1gWidth.value = bw;
 			} else if (s1gchanbwval) {
@@ -503,18 +489,6 @@ var CBIWifiFrequencyValue = form.Value.extend({
 					'disabled': (this.disabled != null) ? this.disabled : this.map.readonly
 				})
 			]),
-			E('label', {
-				'style': 'float:left; margin-right:3px; display:none; text-decoration: underline currentcolor dotted; cursor: help',
-				'data-tooltip': _('Channelization standard version; current or those defined in older standards'),
-			}, [
-				_('Standard'), E('br'),
-				E('select', {
-					'class': 's1g-channelization',
-					'style': 'width:auto',
-					'change': L.bind(this.toggleS1gChannelization, this, elem),
-					'disabled': (this.disabled != null) ? this.disabled : this.map.readonly
-				})
-			]),
 			E('label', { 'style': 'float:left; margin-right:3px; display:none;' }, [
 				_('Width'), E('br'),
 				E('select', {
@@ -549,10 +523,7 @@ var CBIWifiFrequencyValue = form.Value.extend({
 			// | -2MHz op- |
 			// | -0- | -1- |                                     1 in 2 Primary Channel index
 			// Only 1MHz and 2MHz supported.
-			E('label', {
-				'style': 'float:left; margin-right:3px; display:none; text-decoration: underline currentcolor dotted; cursor: help',
-				'data-tooltip': _('Primary Channel Width; available options will vary depending on the main channel'),
-			}, [
+			E('label', { 'style': 'float:left; margin-right:3px; display:none;' }, [
 				_('Prim Width'), E('br'),
 				E('select', {
 					'class': 's1g-prim-chan-width',
@@ -561,10 +532,7 @@ var CBIWifiFrequencyValue = form.Value.extend({
 					'disabled': (this.disabled != null) ? this.disabled : this.map.readonly
 				})
 			]),
-			E('label', {
-				'style': 'float:left; margin-right:3px; display:none; text-decoration: underline currentcolor dotted; cursor: help',
-				'data-tooltip': _('Primary 1MHz Channel Index; available options will vary depending on the main channel.'),
-			}, [
+			E('label', { 'style': 'float:left; margin-right:3px; display:none;' }, [
 				_('Prim Index'), E('br'),
 				E('select', {
 					'class': 's1g-prim-1mhz-chan-index',
@@ -596,7 +564,6 @@ var CBIWifiFrequencyValue = form.Value.extend({
 
 		const morse = uci.get('wireless', section_id, 'type') === 'morse';
 		const country = uci.get('wireless', section_id, 'country');
-		const chznval = uci.get('wireless', section_id, 'channelization');
 		const channel = uci.get('wireless', section_id, 'channel');
 		let s1g_chanbw = uci.get('wireless', section_id, 's1g_chanbw');
 		// We do this so that we can predict the initial bandwidth,
@@ -604,7 +571,7 @@ var CBIWifiFrequencyValue = form.Value.extend({
 		// (based on the formvalue) which will cause us to remove
 		// s1g-prim-1mhz-chan-index and s1g-prim-chan-width unnecessarily.
 		if (morse && country && channel && !s1g_chanbw) {
-			s1g_chanbw = this.halowChannels.getMap(country, chznval)?.[channel]?.bw;
+			s1g_chanbw = this.halowChannelMap[country]?.[channel]?.bw;
 		}
 
 		return [
@@ -617,7 +584,6 @@ var CBIWifiFrequencyValue = form.Value.extend({
 		    this.primChanSelect ? uci.get('wireless', section_id, 's1g_prim_1mhz_chan_index') : undefined,
 		    this.primChanSelect ? uci.get('wireless', section_id, 's1g_prim_chwidth') : undefined,
 		    morse ? s1g_chanbw : undefined,
-		    morse ? chznval : undefined,
 		    // We put country here (and in formvalue) to make sure if the country has changed
 		    // this counts for causing handleValueChange. Currently, this is only relevant
 		    // for 'morse' devices.
@@ -638,7 +604,6 @@ var CBIWifiFrequencyValue = form.Value.extend({
 		    removeAuto(node.querySelector('.s1g-prim-1mhz-chan-index').value || undefined),
 		    removeAuto(node.querySelector('.s1g-prim-chan-width').value || undefined),
 		    node.querySelector('.s1g-width').value || undefined,
-		    node.querySelector('.s1g-channelization').value || undefined,
 		    node.dataset.country,
 		];
 	},
@@ -669,7 +634,6 @@ var CBIWifiFrequencyValue = form.Value.extend({
 		}
 
 		uci.set('wireless', section_id, 's1g_chanbw', value[2] === 'auto' ? value[5] : undefined);
-		uci.set('wireless', section_id, 'channelization', value[6]);
 	},
 
 	formatChannel: function(chanNum, freqMHz) {
@@ -731,16 +695,14 @@ var CBIWifiCountryValue = form.Value.extend({
 		const s1g = uci.get('wireless', section_id, 'band') == 's1g' || uci.get('wireless', section_id, 'hwmode') == '11ah';
 
 		if (s1g) {
-			return halow.loadChannels().then(channels => {
-				const csvCountries = channels.getCountryCodes();
-
+			return halow.loadChannelMap().then(channelMap => {
 				return this.callCountryList(section_id).then(countryList => {
 					delete this.keylist;
 					delete this.vallist;
 
 					const validCodes = new Set();
 					for (const country of L.toArray(countryList)) {
-						if (csvCountries.has(country.iso3166)) {
+						if (channelMap[country.iso3166]) {
 							validCodes.add(country.iso3166);
 							this.value(country.iso3166, '%s - %s'.format(country.iso3166, country.country));
 						}
