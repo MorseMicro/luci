@@ -748,7 +748,10 @@ return view.extend({
 					const countryValue = ss.taboption('general', widgets.WifiCountryValue, 'country', _('Country Code'));
 					countryValue.wifiNetwork = radioNet;
 
-					const freqValue = ss.taboption('general', widgets.WifiFrequencyValue, '_freq', '<br />' + _('Operating frequency'));
+					const freqValue = ss.taboption('general', widgets.WifiFrequencyValue, '_freq', '<br />' + _('Operating frequency'), _(`
+						Prim Width and Prim Index are the Primary Channel Width and the Primary 1 MHz Channel Index respectively.
+						These options will vary depending on the main channel.
+					`));
 					freqValue.primChanSelect = true;
 					countryValue.validate = function (sectionId, value) {
 						const country = this.getUIElement(sectionId).getValue();
