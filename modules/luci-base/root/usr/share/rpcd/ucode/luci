@@ -242,6 +242,16 @@ const methods = {
 				fd.close();
 			}
 
+			result.morseregionlock = false;
+			fd = popen('persistent_vars_storage.sh READ mm_region 2>/dev/null');
+			if (fd) {
+				const output = fd.read('all');
+				if (length(output) > 0) {
+					result.morseregionlock = true;
+				}
+				fd.close();
+			}
+
 			fd = popen('ipset --help 2>/dev/null');
 
 			if (fd) {

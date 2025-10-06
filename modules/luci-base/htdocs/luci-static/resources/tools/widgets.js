@@ -693,6 +693,11 @@ var CBIWifiCountryValue = form.Value.extend({
 
 	load: function(section_id) {
 		const s1g = uci.get('wireless', section_id, 'band') == 's1g' || uci.get('wireless', section_id, 'hwmode') == '11ah';
+		if (L.hasSystemFeature('morseregionlock')) {
+			this.readonly = true;
+			this.description = _("This device is locked to this country.");
+			return form.Value.prototype.load.apply(this, [section_id]);
+		}
 
 		if (s1g) {
 			return halow.loadChannelMap().then(channelMap => {
