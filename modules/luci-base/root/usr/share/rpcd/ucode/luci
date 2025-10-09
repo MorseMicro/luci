@@ -245,6 +245,7 @@ const methods = {
 				morsesmartmanager: access('/sbin/smart_manager') == true,
 				morsedppd:  access('/usr/bin/dppd') == true,
 				morsectrl:  access('/sbin/morsectrl') == true,
+				mesh11sd:   access('/usr/sbin/mesh11sd') == true,
 			};
 
 			const wifi_features = [ 
@@ -320,6 +321,14 @@ const methods = {
 				}
 
 				fd.close();
+			}
+
+			// APP-4910: 802.11s mesh is considered beta for MM8108 firmware as of rel_1_16_4_2025_Sep_18
+			if (result.mesh11sd) {
+				const MESH11S_BETA_BOARDS = ['morse,halowlink2'];
+				result.mesh11sd = {
+					beta: trim(readfile('/tmp/sysinfo/board_name')) in MESH11S_BETA_BOARDS,
+				};
 			}
 
 			return result;
