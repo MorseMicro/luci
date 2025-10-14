@@ -762,10 +762,7 @@ return view.extend({
 					o = ss.taboption('general', widgets.WifiTxPowerValue, 'txpower', _('Maximum transmit power'), _('Specifies the maximum transmit power the wireless radio may use. Depending on regulatory requirements and wireless usage, the actual transmit power may be reduced by the driver.'));
 					o.wifiNetwork = radioNet;
 			
-					const freqValue = ss.taboption('general', widgets.WifiFrequencyValue, '_freq', '<br />' + _('Operating frequency'), _(`
-						Prim Width and Prim Index are the Primary Channel Width and the Primary 1 MHz Channel Index respectively.
-						These options will vary depending on the main channel.
-					`));
+					const freqValue = ss.taboption('general', widgets.WifiFrequencyValue, '_freq', '<br />' + _('Operating frequency'));
 					freqValue.primChanSelect = true;
 					countryValue.validate = function (sectionId, value) {
 						const country = this.getUIElement(sectionId).getValue();
