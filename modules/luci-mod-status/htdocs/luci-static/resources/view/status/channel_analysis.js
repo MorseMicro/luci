@@ -116,8 +116,19 @@ return view.extend({
 	},
 
 	create_channel_graph: function(chan_analysis, freq_tbl, freq) {
+		// Determine the smallest gap between frequencies, and use this to indicate the lines.
+		const channels_by_mhz = freq_tbl.reduce((acc, freq) => {
+			(acc[freq.mhz] ??= []).push(freq.channel);
+			return acc;
+		}, {});
+		const frequencies = freq_tbl.map(f => f.mhz).sort();
+		const frequency_start = frequencies[0];
+		const frequency_end = frequencies[frequencies.length - 1];
+		const frequency_gap = Math.min(...frequencies.map((f, i) => i > 0 ? f - frequencies[i-1] : Infinity));
+		const frequency_length = (frequency_end - frequency_start) / frequency_gap;
+
 		var is5GHz = freq == '5GHz',
-			columns = is5GHz ? freq_tbl.length * 4 : freq_tbl.length + 3,
+			columns = is5GHz ? freq_tbl.length * 4 : frequency_length + 3,
 		    chan_graph = chan_analysis.graph,
 		    G = chan_graph.firstElementChild,
 		    step = (chan_graph.offsetWidth - 2) / columns,
@@ -145,26 +156,38 @@ return view.extend({
 		chan_analysis.col_width = step;
 
 		createGraphHLine(G,curr_offset, 0.1, 1);
-		for (var i=0; i< freq_tbl.length;i++) {
-			var channel = freq_tbl[i]
-			chan_analysis.offset_tbl[channel] = curr_offset+step;
-
-			if (is5GHz) {
-				createGraphHLine(G,curr_offset+step, 0.1, 3);
-				if (channel < 100)
-					createGraphText(G,curr_offset-(step/2), channel);
-				else
-					createGraphText(G,curr_offset-step, channel);
-			} else {
-				createGraphHLine(G,curr_offset+step, 0.1, 0);
-				createGraphText(G,curr_offset+step, channel);
+		for (var frequency = frequency_start; frequency <= frequency_end; frequency += frequency_gap) {
+			var channels = (channels_by_mhz[frequency] ?? []).toSorted();
+			var channel = channels[0];
+			var channel_text = channels.join('/');
+			for (var c of channels) {
+				// It's currently possible to have multiple channels mapping to the
+				// same frequency for Morse S1G devices (i.e. iwinfo freqlist returns
+				// all channels regardless of bandwidth).
+				chan_analysis.offset_tbl[c] = curr_offset+step;
 			}
-			curr_offset += step;
 
-			if (is5GHz && freq_tbl[i+1]) {
-				var next_channel = freq_tbl[i+1];
+			if (!is5GHz) {
+				createGraphHLine(G,curr_offset+step, 0.1, 0);
+				if (channel) {
+					createGraphText(G,curr_offset+step, channel_text);
+				}
+				curr_offset += step;
+			} else if (is5GHz && channel) {
+				// 5GHz skips channels and uses bars to indicate discontinuities.
+				createGraphHLine(G,curr_offset+step, 0.1, 3);
+				if (channel) {
+					if (channel < 100)
+						createGraphText(G,curr_offset-(step/2), channel_text);
+					else
+						createGraphText(G,curr_offset-step, channel_text);
+				}
+				curr_offset += step;
+
+				var next_channel = channels_by_mhz[frequency + frequency_gap]?.[0];
+
 				/* Check if we are transitioning to another 5Ghz band range */
-				if ((next_channel - channel) == 4) {
+				if (next_channel) {
 					for (var j=1; j < 4; j++) {
 						chan_analysis.offset_tbl[channel+j] = curr_offset+step;
 						if (j == 2)
@@ -174,17 +197,19 @@ return view.extend({
 						curr_offset += step;
 					}
 				} else {
-					chan_analysis.offset_tbl[channel+1] = curr_offset+step;
 					createGraphHLine(G,curr_offset+step, 0.1, 1);
 					curr_offset += step;
 
-					chan_analysis.offset_tbl[next_channel-2] = curr_offset+step;
 					createGraphHLine(G,curr_offset+step, 0.5, 0);
 					curr_offset += step;
 
-					chan_analysis.offset_tbl[next_channel-1] = curr_offset+step;
 					createGraphHLine(G,curr_offset+step, 0.1, 1);
 					curr_offset += step;
+				}
+
+				// Nasty hack to jump from ch 144 to 149.
+				if (channel == 144) {
+					frequency += 5;
 				}
 			}
 		}
@@ -411,11 +436,11 @@ return view.extend({
 			/* Split FrequencyList in Bands */
 			wifiDevs[ifname].freq.forEach(function(freq) {
 				if (freq.mhz >= 500_000) {
-					freq_tbl['900MHz'].push(freq.channel);
+					freq_tbl['900MHz'].push(freq);
 				} else if (freq.mhz >= 5000) {
-					freq_tbl['5GHz'].push(freq.channel);
+					freq_tbl['5GHz'].push(freq);
 				} else if(freq.mhz >= 2000) {
-					freq_tbl['2.4GHz'].push(freq.channel);
+					freq_tbl['2.4GHz'].push(freq);
 				}
 			});
 
