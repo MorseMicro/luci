@@ -759,6 +759,9 @@ return view.extend({
 					const countryValue = ss.taboption('general', widgets.WifiCountryValue, 'country', _('Country Code'));
 					countryValue.wifiNetwork = radioNet;
 
+					o = ss.taboption('general', widgets.WifiTxPowerValue, 'txpower', _('Maximum transmit power'), _('Specifies the maximum transmit power the wireless radio may use. Depending on regulatory requirements and wireless usage, the actual transmit power may be reduced by the driver.'));
+					o.wifiNetwork = radioNet;
+			
 					const freqValue = ss.taboption('general', widgets.WifiFrequencyValue, '_freq', '<br />' + _('Operating frequency'), _(`
 						Prim Width and Prim Index are the Primary Channel Width and the Primary 1 MHz Channel Index respectively.
 						These options will vary depending on the main channel.
@@ -908,6 +911,50 @@ return view.extend({
 						bcfOpt.onchange = function (ev, sid, val) {
 							bcfInfoOpt.renderUpdate(sid, renderBcfInfo(val));
 						}
+					}
+					if (L.hasSystemFeature('morsetestmode')) {
+						ss.tab('chan_test', _('Channel Test'));
+
+						o = ss.taboption('chan_test', form.Flag, 'chan_test_mode', _('Enable channel test mode'), _('Allows temporary setting of frequency, channel width and power beyond normal regulatory limits, which will override all other channel settings. Use with caution and only in a controlled environment to avoid interference with other devices.'));
+						o.enabled = '1';
+						o.disabled = '0';
+						o.default = o.disabled;
+
+						o = ss.taboption('chan_test', form.Value, 'chan_test_freq', _('Channel test frequency (kHz)'));
+						o.datatype = 'range(800000,950000)';
+						o.default = '850000';
+						o.optional = true;
+						o.depends('chan_test_mode', '1');
+
+						o = ss.taboption('chan_test', form.ListValue, 'chan_test_bw', _('Channel test channel width'));
+						o.value('1', '1 MHz');
+						o.value('2', '2 MHz');
+						o.value('4', '4 MHz');
+						o.value('8', '8 MHz');
+						o.value('16', '16 MHz');
+						o.default = '1';
+						o.depends('chan_test_mode', '1');
+
+						o = ss.taboption('chan_test', form.ListValue, 'chan_test_prim_chwidth', _('Channel test primary channel width'));
+						o.value('1', '1 MHz');
+						o.value('2', '2 MHz');
+						o.value('4', '4 MHz');
+						o.value('8', '8 MHz');
+						o.value('16', '16 MHz');
+						o.default = '1';
+						o.depends('chan_test_mode', '1');
+
+						o = ss.taboption('chan_test', form.ListValue, 'chan_test_prim_chan_index', _('Channel test primary 1 MHz channel index'));
+						o.value('0', '0');
+						o.value('1', '1');
+						o.value('2', '2');
+						o.value('3', '3');
+						o.value('4', '4');
+						o.value('5', '5');
+						o.value('6', '6');
+						o.value('7', '7');
+						o.default = '0';
+						o.depends('chan_test_mode', '1');
 					}
 
 					o = ss.taboption('advanced', form.Flag, 's1g_capab', _('Short Guard Interval'));

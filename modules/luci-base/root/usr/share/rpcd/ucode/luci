@@ -212,6 +212,7 @@ const methods = {
 				morsedppd:  access('/usr/bin/dppd') == true,
 				morsectrl:  access('/sbin/morsectrl') == true,
 				mesh11sd:   access('/usr/sbin/mesh11sd') == true,
+				morsetestmode: access('/sys/module/morse/parameters/chan_test_mode') == true,
 			};
 
 			const wifi_features = [ 'eap', '11ac', '11ax', '11r', 'acs', 'sae', 'owe', 'suiteb192', 'wep', 'wps' ];
