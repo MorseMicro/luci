@@ -955,13 +955,6 @@ return view.extend({
 					o = ss.taboption('advanced', form.Flag, 'ampdu', _('AMPDU'));
 					o.default = 1;
 
-					o = ss.taboption('advanced', form.ListValue, 'bss_color', _('BSS Color'));
-					o.optional = true;
-					o.placeholder = _('-- Not set --');
-					for (let i = 0; i <= 7; ++i) {
-						o.value(i, i);
-					}
-
 					o = ss.taboption('advanced', form.Value, 'forced_listen_interval', _('Forced listen interval'),
 						_('Forces the listen interval in all cases (unlike max_listen_interval, which is a cap that only applies to the AP). The unified scaling factor and unscaled interval are automatically determined from this value.'));
 					o.optional = true;
@@ -1356,6 +1349,13 @@ return view.extend({
 					o.depends('mode', 'sta');
 					o.depends('mode', 'ap-wds');
 					o.depends('mode', 'sta-wds');
+
+					o = ss.taboption('advanced', form.ListValue, 's1g_bss_color', _('BSS Color'));
+					o.optional = true;
+					o.placeholder = _('-- Not set --');
+					for (let i = 1; i <= 7; ++i) {
+						o.value(i, i);
+					}
 
 					o = ss.taboption('advanced', form.Value, 'max_inactivity', _('Station inactivity limit'), _('802.11v: BSS Max Idle. Units: seconds.'));
 					o.optional = true;
