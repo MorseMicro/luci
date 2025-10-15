@@ -332,7 +332,7 @@ var CBIWifiFrequencyValue = form.Value.extend({
 		var options = ['auto', 'auto', true];
 
 		if (chanInfo && s1gChanWidth.value != 'auto') {
-			for (const index of chanInfo[`prim_chan_indices_for_${s1gChanWidth.value}MHz`]) {
+			for (const index of (chanInfo.prim_chan_indices_allowed[s1gChanWidth.value] ?? [])) {
 				options.push(String(index), String(index), true);
 			}
 		}

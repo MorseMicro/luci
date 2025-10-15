@@ -132,6 +132,10 @@ class HaLowChannels {
 			.map(ch => Math.round(ch.centre_freq_mhz * 1000)));
 
 		for (const c of Object.values(channels)) {
+			// This channel might be used by other channelizations, or we may have
+			// called restrict() again, so make sure to recalculate from scratch.
+			c.prim_chan_indices_allowed = {};
+
 			for (let width = 1; width <= Math.min(2, c.bw); ++width) {
 				for (let index = 0; index < Number(c.bw); ++index) {
 					let offsetMhz;
@@ -142,7 +146,7 @@ class HaLowChannels {
 					}
 					const freqKhz = Math.round(1000 * (Number(c.centre_freq_mhz) + offsetMhz));
 					if (allowedKhz.has(freqKhz)) {
-						(c[`prim_chan_indices_for_${width}MHz`] ??= []).push(index);
+						(c.prim_chan_indices_allowed[width] ??= []).push(index);
 					}
 				}
 			}
