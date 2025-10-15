@@ -122,7 +122,7 @@ return view.extend({
 		const frequencies = freq_tbl.map(f => f.mhz).sort();
 		const frequency_start = frequencies[0];
 		const frequency_end = frequencies[frequencies.length - 1];
-		const frequency_gap = Math.min(...frequencies.map((f, i) => i > 0 ? f - frequencies[i-1] : Infinity));
+		const frequency_gap = Math.min(...frequencies.map((f, i) => i > 0 ? f - frequencies[i-1] : Infinity).filter(gap => gap > 0));
 		const frequency_length = (frequency_end - frequency_start) / frequency_gap;
 
 		var is5GHz = freq == '5GHz',
