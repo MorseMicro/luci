@@ -294,15 +294,19 @@ const methods = {
 
 			// This check can be removed after v25 release
 			result.netifd_vrf = match(callPackageVersionCheck('netifd'), /^20[0-9][0-9]/s)?.[0] >= 2025;
-			result.morseregionlock = false;
-			fd = popen('persistent_vars_storage.sh READ mm_region 2>/dev/null');
-			if (fd) {
-				const output = fd.read('all');
-				if (length(output) > 0) {
-					result.morseregionlock = true;
+
+			const persistent = {
+				mm_region: '',
+				mm_region_unlocked: '',
+			};
+			for (let key in ['mm_region', 'mm_region_unlocked']) {
+				fd = popen(`persistent_vars_storage.sh READ '${key}' 2>/dev/null`);
+				if (fd) {
+					persistent[key] = trim(fd.read('all'));
+					fd.close();
 				}
-				fd.close();
 			}
+			result.morseregionlock = persistent.mm_region && persistent.mm_region_unlocked !== '1';
 
 			fd = popen('ipset --help 2>/dev/null');
 
