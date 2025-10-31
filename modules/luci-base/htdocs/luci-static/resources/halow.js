@@ -115,6 +115,11 @@ class HaLowChannels {
 	 * about the available primary channel indices based on the current active channels.
 	 */
 	_setHaLowChannelMap(country_code, channelization = null, activeChannels = null) {
+		if (!channelization) {
+			// Collapse undefined/"" to null.
+			channelization = null;
+		}
+
 		const channels = {};
 
 		for (const c of this.channels) {
@@ -132,7 +137,7 @@ class HaLowChannels {
 				}
 			}
 
-			if (activeChannels && !activeChannels.has(c.s1g_chan)) {
+			if (activeChannels && !activeChannels.has(Number(c.s1g_chan))) {
 				continue;
 			}
 
@@ -172,6 +177,11 @@ class HaLowChannels {
 	 * Get a map of channel->chanInfo for this country_code + channelization.
 	 */
 	getMap(country_code, channelization = null) {
+		if (!channelization) {
+			// Collapse undefined/"" to null.
+			channelization = null;
+		}
+
 		if (!this.channelMap[country_code]?.[channelization]) {
 			this._setHaLowChannelMap(country_code, channelization);
 		}
