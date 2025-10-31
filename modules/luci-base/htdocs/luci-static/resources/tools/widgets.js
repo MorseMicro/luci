@@ -10,7 +10,6 @@
 'require halow';
 
 const DEFAULT_S1G_COUNTRY = 'US';
-const S1G_AUTO_ONLY_COUNTRIES = new Set(['EU', 'GB']);
 
 function getUsers() {
     return fs.lines('/etc/passwd').then(function(lines) {
@@ -360,7 +359,7 @@ var CBIWifiFrequencyValue = form.Value.extend({
 			const channelValues = hasAcs ? [ 'auto', 'auto', true ] : [];
 			const chanList = [];
 			const haLowChannels = this.getCurrentHalowChannels(elem);
-			if (!S1G_AUTO_ONLY_COUNTRIES.has(country)) {
+			if (!halow.isAutoOnlyCountry(country)) {
 				const chans = Object.values(haLowChannels).toSorted((a, b) => Number(a.centre_freq_mhz) - Number(b.centre_freq_mhz));
 				for (const chanInfo of chans) {
 					if (chanInfo.bw === s1gWidth) {
