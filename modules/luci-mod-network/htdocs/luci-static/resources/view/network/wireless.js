@@ -946,7 +946,7 @@ return view.extend({
 					o = ss.taboption('advanced', form.Value, 'forced_listen_interval', _('Forced listen interval'),
 						_('Forces the listen interval in all cases (unlike max_listen_interval, which is a cap that only applies to the AP). The unified scaling factor and unscaled interval are automatically determined from this value.'));
 					o.optional = true;
-					o.datatype = 'range(1,163830000)';
+					o.datatype = 'range(0,163830000)';
 
 					o = ss.taboption('advanced', form.Flag, 'vendor_keep_alive_offload', _('Keep alive offload'), _('Offload IPv4 keep alive frames to hardware'));
 					o.enabled = '1';
