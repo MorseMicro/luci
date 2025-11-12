@@ -747,6 +747,12 @@ return view.extend({
 					const countryValue = ss.taboption('general', widgets.WifiCountryValue, 'country', _('Country Code'));
 					countryValue.wifiNetwork = radioNet;
 
+					o = ss.taboption('general', form.Flag, 'enable_auto_duty_cycle', _('Use standard duty cycle'),
+						_('Disabling this in EU/GB will rely on ACS/DCS to meet regulatory requirements for AFA (Adaptive Frequency Agility).'));
+					o.default = true;
+					o.depends('country', 'EU');
+					o.depends('country', 'GB');
+
 					o = ss.taboption('general', widgets.WifiTxPowerValue, 'txpower', _('Maximum transmit power'), _('Specifies the maximum transmit power the wireless radio may use. Depending on regulatory requirements and wireless usage, the actual transmit power may be reduced by the driver.'));
 					o.wifiNetwork = radioNet;
 			
