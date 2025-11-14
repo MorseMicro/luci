@@ -511,7 +511,7 @@ var CBIWifiFrequencyValue = form.Value.extend({
 			E('label', { 'style': 'float:left; margin-right:3px; display:none;' }, [
 				E('span', {
 					'style': 'text-decoration: underline currentcolor dotted; cursor: help',
-					'data-tooltip': _('Primary Channel Width; available options will vary depending on the main channel'),
+					'data-tooltip': _('Channelization standard; this will affect available channels and hence interoperability'),
 				}, _('Channelization')),
 				E('br'),
 				E('select', {
@@ -571,7 +571,7 @@ var CBIWifiFrequencyValue = form.Value.extend({
 			E('label', { 'style': 'float:left; margin-right:3px; display:none;', }, [
 				E('span', {
 					'style': 'text-decoration: underline currentcolor dotted; cursor: help',
-					'data-tooltip': _('Primary Channel Width; available options will vary depending on the main channel'),
+					'data-tooltip': _('Primary 1MHz Channel Index; available options will vary depending on the main channel'),
 				}, _('Prim Index')),
 				E('br'),
 				E('select', {
