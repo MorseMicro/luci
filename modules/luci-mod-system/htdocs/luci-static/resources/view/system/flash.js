@@ -17,6 +17,19 @@ var callSystemValidateFirmwareImage = rpc.declare({
 	expect: { '': { valid: false, forcable: true } }
 });
 
+var callGetLocaltime = rpc.declare({
+	object: 'luci',
+	method: 'getLocaltime',
+	params: [],
+});
+
+var callSetLocaltime = rpc.declare({
+	object: 'luci',
+	method: 'setLocaltime',
+	params: [ 'localtime' ],
+	expect: { result: 0 }
+});
+
 function findStorageSize(procmtd, procpart) {
 	var kernsize = 0, rootsize = 0, wholesize = 0;
 
@@ -63,6 +76,18 @@ function findStorageSize(procmtd, procpart) {
 	return wholesize;
 }
 
+function synchroniseDeviceTimeWithBrowser () {
+	return callGetLocaltime()
+		.then((res) => {
+			const deviceTime = res.result;
+			const browserTime = Math.floor(Date.now() / 1000);
+			if (Math.abs(browserTime - deviceTime) > 300) {
+				return callSetLocaltime(browserTime).then(() => true)
+			}
+			return false;
+		})
+		.catch(() => false)
+}
 
 var mapdata = { actions: {}, config: {} };
 
@@ -198,8 +223,11 @@ return view.extend({
 					E('span', { 'class': 'spinning' }, _('Verifying the uploaded image file.'))
 				]);
 
-				return callSystemValidateFirmwareImage('/tmp/firmware.bin')
-					.then(function(res) { return [ reply, res ]; });
+				/* Silently synchronise device time with browser time before validating firmware to reduce cert expiry errors */
+				return synchroniseDeviceTimeWithBrowser().then(() => {
+					return callSystemValidateFirmwareImage('/tmp/firmware.bin')
+						.then(function(res) { return [ reply, res ]; });
+				});
 			}, this, ev.target))
 			.then(L.bind(function(btn, reply) {
 				return fs.exec('/sbin/sysupgrade', [ '--test', '/tmp/firmware.bin' ])
