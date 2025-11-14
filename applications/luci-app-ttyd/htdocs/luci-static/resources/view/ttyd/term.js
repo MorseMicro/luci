@@ -12,10 +12,20 @@ return view.extend({
 	render: function() {
 		var port = uci.get_first('ttyd', 'ttyd', 'port') || '7681',
 			ssl = uci.get_first('ttyd', 'ttyd', 'ssl') || '0',
-			url = uci.get_first('ttyd', 'ttyd', 'url_override');
+			url = uci.get_first('ttyd', 'ttyd', 'url_override'),
+			enable = uci.get_first('ttyd', 'ttyd', 'enable');
+
 		if (port === '0')
 			return E('div', { class: 'alert-message warning' },
 					_('Random ttyd port (port=0) is not supported.<br />Change to a fixed port and try again.'));
+
+		if (enable === '0')
+			return E('div', { class: 'alert-message warning' }, [
+				E('p', {}, _('ttyd is disabled. Note that ttyd runs a separate web server that allows unencrypted terminal/console access over HTTP.')),
+				E('a', {
+					href: L.url('admin/services/ttyd/config'),
+				}, _('Configure ttyd.')),
+			]);
 
 		if (window.location.protocol === 'https:' && ssl === '0') {
 
