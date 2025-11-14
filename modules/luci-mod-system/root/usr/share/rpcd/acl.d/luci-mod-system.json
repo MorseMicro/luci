@@ -158,7 +158,8 @@
 				"/sbin/sysupgrade --list-backup": [ "exec" ]
 			},
 			"ubus": {
-				"file": [ "exec", "read", "stat" ]
+				"file": [ "exec", "read", "stat" ],
+				"luci": [ "getLocaltime" ]
 			}
 		},
 		"write": {
@@ -185,7 +186,8 @@
 			},
 			"ubus": {
 				"file": [ "exec", "remove", "write" ],
-				"system": [ "validate_firmware_image" ]
+				"system": [ "validate_firmware_image" ],
+				"luci": [ "setLocaltime" ]
 			}
 		}
 	},
