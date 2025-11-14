@@ -1812,6 +1812,12 @@ msgstr ""
 msgid "Channelization"
 msgstr ""
 
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:506
+msgid ""
+"Channelization standard; this will affect available channels and hence "
+"interoperability"
+msgstr ""
+
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/mounts.js:174
 msgid "Check filesystems before mount"
 msgstr ""
@@ -7854,9 +7860,13 @@ msgstr ""
 msgid "Prim Width"
 msgstr ""
 
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:506
-#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:553
 #: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:566
+msgid ""
+"Primary 1MHz Channel Index; available options will vary depending on the "
+"main channel"
+msgstr ""
+
+#: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:553
 msgid ""
 "Primary Channel Width; available options will vary depending on the main "
 "channel"
