@@ -13,7 +13,7 @@ msgstr ""
 "20)) ? 1 : 2;\n"
 "X-Generator: Weblate 5.13-dev\n"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:163
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:164
 msgid "Active"
 msgstr "Activ"
 
@@ -21,15 +21,15 @@ msgstr "Activ"
 msgid "Architecture"
 msgstr "Arhitectură"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:181
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:182
 msgid "BSSID"
 msgstr "BSSID"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:175
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:176
 msgid "Bitrate"
 msgstr "Viteză de transfer"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:169
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:170
 msgid "Channel"
 msgstr "Canal"
 
@@ -58,7 +58,7 @@ msgstr "Tabloul de bord"
 msgid "Devices"
 msgstr "Dispozitive"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:193
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:194
 msgid "Devices Connected"
 msgstr "Dispozitive Conectate"
 
@@ -70,17 +70,13 @@ msgstr "Nefuncțional."
 msgid "Download"
 msgstr "Descarcă"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:187
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:188
 msgid "Encryption"
 msgstr "Criptare"
 
 #: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/10_router.js:313
 msgid "Firmware Version"
 msgstr "Versiune Firmware"
-
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:171
-msgid "GHz"
-msgstr "GHz"
 
 #: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/10_router.js:201
 msgid "GatewayV4"
@@ -108,7 +104,7 @@ msgstr "Acordați acces la afișarea stării wireless"
 
 #: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/20_lan.js:30
 #: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:83
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:223
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:224
 msgid "Hostname"
 msgstr "Numele gazdei (hostname)"
 
@@ -157,7 +153,7 @@ msgstr "MAC"
 msgid "Mac"
 msgstr "Mac"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:177
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:178
 msgid "Mbit/s"
 msgstr "Mbit/s"
 
@@ -176,8 +172,8 @@ msgid "Protocol"
 msgstr "Protocol"
 
 #: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:84
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:157
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:229
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:158
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:230
 msgid "SSID"
 msgstr "SSID"
 
@@ -185,7 +181,7 @@ msgstr "SSID"
 msgid "Signal Strength"
 msgstr "Puterea Semnalului"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:235
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:236
 msgid "Strength"
 msgstr "Putere"
 
@@ -193,7 +189,7 @@ msgstr "Putere"
 msgid "System"
 msgstr "Sistem"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:245
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:246
 msgid "Transferred"
 msgstr "Transferat"
 
@@ -224,3 +220,6 @@ msgstr "nu"
 #: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:65
 msgid "yes"
 msgstr "da"
+
+#~ msgid "GHz"
+#~ msgstr "GHz"

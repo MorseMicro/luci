@@ -12,7 +12,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 5.13-dev\n"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:163
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:164
 msgid "Active"
 msgstr "Aktív"
 
@@ -20,15 +20,15 @@ msgstr "Aktív"
 msgid "Architecture"
 msgstr "Architektúra"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:181
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:182
 msgid "BSSID"
 msgstr "BSSID"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:175
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:176
 msgid "Bitrate"
 msgstr "Bitráta"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:169
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:170
 msgid "Channel"
 msgstr "Csatorna"
 
@@ -57,7 +57,7 @@ msgstr "Kezelőfelület"
 msgid "Devices"
 msgstr "Eszközök"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:193
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:194
 msgid "Devices Connected"
 msgstr "Csatlakozott eszközök"
 
@@ -69,17 +69,13 @@ msgstr "Le."
 msgid "Download"
 msgstr "Letöltés"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:187
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:188
 msgid "Encryption"
 msgstr "Titkosítás"
 
 #: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/10_router.js:313
 msgid "Firmware Version"
 msgstr "Firmware verzió"
-
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:171
-msgid "GHz"
-msgstr "GHz"
 
 #: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/10_router.js:201
 msgid "GatewayV4"
@@ -107,7 +103,7 @@ msgstr "Jogosultság adása a vezeték nélküli állapotkijelzéshez"
 
 #: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/20_lan.js:30
 #: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:83
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:223
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:224
 msgid "Hostname"
 msgstr "Gépnév"
 
@@ -156,7 +152,7 @@ msgstr "MAC"
 msgid "Mac"
 msgstr "MAC"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:177
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:178
 msgid "Mbit/s"
 msgstr "Mbit/s"
 
@@ -175,8 +171,8 @@ msgid "Protocol"
 msgstr "Protokoll"
 
 #: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:84
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:157
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:229
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:158
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:230
 msgid "SSID"
 msgstr "SSID"
 
@@ -184,7 +180,7 @@ msgstr "SSID"
 msgid "Signal Strength"
 msgstr "Jelerősség"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:235
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:236
 msgid "Strength"
 msgstr ""
 
@@ -192,7 +188,7 @@ msgstr ""
 msgid "System"
 msgstr "Rendszer"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:245
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:246
 msgid "Transferred"
 msgstr ""
 
@@ -223,3 +219,6 @@ msgstr "nem"
 #: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:65
 msgid "yes"
 msgstr "igen"
+
+#~ msgid "GHz"
+#~ msgstr "GHz"

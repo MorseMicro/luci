@@ -38,6 +38,10 @@ msgstr "IP bağlantı noktası yerine UNIX etki alanı soketine bağlama"
 msgid "Check origin"
 msgstr "Menşeini kontrol et"
 
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:43
+msgid "Click to start HTTP session"
+msgstr ""
+
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:53
 msgid "Client option"
 msgstr "İstemci seçeneği"
@@ -50,6 +54,10 @@ msgstr "Komut"
 msgid "Config"
 msgstr "Yapılandırma"
 
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:27
+msgid "Configure ttyd."
+msgstr ""
+
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:37
 msgid "Credential"
 msgstr "Kimlik"
@@ -57,6 +65,10 @@ msgstr "Kimlik"
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:37
 msgid "Credential for Basic Authentication"
 msgstr "Temel Kimlik Doğrulama için Kimlik Bilgisi"
+
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:48
+msgid "Current terminal configuration is not allowed over HTTPS."
+msgstr ""
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:67
 msgid "Custom index.html path"
@@ -101,6 +113,15 @@ msgstr "Grup kimliği"
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:43
 msgid "Group id to run with"
 msgstr "Birlikte çalıştırılacak grup kimliği"
+
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:40
+msgid ""
+"HTTP is not encrypted. Your password and data can be read on the network."
+msgstr ""
+
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:53
+msgid "HTTP(s) Access"
+msgstr ""
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:69
 msgid "IPv6"
@@ -161,7 +182,7 @@ msgstr ""
 "Dinlemek için bağlantı noktası (varsayılan: 7681, rastgele bağlantı noktası "
 "için \"0\" kullanın)"
 
-#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:15
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:20
 msgid ""
 "Random ttyd port (port=0) is not supported.<br />Change to a fixed port and "
 "try again."
@@ -201,6 +222,10 @@ msgstr "SSL anahtarı"
 msgid "SSL key file path"
 msgstr "SSL anahtar dosya yolu"
 
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:39
+msgid "Security Warning:"
+msgstr ""
+
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:53
 msgid "Send option to client"
 msgstr "İstemciye seçenek gönder"
@@ -230,6 +255,10 @@ msgstr "Terminal tipi"
 msgid "Terminal type to report (default: xterm-256color)"
 msgstr "Raporlanacak terminal türü (varsayılan: xterm-256color)"
 
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:50
+msgid "Turn off HTTPS redirect in"
+msgstr ""
+
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:32
 msgid "UNIX domain socket path (eg: /var/run/ttyd.sock)"
 msgstr "UNIX etki alanı soket yolu (örn: /var/run/ttyd.sock)"
@@ -258,6 +287,16 @@ msgstr "Çalıştırılacak kullanıcı kimliği"
 msgid "Warning"
 msgstr "Dikkat"
 
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:54
+msgid "settings."
+msgstr ""
+
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:12
 msgid "ttyd Instance"
 msgstr "ttyd Örneği"
+
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:24
+msgid ""
+"ttyd is disabled. Note that ttyd runs a separate web server that allows "
+"unencrypted terminal/console access over HTTP."
+msgstr ""

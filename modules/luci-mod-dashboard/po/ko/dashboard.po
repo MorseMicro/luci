@@ -12,7 +12,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 4.15.1-dev\n"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:163
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:164
 msgid "Active"
 msgstr "활성화"
 
@@ -20,15 +20,15 @@ msgstr "활성화"
 msgid "Architecture"
 msgstr "아키텍처"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:181
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:182
 msgid "BSSID"
 msgstr "BSSID"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:175
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:176
 msgid "Bitrate"
 msgstr "비트레이트"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:169
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:170
 msgid "Channel"
 msgstr "채널"
 
@@ -57,7 +57,7 @@ msgstr "대시보드"
 msgid "Devices"
 msgstr "장치"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:193
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:194
 msgid "Devices Connected"
 msgstr "연결된 장치"
 
@@ -69,17 +69,13 @@ msgstr "다운."
 msgid "Download"
 msgstr "다운로드"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:187
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:188
 msgid "Encryption"
 msgstr "암호화"
 
 #: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/10_router.js:313
 msgid "Firmware Version"
 msgstr "펌웨어 버전"
-
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:171
-msgid "GHz"
-msgstr "GHz"
 
 #: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/10_router.js:201
 msgid "GatewayV4"
@@ -107,7 +103,7 @@ msgstr "무선 상태 표시 접근을 허가합니다"
 
 #: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/20_lan.js:30
 #: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:83
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:223
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:224
 msgid "Hostname"
 msgstr "호스트명"
 
@@ -156,7 +152,7 @@ msgstr "MAC"
 msgid "Mac"
 msgstr "MAC"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:177
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:178
 msgid "Mbit/s"
 msgstr "Mbit/s"
 
@@ -175,8 +171,8 @@ msgid "Protocol"
 msgstr "프로토콜"
 
 #: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:84
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:157
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:229
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:158
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:230
 msgid "SSID"
 msgstr "SSID"
 
@@ -184,7 +180,7 @@ msgstr "SSID"
 msgid "Signal Strength"
 msgstr ""
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:235
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:236
 msgid "Strength"
 msgstr ""
 
@@ -192,7 +188,7 @@ msgstr ""
 msgid "System"
 msgstr "시스템"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:245
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:246
 msgid "Transferred"
 msgstr ""
 
@@ -223,3 +219,6 @@ msgstr "아니오"
 #: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:65
 msgid "yes"
 msgstr "예"
+
+#~ msgid "GHz"
+#~ msgstr "GHz"

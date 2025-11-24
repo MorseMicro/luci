@@ -10,7 +10,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 5.10.3-dev\n"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:163
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:164
 msgid "Active"
 msgstr "活跃"
 
@@ -18,15 +18,15 @@ msgstr "活跃"
 msgid "Architecture"
 msgstr "架构"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:181
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:182
 msgid "BSSID"
 msgstr "BSSID"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:175
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:176
 msgid "Bitrate"
 msgstr "比特率"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:169
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:170
 msgid "Channel"
 msgstr "信道"
 
@@ -55,7 +55,7 @@ msgstr "主页"
 msgid "Devices"
 msgstr "设备"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:193
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:194
 msgid "Devices Connected"
 msgstr "已连接设备"
 
@@ -67,17 +67,13 @@ msgstr "下行"
 msgid "Download"
 msgstr "下载"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:187
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:188
 msgid "Encryption"
 msgstr "加密"
 
 #: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/10_router.js:313
 msgid "Firmware Version"
 msgstr "固件版本"
-
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:171
-msgid "GHz"
-msgstr "GHz"
 
 #: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/10_router.js:201
 msgid "GatewayV4"
@@ -105,7 +101,7 @@ msgstr "授予访问无线状态展示的权限"
 
 #: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/20_lan.js:30
 #: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:83
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:223
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:224
 msgid "Hostname"
 msgstr "主机名"
 
@@ -154,7 +150,7 @@ msgstr "MAC"
 msgid "Mac"
 msgstr "Mac"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:177
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:178
 msgid "Mbit/s"
 msgstr "Mbit/s"
 
@@ -173,8 +169,8 @@ msgid "Protocol"
 msgstr "协议"
 
 #: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:84
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:157
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:229
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:158
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:230
 msgid "SSID"
 msgstr "SSID"
 
@@ -182,7 +178,7 @@ msgstr "SSID"
 msgid "Signal Strength"
 msgstr "信号强度"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:235
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:236
 msgid "Strength"
 msgstr "强度"
 
@@ -190,7 +186,7 @@ msgstr "强度"
 msgid "System"
 msgstr "系统"
 
-#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:245
+#: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:246
 msgid "Transferred"
 msgstr "已传输"
 
@@ -221,3 +217,6 @@ msgstr "否"
 #: modules/luci-mod-dashboard/htdocs/luci-static/resources/view/dashboard/include/30_wifi.js:65
 msgid "yes"
 msgstr "是"
+
+#~ msgid "GHz"
+#~ msgstr "GHz"

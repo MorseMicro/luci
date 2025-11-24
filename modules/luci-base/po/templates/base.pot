@@ -644,7 +644,7 @@ msgstr ""
 msgid "Access Technologies"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:390
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:418
 msgid "Actions"
 msgstr ""
 
@@ -981,7 +981,7 @@ msgstr ""
 msgid "Allow localhost"
 msgstr ""
 
-#: modules/luci-mod-system/root/usr/share/rpcd/acl.d/luci-mod-system.json:179
+#: modules/luci-mod-system/root/usr/share/rpcd/acl.d/luci-mod-system.json:181
 msgid "Allow rebooting the device"
 msgstr ""
 
@@ -1135,7 +1135,7 @@ msgstr ""
 msgid "Apply and keep settings"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:121
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:146
 msgid "Apply backup?"
 msgstr ""
 
@@ -1353,7 +1353,7 @@ msgstr ""
 msgid "Back to peer configuration"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:393
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:421
 msgid "Backup"
 msgstr ""
 
@@ -1361,7 +1361,7 @@ msgstr ""
 msgid "Backup / Flash Firmware"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:353
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:381
 msgid "Backup file list"
 msgstr ""
 
@@ -1420,7 +1420,7 @@ msgstr ""
 msgid "Beacon spreading cannot be used with periodic RAW"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:354
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:382
 msgid ""
 "Below is the determined list of files to backup. It consists of changed "
 "configuration files marked by opkg, essential base files and the user "
@@ -1645,8 +1645,8 @@ msgstr ""
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/interfaces.js:188
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/interfaces.js:1242
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:2678
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:130
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:297
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:155
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:325
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/sshkeys.js:209
 #: protocols/luci-proto-wireguard/htdocs/luci-static/resources/protocol/wireguard.js:472
 msgid "Cancel"
@@ -1826,12 +1826,12 @@ msgstr ""
 msgid "Check this option to delete the existing networks from this radio."
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:112
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:137
 msgid "Checking archive…"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:195
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:197
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:220
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:222
 msgid "Checking image…"
 msgstr ""
 
@@ -1848,7 +1848,7 @@ msgstr ""
 msgid "Choose (if empty, default)"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:429
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:457
 msgid "Choose mtdblock"
 msgstr ""
 
@@ -1875,13 +1875,13 @@ msgstr ""
 msgid "Cisco UDP encapsulation"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:393
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:421
 msgid ""
 "Click \"Generate archive\" to download a tar archive of the current "
 "configuration files."
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:426
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:454
 msgid ""
 "Click \"Save mtdblock\" to download specified mtdblock file. (NOTE: THIS "
 "FEATURE IS FOR PROFESSIONALS! )"
@@ -1971,7 +1971,7 @@ msgid "Config File"
 msgstr ""
 
 #: modules/luci-base/htdocs/luci-static/resources/ui.js:4486
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:456
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:484
 msgid "Configuration"
 msgstr ""
 
@@ -2086,7 +2086,7 @@ msgid "Consider the slave up when any ARP IP target is reachable (any, 0)"
 msgstr ""
 
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/crontab.js:18
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:370
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:398
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/startup.js:55
 msgid "Contents have been saved."
 msgstr ""
@@ -2094,8 +2094,8 @@ msgstr ""
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/interfaces.js:434
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/interfaces.js:468
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:543
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:134
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:271
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:159
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:299
 msgid "Continue"
 msgstr ""
 
@@ -2158,8 +2158,8 @@ msgstr ""
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:858
 msgid ""
 "Current Board Configuration File. If unset, will default to "
-"bcf_boardtype_xxxx.bin, where xxxx is the board type in OTP, or bcf_default."
-"bin if no OTP bits are set."
+"bcf_boardtype_xxxx.bin, where xxxx is the board type in OTP, or "
+"bcf_default.bin if no OTP bits are set."
 msgstr ""
 
 #: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:713
@@ -2190,7 +2190,7 @@ msgstr ""
 msgid "Custom Interface"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:412
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:440
 msgid ""
 "Custom files (certificates, scripts) may remain on the system. To prevent "
 "this, perform a factory-reset first."
@@ -2704,7 +2704,7 @@ msgstr ""
 #: modules/luci-base/htdocs/luci-static/resources/ui.js:3765
 #: modules/luci-base/htdocs/luci-static/resources/ui.js:4619
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:2400
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:360
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:388
 #: protocols/luci-proto-wireguard/htdocs/luci-static/resources/view/wireguard/status.js:45
 #: protocols/luci-proto-wireguard/htdocs/luci-static/resources/view/wireguard/status.js:66
 msgid "Dismiss"
@@ -2796,7 +2796,7 @@ msgstr ""
 msgid "Do you really want to delete the following SSH key?"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:96
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:121
 msgid "Do you really want to erase all settings?"
 msgstr ""
 
@@ -2832,11 +2832,11 @@ msgstr ""
 msgid "Down Delay"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:396
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:424
 msgid "Download backup"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:434
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:462
 msgid "Download mtdblock"
 msgstr ""
 
@@ -3420,7 +3420,7 @@ msgstr ""
 msgid "Enter custom values"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:99
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:124
 msgid "Erasing..."
 msgstr ""
 
@@ -3790,25 +3790,25 @@ msgstr ""
 msgid "Fixed source port for outbound DNS queries."
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:314
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:451
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:342
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:479
 msgid "Flash image..."
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:310
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:338
 msgid "Flash image?"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:441
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:469
 msgid "Flash new firmware image"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:386
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:414
 msgid "Flash operations"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:319
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:321
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:347
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:349
 msgid "Flashing…"
 msgstr ""
 
@@ -3862,7 +3862,7 @@ msgstr ""
 msgid "Force link"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:283
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:311
 msgid "Force upgrade"
 msgstr ""
 
@@ -4061,7 +4061,7 @@ msgstr ""
 msgid "Generate PMK locally"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:398
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:426
 msgid "Generate archive"
 msgstr ""
 
@@ -4870,11 +4870,11 @@ msgstr ""
 msgid "Ignore {etc_hosts}"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:449
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:477
 msgid "Image"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:275
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:303
 msgid "Image check failed:"
 msgstr ""
 
@@ -4946,7 +4946,7 @@ msgstr ""
 msgid "Inbound:"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:264
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:292
 msgid ""
 "Include in backup a list of current installed packages at /etc/backup/"
 "installed_packages.txt"
@@ -5273,7 +5273,7 @@ msgstr ""
 msgid "Isolate Clients"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:238
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:266
 msgid ""
 "It appears that you are trying to flash an image that does not fit into the "
 "flash memory, please verify the image file!"
@@ -5305,7 +5305,7 @@ msgstr ""
 msgid "Keep alive offload"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:230
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:258
 msgid "Keep settings and retain the current configuration"
 msgstr ""
 
@@ -5891,7 +5891,7 @@ msgstr ""
 msgid "MBIM Cellular"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:225
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:253
 msgid "MD5"
 msgstr ""
 
@@ -7009,7 +7009,7 @@ msgstr ""
 msgid "Open iptables rules overview…"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:474
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:502
 msgid "Open list..."
 msgstr ""
 
@@ -7678,7 +7678,7 @@ msgstr ""
 msgid "Perform reboot"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:408
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:436
 msgid "Perform reset"
 msgstr ""
 
@@ -8182,8 +8182,8 @@ msgstr ""
 msgid "Reboot"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:155
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:164
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:180
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:189
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/reboot.js:46
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/reboot.js:51
 msgid "Rebooting…"
@@ -8533,7 +8533,7 @@ msgstr ""
 msgid "Reset Counters"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:406
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:434
 msgid "Reset to defaults"
 msgstr ""
 
@@ -8571,11 +8571,11 @@ msgstr ""
 msgid "Restart radio interface"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:402
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:430
 msgid "Restore"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:412
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:440
 msgid "Restore backup"
 msgstr ""
 
@@ -8775,7 +8775,7 @@ msgstr ""
 msgid "Rx LDPC"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:226
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:254
 msgid "SHA256"
 msgstr ""
 
@@ -8852,7 +8852,7 @@ msgstr ""
 #: modules/luci-compat/luasrc/view/cbi/error.htm:17
 #: modules/luci-compat/luasrc/view/cbi/footer.htm:26
 #: modules/luci-compat/luasrc/view/cbi/header.htm:20
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:465
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:493
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/startup.js:123
 msgid "Save"
 msgstr ""
@@ -8867,11 +8867,11 @@ msgstr ""
 msgid "Save error"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:436
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:464
 msgid "Save mtdblock"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:426
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:454
 msgid "Save mtdblock contents"
 msgstr ""
 
@@ -8925,7 +8925,7 @@ msgstr ""
 msgid "See \"mount\" manpage for details"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:285
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:313
 msgid ""
 "Select 'Force upgrade' to flash the image even if the image format check "
 "fails. Use only if you are sure that the firmware is correct and meant for "
@@ -9114,7 +9114,7 @@ msgstr ""
 msgid "Should not define broadcast address for /31 or /32 subnet"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:472
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:500
 msgid "Show current backup file list"
 msgstr ""
 
@@ -9161,7 +9161,7 @@ msgid "Signal:"
 msgstr ""
 
 #: modules/luci-base/htdocs/luci-static/resources/ui.js:4244
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:224
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:252
 msgid "Size"
 msgstr ""
 
@@ -9178,7 +9178,7 @@ msgstr ""
 msgid "Skip"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:259
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:287
 msgid "Skip from backup files that are equal to those in /rom"
 msgstr ""
 
@@ -9209,7 +9209,7 @@ msgstr ""
 msgid "Sorry, the object you requested was not found."
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:444
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:472
 msgid ""
 "Sorry, there is no sysupgrade support present; a new firmware image must be "
 "flashed manually. Please refer to the wiki for device specific install "
@@ -9558,8 +9558,8 @@ msgstr ""
 #: protocols/luci-proto-gre/htdocs/luci-static/resources/protocol/grev6tap.js:84
 msgid ""
 "Specify a Traffic Class. Can be <code>inherit</code> (the outer header "
-"inherits the value of the inner header) or an hexadecimal value <code>00.."
-"FF</code> (optional)."
+"inherits the value of the inner header) or an hexadecimal value "
+"<code>00..FF</code> (optional)."
 msgstr ""
 
 #: protocols/luci-proto-gre/htdocs/luci-static/resources/protocol/gre.js:64
@@ -10123,7 +10123,7 @@ msgid ""
 "properly."
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:222
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:250
 msgid ""
 "The flash image was uploaded. Below is the checksum and file size listed, "
 "compare them with the original file to ensure data integrity. <br /> Click "
@@ -10286,12 +10286,12 @@ msgstr ""
 msgid "The query response interval must be lower than the query interval value"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:160
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:185
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/reboot.js:42
 msgid "The reboot command failed with code %d"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:149
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:174
 msgid "The restore command failed with code %d"
 msgstr ""
 
@@ -10331,13 +10331,13 @@ msgstr ""
 msgid "The syslog output, pre-filtered for messages related to:"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:100
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:125
 msgid ""
 "The system is erasing the configuration partition now and will reboot itself "
 "when finished."
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:322
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:350
 msgid ""
 "The system is flashing now.<br /> DO NOT POWER OFF THE DEVICE!<br /> Wait a "
 "few minutes before you try to reconnect. It might be necessary to renew the "
@@ -10345,7 +10345,7 @@ msgid ""
 "settings."
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:165
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:190
 msgid ""
 "The system is rebooting now. If the restored configuration changed the "
 "current LAN IP address, you might need to reconnect manually."
@@ -10355,7 +10355,7 @@ msgstr ""
 msgid "The system password has been successfully changed."
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:347
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:375
 msgid "The sysupgrade command failed with code %d"
 msgstr ""
 
@@ -10367,22 +10367,22 @@ msgid ""
 "duid or hostname still needs to be specified (can be a wildcard)."
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:122
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:147
 msgid ""
 "The uploaded backup archive appears to be valid and contains the files "
 "listed below. Press \"Continue\" to restore the backup and reboot, or "
 "\"Cancel\" to abort the operation."
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:117
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:142
 msgid "The uploaded backup archive is not readable"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:251
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:279
 msgid "The uploaded firmware does not allow keeping current configuration."
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:246
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:274
 msgid ""
 "The uploaded image file does not contain a supported format. Make sure that "
 "you choose the generic image format for your platform and haven't "
@@ -10444,7 +10444,7 @@ msgstr ""
 msgid "This does not look like a valid PEM file"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:456
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:484
 msgid ""
 "This is a list of shell glob patterns for matching files and directories to "
 "include during sysupgrade. Modified files in /etc/config/ and certain other "
@@ -10590,7 +10590,7 @@ msgid ""
 "import\" href=\"#\">configuration import</a></strong> instead."
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:402
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:430
 msgid ""
 "To restore configuration files, you can upload a previously generated backup "
 "archive here. To reset the firmware to its initial state, click \"Perform "
@@ -10839,7 +10839,7 @@ msgid "Unable to restart firewall: %s"
 msgstr ""
 
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/crontab.js:22
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:372
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:400
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/startup.js:57
 msgid "Unable to save contents: %s"
 msgstr ""
@@ -10968,14 +10968,14 @@ msgstr ""
 msgid "Upload"
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:443
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:471
 msgid ""
 "Upload a sysupgrade-compatible image here to replace the running firmware."
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:140
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:171
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:414
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:165
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:196
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:442
 msgid "Upload archive..."
 msgstr ""
 
@@ -11352,7 +11352,7 @@ msgstr ""
 msgid "Verify unsigned domain responses really come from unsigned domains."
 msgstr ""
 
-#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:198
+#: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:223
 msgid "Verifying the uploaded image file."
 msgstr ""
 

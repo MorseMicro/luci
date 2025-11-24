@@ -37,6 +37,10 @@ msgstr "绑定到 UNIX 域套接字而不是 IP 端口"
 msgid "Check origin"
 msgstr "检查来源"
 
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:43
+msgid "Click to start HTTP session"
+msgstr ""
+
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:53
 msgid "Client option"
 msgstr "客户端选项"
@@ -49,6 +53,10 @@ msgstr "命令"
 msgid "Config"
 msgstr "配置"
 
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:27
+msgid "Configure ttyd."
+msgstr ""
+
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:37
 msgid "Credential"
 msgstr "凭据"
@@ -56,6 +64,10 @@ msgstr "凭据"
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:37
 msgid "Credential for Basic Authentication"
 msgstr "用于基本身份验证的凭据"
+
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:48
+msgid "Current terminal configuration is not allowed over HTTPS."
+msgstr ""
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:67
 msgid "Custom index.html path"
@@ -100,6 +112,15 @@ msgstr "组 ID"
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:43
 msgid "Group id to run with"
 msgstr "要运行的组 ID"
+
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:40
+msgid ""
+"HTTP is not encrypted. Your password and data can be read on the network."
+msgstr ""
+
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:53
+msgid "HTTP(s) Access"
+msgstr ""
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:69
 msgid "IPv6"
@@ -157,7 +178,7 @@ msgstr "端口"
 msgid "Port to listen (default: 7681, use `0` for random port)"
 msgstr "要监听的端口 (默认: 7681, `0` 代表随机端口)"
 
-#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:15
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:20
 msgid ""
 "Random ttyd port (port=0) is not supported.<br />Change to a fixed port and "
 "try again."
@@ -195,6 +216,10 @@ msgstr "SSL 密钥"
 msgid "SSL key file path"
 msgstr "SSL 密钥文件路径"
 
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:39
+msgid "Security Warning:"
+msgstr ""
+
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:53
 msgid "Send option to client"
 msgstr "发送选项到客户端"
@@ -224,6 +249,10 @@ msgstr "终端类型"
 msgid "Terminal type to report (default: xterm-256color)"
 msgstr "要报告的终端类型 (默认: xterm-256color)"
 
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:50
+msgid "Turn off HTTPS redirect in"
+msgstr ""
+
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:32
 msgid "UNIX domain socket path (eg: /var/run/ttyd.sock)"
 msgstr "UNIX 域套接字路径（如：/var/run/ttyd.sock）"
@@ -252,6 +281,16 @@ msgstr "要运行的用户 ID"
 msgid "Warning"
 msgstr "警告"
 
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:54
+msgid "settings."
+msgstr ""
+
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:12
 msgid "ttyd Instance"
 msgstr "ttyd 实例"
+
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:24
+msgid ""
+"ttyd is disabled. Note that ttyd runs a separate web server that allows "
+"unencrypted terminal/console access over HTTP."
+msgstr ""
