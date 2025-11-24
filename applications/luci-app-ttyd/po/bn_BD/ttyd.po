@@ -32,6 +32,10 @@ msgstr ""
 msgid "Check origin"
 msgstr "উৎপত্তি নিশ্চিত করুন"
 
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:43
+msgid "Click to start HTTP session"
+msgstr ""
+
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:53
 msgid "Client option"
 msgstr "ক্লায়েন্ট অপশন"
@@ -44,6 +48,10 @@ msgstr "কমান্ড"
 msgid "Config"
 msgstr "কনফিগারেশন"
 
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:27
+msgid "Configure ttyd."
+msgstr ""
+
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:37
 msgid "Credential"
 msgstr "ক্রিডেনশিয়াল"
@@ -51,6 +59,10 @@ msgstr "ক্রিডেনশিয়াল"
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:37
 msgid "Credential for Basic Authentication"
 msgstr "বেসিক অথেনটিকেশনের ক্রিডেনশিয়াল"
+
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:48
+msgid "Current terminal configuration is not allowed over HTTPS."
+msgstr ""
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:67
 msgid "Custom index.html path"
@@ -95,6 +107,15 @@ msgstr "গ্রুপ আইডি"
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:43
 msgid "Group id to run with"
 msgstr "চালানোর জন্য গ্রুপ আইডি"
+
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:40
+msgid ""
+"HTTP is not encrypted. Your password and data can be read on the network."
+msgstr ""
+
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:53
+msgid "HTTP(s) Access"
+msgstr ""
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:69
 msgid "IPv6"
@@ -152,7 +173,7 @@ msgstr "পোর্ট"
 msgid "Port to listen (default: 7681, use `0` for random port)"
 msgstr "শোনার জন্য পোর্ট (ডিফল্ট: 7681, র‍্যান্ডম পোর্টের জন্য `0` ব্যবহার করুন)"
 
-#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:15
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:20
 msgid ""
 "Random ttyd port (port=0) is not supported.<br />Change to a fixed port and "
 "try again."
@@ -190,6 +211,10 @@ msgstr "SSL কী"
 msgid "SSL key file path"
 msgstr "SSL কী ফাইল পাথ"
 
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:39
+msgid "Security Warning:"
+msgstr ""
+
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:53
 msgid "Send option to client"
 msgstr "ক্লায়েন্টকে অপশন পাঠান"
@@ -219,6 +244,10 @@ msgstr "টার্মিনালের ধরণ"
 msgid "Terminal type to report (default: xterm-256color)"
 msgstr "রিপোর্ট করার জন্য টার্মিনাল টাইপ (ডিফল্ট: xterm-256color)"
 
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:50
+msgid "Turn off HTTPS redirect in"
+msgstr ""
+
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:32
 msgid "UNIX domain socket path (eg: /var/run/ttyd.sock)"
 msgstr ""
@@ -247,6 +276,16 @@ msgstr "যে ইউজারের আইডি দিয়ে চালা�
 msgid "Warning"
 msgstr "সতর্কতা"
 
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:54
+msgid "settings."
+msgstr ""
+
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:12
 msgid "ttyd Instance"
 msgstr "ttyd ইনস্ট্যান্স"
+
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:24
+msgid ""
+"ttyd is disabled. Note that ttyd runs a separate web server that allows "
+"unencrypted terminal/console access over HTTP."
+msgstr ""

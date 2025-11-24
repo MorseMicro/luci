@@ -38,6 +38,10 @@ msgstr ""
 msgid "Check origin"
 msgstr ""
 
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:43
+msgid "Click to start HTTP session"
+msgstr ""
+
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:53
 msgid "Client option"
 msgstr ""
@@ -50,12 +54,20 @@ msgstr ""
 msgid "Config"
 msgstr ""
 
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:27
+msgid "Configure ttyd."
+msgstr ""
+
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:37
 msgid "Credential"
 msgstr ""
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:37
 msgid "Credential for Basic Authentication"
+msgstr ""
+
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:48
+msgid "Current terminal configuration is not allowed over HTTPS."
 msgstr ""
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:67
@@ -100,6 +112,15 @@ msgstr ""
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:43
 msgid "Group id to run with"
+msgstr ""
+
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:40
+msgid ""
+"HTTP is not encrypted. Your password and data can be read on the network."
+msgstr ""
+
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:53
+msgid "HTTP(s) Access"
 msgstr ""
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:69
@@ -158,7 +179,7 @@ msgstr ""
 msgid "Port to listen (default: 7681, use `0` for random port)"
 msgstr ""
 
-#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:15
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:20
 msgid ""
 "Random ttyd port (port=0) is not supported.<br />Change to a fixed port and "
 "try again."
@@ -196,6 +217,10 @@ msgstr ""
 msgid "SSL key file path"
 msgstr ""
 
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:39
+msgid "Security Warning:"
+msgstr ""
+
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:53
 msgid "Send option to client"
 msgstr ""
@@ -223,6 +248,10 @@ msgstr ""
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:56
 msgid "Terminal type to report (default: xterm-256color)"
+msgstr ""
+
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:50
+msgid "Turn off HTTPS redirect in"
 msgstr ""
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:32
@@ -253,6 +282,16 @@ msgstr ""
 msgid "Warning"
 msgstr ""
 
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:54
+msgid "settings."
+msgstr ""
+
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:12
 msgid "ttyd Instance"
+msgstr ""
+
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:24
+msgid ""
+"ttyd is disabled. Note that ttyd runs a separate web server that allows "
+"unencrypted terminal/console access over HTTP."
 msgstr ""

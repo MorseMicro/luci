@@ -41,6 +41,10 @@ msgstr "Pririšti prie „UNIX“ domeno-srities lizdo, vietoj IP prievado"
 msgid "Check origin"
 msgstr "Patikrinti kilmę"
 
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:43
+msgid "Click to start HTTP session"
+msgstr ""
+
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:53
 msgid "Client option"
 msgstr "Kliento parinktis"
@@ -53,6 +57,10 @@ msgstr "Komanda"
 msgid "Config"
 msgstr "Konfigūracija"
 
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:27
+msgid "Configure ttyd."
+msgstr ""
+
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:37
 msgid "Credential"
 msgstr "Kredencialas"
@@ -60,6 +68,10 @@ msgstr "Kredencialas"
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:37
 msgid "Credential for Basic Authentication"
 msgstr "Kredencialas paprastam autentifikavimui"
+
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:48
+msgid "Current terminal configuration is not allowed over HTTPS."
+msgstr ""
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:67
 msgid "Custom index.html path"
@@ -104,6 +116,15 @@ msgstr "Grupės ID"
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:43
 msgid "Group id to run with"
 msgstr "Vykdyti su grupės ID"
+
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:40
+msgid ""
+"HTTP is not encrypted. Your password and data can be read on the network."
+msgstr ""
+
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:53
+msgid "HTTP(s) Access"
+msgstr ""
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:69
 msgid "IPv6"
@@ -169,7 +190,7 @@ msgstr ""
 "Prievadas, kurio laukiamas prisijungimo/jungties ryšis (numatytas: 7681, "
 "naudoti – 0 arba atsitiktinį prievadą)"
 
-#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:15
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:20
 msgid ""
 "Random ttyd port (port=0) is not supported.<br />Change to a fixed port and "
 "try again."
@@ -209,6 +230,10 @@ msgstr "„SSL“ raktas"
 msgid "SSL key file path"
 msgstr "„SSL“ rakto failo kelias"
 
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:39
+msgid "Security Warning:"
+msgstr ""
+
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:53
 msgid "Send option to client"
 msgstr "Siųsti parinktį klientui"
@@ -239,6 +264,10 @@ msgstr "Terminalo tipas"
 msgid "Terminal type to report (default: xterm-256color)"
 msgstr "Pranešti terminalo tipą (numatytas: „xterm-256color“)"
 
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:50
+msgid "Turn off HTTPS redirect in"
+msgstr ""
+
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:32
 msgid "UNIX domain socket path (eg: /var/run/ttyd.sock)"
 msgstr "„UNIX“ domeno-srities lizdo kelias (pvz.: /var/run/ttyd.sock)"
@@ -267,6 +296,16 @@ msgstr "Vykdyti su naudotojo/vartotojo ID"
 msgid "Warning"
 msgstr "Įspėjimas"
 
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:54
+msgid "settings."
+msgstr ""
+
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:12
 msgid "ttyd Instance"
 msgstr "„ttyd“ egzempliorius"
+
+#: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:24
+msgid ""
+"ttyd is disabled. Note that ttyd runs a separate web server that allows "
+"unencrypted terminal/console access over HTTP."
+msgstr ""
