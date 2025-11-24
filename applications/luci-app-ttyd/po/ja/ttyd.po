@@ -1,15 +1,14 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-11-08 14:47+0000\n"
-"Last-Translator: Monarch "
-"<monarch.scrap-0p@users.noreply.hosted.weblate.org>\n"
+"PO-Revision-Date: 2025-11-20 05:56+0000\n"
+"Last-Translator: LLM\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/openwrt/"
 "luciapplicationsttyd/ja/>\n"
 "Language: ja\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.15-dev\n"
+"X-Generator: Weblate 5.5-dev\n"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:65
 msgid "Accept only one client and exit on disconnection"
@@ -21,29 +20,29 @@ msgstr "インスタンスを追加"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:49
 msgid "Allow URL args"
-msgstr ""
+msgstr "URL 引数を許可"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:49
 msgid ""
 "Allow client to send command line arguments in URL (eg: http://"
 "localhost:7681?arg=foo&arg=bar)"
-msgstr ""
+msgstr "クライアントが URL (例: http://localhost:7681?arg=foo&arg=bar) でコマンドライン引数を送信できるようにします"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:20
 msgid "Bind to UNIX domain socket instead of IP port"
-msgstr ""
+msgstr "IP ポートではなく UNIX ドメインソケットにバインド"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:59
 msgid "Check origin"
-msgstr ""
+msgstr "オリジンを確認"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:43
 msgid "Click to start HTTP session"
-msgstr ""
+msgstr "クリックして HTTP セッションを開始"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:53
 msgid "Client option"
-msgstr ""
+msgstr "クライアントオプション"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:89
 msgid "Command"
@@ -51,27 +50,27 @@ msgstr "コマンド"
 
 #: applications/luci-app-ttyd/root/usr/share/luci/menu.d/luci-app-ttyd.json:23
 msgid "Config"
-msgstr ""
+msgstr "設定"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:27
 msgid "Configure ttyd."
-msgstr ""
+msgstr "ttyd を設定します。"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:37
 msgid "Credential"
-msgstr ""
+msgstr "認証情報"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:37
 msgid "Credential for Basic Authentication"
-msgstr ""
+msgstr "Basic 認証用の認証情報"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:48
 msgid "Current terminal configuration is not allowed over HTTPS."
-msgstr ""
+msgstr "現在の端末設定は HTTPS 経由では許可されていません。"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:67
 msgid "Custom index.html path"
-msgstr ""
+msgstr "カスタム index.html のパス"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:82
 msgid "Debug"
@@ -79,11 +78,11 @@ msgstr "デバッグ"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:51
 msgid "Do not allow clients to write to the TTY"
-msgstr ""
+msgstr "クライアントによる TTY への書き込みを禁止"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:59
 msgid "Do not allow websocket connection from different origin"
-msgstr ""
+msgstr "異なるオリジンからの WebSocket 接続を許可しない"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:17
 msgid "Enable"
@@ -91,7 +90,7 @@ msgstr "有効化"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:69
 msgid "Enable IPv6 support"
-msgstr ""
+msgstr "IPv6 サポートを有効にする"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:71
 msgid "Enable SSL"
@@ -103,24 +102,24 @@ msgstr "エラー"
 
 #: applications/luci-app-ttyd/root/usr/share/rpcd/acl.d/luci-app-ttyd.json:3
 msgid "Grant UCI access for luci-app-ttyd"
-msgstr ""
+msgstr "luci-app-ttyd に UCI アクセスを許可"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:43
 msgid "Group ID"
-msgstr ""
+msgstr "グループ ID"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:43
 msgid "Group id to run with"
-msgstr ""
+msgstr "実行に使用するグループ ID"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:40
 msgid ""
 "HTTP is not encrypted. Your password and data can be read on the network."
-msgstr ""
+msgstr "HTTP は暗号化されていません。パスワードやデータはネットワーク上で読み取られる可能性があります。"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:53
 msgid "HTTP(s) Access"
-msgstr ""
+msgstr "HTTP(s) アクセス"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:69
 msgid "IPv6"
@@ -128,7 +127,7 @@ msgstr "IPv6"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:67
 msgid "Index"
-msgstr ""
+msgstr "インデックス"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:86
 msgid "Info"
@@ -140,7 +139,7 @@ msgstr "インターフェース"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:94
 msgid "Make sure to set up another authorization method."
-msgstr ""
+msgstr "別の認証方法を必ず設定してください。"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:61
 msgid "Max clients"
@@ -148,15 +147,15 @@ msgstr "最大クライアント"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:61
 msgid "Maximum clients to support (default: 0, no limit)"
-msgstr ""
+msgstr "サポートする最大クライアント数 (デフォルト: 0、無制限)"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:27
 msgid "Network interface to bind (eg: eth0)"
-msgstr ""
+msgstr "バインドするネットワークインターフェース (例: eth0)"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:93
 msgid "Note that reverse proxied pages is NOT protected by password like LuCI."
-msgstr ""
+msgstr "リバースプロキシされたページは LuCI のようにパスワードで保護されないことに注意してください。"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:85
 msgid "Notice"
@@ -164,11 +163,11 @@ msgstr "注意"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:65
 msgid "Once"
-msgstr ""
+msgstr "一度のみ"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:92
 msgid "Override URL in Terminal tab. For use with reverse proxy."
-msgstr ""
+msgstr "ターミナルタブの URL を上書きします。リバースプロキシ利用時に使用します。"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:22
 msgid "Port"
@@ -176,13 +175,13 @@ msgstr "ポート"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:22
 msgid "Port to listen (default: 7681, use `0` for random port)"
-msgstr ""
+msgstr "待ち受けるポート (デフォルト: 7681、ランダムポートは `0`)"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:20
 msgid ""
 "Random ttyd port (port=0) is not supported.<br />Change to a fixed port and "
 "try again."
-msgstr ""
+msgstr "ttyd のランダムポート (port=0) はサポートされていません。<br />固定ポートに変更して再試行してください。"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:51
 msgid "Read-only"
@@ -194,39 +193,39 @@ msgstr "SSL"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:79
 msgid "SSL CA file path for client certificate verification"
-msgstr ""
+msgstr "クライアント証明書検証用の SSL CA ファイルパス"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:79
 msgid "SSL ca"
-msgstr ""
+msgstr "SSL CA"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:73
 msgid "SSL cert"
-msgstr ""
+msgstr "SSL 証明書"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:73
 msgid "SSL certificate file path"
-msgstr ""
+msgstr "SSL 証明書ファイルのパス"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:76
 msgid "SSL key"
-msgstr ""
+msgstr "SSL 秘密鍵"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:76
 msgid "SSL key file path"
-msgstr ""
+msgstr "SSL 秘密鍵ファイルのパス"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:39
 msgid "Security Warning:"
-msgstr ""
+msgstr "セキュリティ警告:"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:53
 msgid "Send option to client"
-msgstr ""
+msgstr "クライアントにオプションを送信"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:82
 msgid "Set log level (default: 7)"
-msgstr ""
+msgstr "ログレベルを設定 (デフォルト: 7)"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:46
 msgid "Signal"
@@ -234,48 +233,48 @@ msgstr "信号強度"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:46
 msgid "Signal to send to the command when exit it (default: 1, SIGHUP)"
-msgstr ""
+msgstr "終了時にコマンドへ送るシグナル (デフォルト: 1、SIGHUP)"
 
 #: applications/luci-app-ttyd/root/usr/share/luci/menu.d/luci-app-ttyd.json:3
 #: applications/luci-app-ttyd/root/usr/share/luci/menu.d/luci-app-ttyd.json:14
 msgid "Terminal"
-msgstr ""
+msgstr "ターミナル"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:56
 msgid "Terminal type"
-msgstr ""
+msgstr "端末タイプ"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:56
 msgid "Terminal type to report (default: xterm-256color)"
-msgstr ""
+msgstr "報告する端末タイプ (デフォルト: xterm-256color)"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:50
 msgid "Turn off HTTPS redirect in"
-msgstr ""
+msgstr "HTTPS リダイレクトを無効にするには "
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:32
 msgid "UNIX domain socket path (eg: /var/run/ttyd.sock)"
-msgstr ""
+msgstr "UNIX ドメインソケットのパス (例: /var/run/ttyd.sock)"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:20
 msgid "UNIX socket"
-msgstr ""
+msgstr "UNIX ソケット"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:32
 msgid "UNIX socket path"
-msgstr ""
+msgstr "UNIX ソケットパス"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:91
 msgid "URL override"
-msgstr ""
+msgstr "URL 上書き"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:40
 msgid "User ID"
-msgstr ""
+msgstr "ユーザー ID"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:40
 msgid "User id to run with"
-msgstr ""
+msgstr "実行に使用するユーザー ID"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:84
 msgid "Warning"
@@ -283,14 +282,14 @@ msgstr "警告"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:54
 msgid "settings."
-msgstr ""
+msgstr " の設定を開いてください。"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/config.js:12
 msgid "ttyd Instance"
-msgstr ""
+msgstr "ttyd インスタンス"
 
 #: applications/luci-app-ttyd/htdocs/luci-static/resources/view/ttyd/term.js:24
 msgid ""
 "ttyd is disabled. Note that ttyd runs a separate web server that allows "
 "unencrypted terminal/console access over HTTP."
-msgstr ""
+msgstr "ttyd は無効です。ttyd は暗号化されていない HTTP 経由で端末/コンソールへのアクセスを提供する独立した Web サーバーであることに注意してください。"
