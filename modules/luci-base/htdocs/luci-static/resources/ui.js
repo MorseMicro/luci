@@ -4387,7 +4387,7 @@ var UI = baseclass.extend(/** @lends LuCI.ui.prototype */ {
 					}
 				});
 			}, this));
-		}, this), 5000);
+		}, this), 15000);
 	},
 
 	/**
