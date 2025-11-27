@@ -6,7 +6,7 @@
 'require fs';
 'require ui';
 
-var reconnectTargets = [window.location.host, '10.42.0.1', '192.168.12.1', '192.168.1.1', 'openwrt.lan'];
+var reconnectTargets = [window.location.host, '10.42.0.1', '192.168.12.1', '192.168.8.1', '192.168.1.1', 'openwrt.lan'];
 
 var isReadonlyView = !L.hasViewPermission();
 
