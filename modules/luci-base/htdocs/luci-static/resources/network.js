@@ -4338,7 +4338,7 @@ WifiNetwork = baseclass.extend(/** @lends LuCI.network.WifiNetwork.prototype */ 
 	 * otherwise returns false.
 	 */
 	is4v3FemSupported: function() {
-		return this.ubus('dev', 'mm_4v3_fem') !== null;
+		return this.ubus('dev', 'mm_4v3_fem') !== undefined;
 	},
 
 	/**
