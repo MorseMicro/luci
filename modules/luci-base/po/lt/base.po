@@ -1254,7 +1254,7 @@ msgstr "Taikyti sugrąžinimą po ryšio praradimo"
 msgid "Applying configuration changes… %ds"
 msgstr "Įgalinami konfigūracijos pakeitimai... %ds"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:60
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:57
 msgid "Architecture"
 msgstr "Architektūra"
 
@@ -1981,10 +1981,6 @@ msgstr "Tikrinamas archyvas…"
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:222
 msgid "Checking image…"
 msgstr "Tikrinama laikmena…"
-
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:63
-msgid "Chip ID"
-msgstr ""
 
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:881
 msgid "Chips"
@@ -4088,7 +4084,7 @@ msgstr "Programinės įrangos failas"
 msgid "Firmware Type"
 msgstr ""
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:62
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:59
 msgid "Firmware Version"
 msgstr "Programinės įrangos versija"
 
@@ -4687,7 +4683,7 @@ msgstr ""
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js:38
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js:903
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js:975
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:58
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:55
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/40_dhcp.js:87
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/system.js:135
 msgid "Hostname"
@@ -5735,7 +5731,7 @@ msgstr "„Laikyti „gyvą“/„reaguojantį““"
 msgid "Kernel Log"
 msgstr "Branduolio („Kernel“) žurnalas"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:64
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:60
 msgid "Kernel Version"
 msgstr "Branduolio („Kernel“) versija"
 
@@ -6069,7 +6065,7 @@ msgstr ""
 msgid "Load"
 msgstr "Įkelti/Apkrova"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:67
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:63
 msgid "Load Average"
 msgstr "Įkėlimo/Krovimo vidurkis"
 
@@ -6142,7 +6138,7 @@ msgstr "Vietinis IPv6 adresas"
 msgid "Local Startup"
 msgstr "Vietinis paleidimas"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:65
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:61
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/system.js:131
 msgid "Local Time"
 msgstr "Vietinis laikas"
@@ -6702,7 +6698,7 @@ msgstr "Mobilumo domenas-sritis"
 msgid "Mode"
 msgstr "Veiksena"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:59
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:56
 #: protocols/luci-proto-modemmanager/htdocs/luci-static/resources/view/modemmanager/status.js:83
 msgid "Model"
 msgstr "Modelis"
@@ -10521,7 +10517,7 @@ msgid "Syntax: {code_syntax}."
 msgstr "Sintaksė: „{code_syntax}“."
 
 #: modules/luci-base/root/usr/share/luci/menu.d/luci-base.json:26
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:23
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:22
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/system.js:113
 #: modules/luci-mod-system/root/usr/share/luci/menu.d/luci-mod-system.json:3
 msgid "System"
@@ -10636,7 +10632,7 @@ msgstr "Pažymėta/-s"
 msgid "Target"
 msgstr "Taikinys"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:61
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:58
 msgid "Target Platform"
 msgstr "Taikomoji platforma"
 
@@ -11952,7 +11948,7 @@ msgstr ""
 "paleistas iš naujo, kad būtų pritaikyta atnaujinta konfigūracija."
 
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/interfaces.js:82
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:66
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:62
 #: protocols/luci-proto-yggdrasil/htdocs/luci-static/resources/protocol/yggdrasil.js:138
 msgid "Uptime"
 msgstr "Aktyvumo laikas"
@@ -13131,7 +13127,7 @@ msgstr "išskirtinė vertė"
 msgid "unknown"
 msgstr "nežinoma/-s/-i"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:29
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:28
 msgid "unknown version"
 msgstr "nežinoma versija"
 

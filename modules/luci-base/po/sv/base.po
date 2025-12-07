@@ -1184,7 +1184,7 @@ msgstr ""
 msgid "Applying configuration changes… %ds"
 msgstr "Verkställer ändringar i konfigurationen... %ds"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:60
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:57
 msgid "Architecture"
 msgstr "Arkitektur"
 
@@ -1867,10 +1867,6 @@ msgstr "Kontrollerar arkivet…"
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:222
 msgid "Checking image…"
 msgstr "Kontrollerar avbilden…"
-
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:63
-msgid "Chip ID"
-msgstr ""
 
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:881
 msgid "Chips"
@@ -3817,7 +3813,7 @@ msgstr "Fil för inbyggd programvara"
 msgid "Firmware Type"
 msgstr ""
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:62
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:59
 msgid "Firmware Version"
 msgstr "Firmware Version"
 
@@ -4381,7 +4377,7 @@ msgstr ""
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js:38
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js:903
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js:975
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:58
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:55
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/40_dhcp.js:87
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/system.js:135
 msgid "Hostname"
@@ -5359,7 +5355,7 @@ msgstr ""
 msgid "Kernel Log"
 msgstr "Kernel-logg"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:64
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:60
 msgid "Kernel Version"
 msgstr "Kernel-version"
 
@@ -5676,7 +5672,7 @@ msgstr "Lyssningsportar för ankommande DNS-förfrågningar."
 msgid "Load"
 msgstr "Last"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:67
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:63
 msgid "Load Average"
 msgstr "Snitt-belastning"
 
@@ -5749,7 +5745,7 @@ msgstr "Lokal IPv6-adress"
 msgid "Local Startup"
 msgstr "Lokal uppstart"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:65
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:61
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/system.js:131
 msgid "Local Time"
 msgstr "Lokal tid"
@@ -6286,7 +6282,7 @@ msgstr ""
 msgid "Mode"
 msgstr "Läge"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:59
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:56
 #: protocols/luci-proto-modemmanager/htdocs/luci-static/resources/view/modemmanager/status.js:83
 msgid "Model"
 msgstr "Modell"
@@ -9831,7 +9827,7 @@ msgid "Syntax: {code_syntax}."
 msgstr "Syntax: {code_syntax}."
 
 #: modules/luci-base/root/usr/share/luci/menu.d/luci-base.json:26
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:23
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:22
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/system.js:113
 #: modules/luci-mod-system/root/usr/share/luci/menu.d/luci-mod-system.json:3
 msgid "System"
@@ -9946,7 +9942,7 @@ msgstr "Taggad"
 msgid "Target"
 msgstr "Mål"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:61
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:58
 msgid "Target Platform"
 msgstr "Mål-plattform"
 
@@ -11072,7 +11068,7 @@ msgid ""
 msgstr ""
 
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/interfaces.js:82
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:66
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:62
 #: protocols/luci-proto-yggdrasil/htdocs/luci-static/resources/protocol/yggdrasil.js:138
 msgid "Uptime"
 msgstr "Upptid"
@@ -12177,7 +12173,7 @@ msgstr "unikt värde"
 msgid "unknown"
 msgstr "okänd"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:29
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:28
 msgid "unknown version"
 msgstr "okänd version"
 

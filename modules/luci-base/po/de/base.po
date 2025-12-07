@@ -1230,7 +1230,7 @@ msgstr "Anwenden, bei Verbindungsverlust zurückrollen"
 msgid "Applying configuration changes… %ds"
 msgstr "Warte auf das Anwenden der Konfiguration… %ds"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:60
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:57
 msgid "Architecture"
 msgstr "Architektur"
 
@@ -1960,10 +1960,6 @@ msgstr "Archiv wird überprüft…"
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:222
 msgid "Checking image…"
 msgstr "Image wird überprüft…"
-
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:63
-msgid "Chip ID"
-msgstr ""
 
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:881
 msgid "Chips"
@@ -4039,7 +4035,7 @@ msgstr "Firmware-Datei"
 msgid "Firmware Type"
 msgstr ""
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:62
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:59
 msgid "Firmware Version"
 msgstr "Firmware-Version"
 
@@ -4624,7 +4620,7 @@ msgstr ""
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js:38
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js:903
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js:975
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:58
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:55
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/40_dhcp.js:87
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/system.js:135
 msgid "Hostname"
@@ -5667,7 +5663,7 @@ msgstr "Keep-Alive"
 msgid "Kernel Log"
 msgstr "Kernelprotokoll"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:64
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:60
 msgid "Kernel Version"
 msgstr "Kernel-Version"
 
@@ -6008,7 +6004,7 @@ msgstr "Hörender Port für eingehende DNS-Abfragen."
 msgid "Load"
 msgstr "Last"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:67
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:63
 msgid "Load Average"
 msgstr "Durchschnittslast"
 
@@ -6081,7 +6077,7 @@ msgstr "Lokale IPv6-Adresse"
 msgid "Local Startup"
 msgstr "Lokales Startskript"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:65
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:61
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/system.js:131
 msgid "Local Time"
 msgstr "Ortszeit"
@@ -6636,7 +6632,7 @@ msgstr "Mobilitätsbereich"
 msgid "Mode"
 msgstr "Modus"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:59
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:56
 #: protocols/luci-proto-modemmanager/htdocs/luci-static/resources/view/modemmanager/status.js:83
 msgid "Model"
 msgstr "Modell"
@@ -10433,7 +10429,7 @@ msgid "Syntax: {code_syntax}."
 msgstr "Syntax: {code_syntax}."
 
 #: modules/luci-base/root/usr/share/luci/menu.d/luci-base.json:26
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:23
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:22
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/system.js:113
 #: modules/luci-mod-system/root/usr/share/luci/menu.d/luci-mod-system.json:3
 msgid "System"
@@ -10549,7 +10545,7 @@ msgstr "Markiert"
 msgid "Target"
 msgstr "Zielplattform"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:61
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:58
 msgid "Target Platform"
 msgstr "Platform"
 
@@ -11872,7 +11868,7 @@ msgstr ""
 "gestartet um die Veränderungen anzuwenden."
 
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/interfaces.js:82
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:66
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:62
 #: protocols/luci-proto-yggdrasil/htdocs/luci-static/resources/protocol/yggdrasil.js:138
 msgid "Uptime"
 msgstr "Laufzeit"
@@ -13047,7 +13043,7 @@ msgstr "eindeutigen Wert"
 msgid "unknown"
 msgstr "unbekannt"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:29
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:28
 msgid "unknown version"
 msgstr "Unbekannte Version"
 

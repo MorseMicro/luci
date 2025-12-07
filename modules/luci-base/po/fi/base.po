@@ -1186,7 +1186,7 @@ msgstr ""
 msgid "Applying configuration changes… %ds"
 msgstr "Otetaan käyttöön määritysmuutoksia... %ds"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:60
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:57
 msgid "Architecture"
 msgstr "Arkkitehtuuri"
 
@@ -1881,10 +1881,6 @@ msgstr "Tarkistetaan arkistoa…"
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:222
 msgid "Checking image…"
 msgstr "Tarkistetaan kuvaa…"
-
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:63
-msgid "Chip ID"
-msgstr ""
 
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:881
 msgid "Chips"
@@ -3892,7 +3888,7 @@ msgstr "Laiteohjelmisto-tiedosto"
 msgid "Firmware Type"
 msgstr ""
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:62
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:59
 msgid "Firmware Version"
 msgstr "Laiteohjelmiston versio"
 
@@ -4458,7 +4454,7 @@ msgstr ""
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js:38
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js:903
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js:975
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:58
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:55
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/40_dhcp.js:87
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/system.js:135
 msgid "Hostname"
@@ -5453,7 +5449,7 @@ msgstr ""
 msgid "Kernel Log"
 msgstr "Ytimen loki"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:64
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:60
 msgid "Kernel Version"
 msgstr "Ytimen versio"
 
@@ -5783,7 +5779,7 @@ msgstr "Saapuvien DNS-kyselyiden kuunteluportti"
 msgid "Load"
 msgstr "Kuormitus"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:67
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:63
 msgid "Load Average"
 msgstr "Kuormituksen keskiarvo"
 
@@ -5856,7 +5852,7 @@ msgstr "Paikallinen IPv6-osoite"
 msgid "Local Startup"
 msgstr "Paikallinen käynnistys"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:65
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:61
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/system.js:131
 msgid "Local Time"
 msgstr "Paikallinen aika"
@@ -6400,7 +6396,7 @@ msgstr "Liikkuvuusalue"
 msgid "Mode"
 msgstr "Tila"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:59
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:56
 #: protocols/luci-proto-modemmanager/htdocs/luci-static/resources/view/modemmanager/status.js:83
 msgid "Model"
 msgstr "Malli"
@@ -10047,7 +10043,7 @@ msgid "Syntax: {code_syntax}."
 msgstr ""
 
 #: modules/luci-base/root/usr/share/luci/menu.d/luci-base.json:26
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:23
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:22
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/system.js:113
 #: modules/luci-mod-system/root/usr/share/luci/menu.d/luci-mod-system.json:3
 msgid "System"
@@ -10162,7 +10158,7 @@ msgstr ""
 msgid "Target"
 msgstr "Kohde"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:61
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:58
 msgid "Target Platform"
 msgstr "Kohdealusta"
 
@@ -11357,7 +11353,7 @@ msgid ""
 msgstr ""
 
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/interfaces.js:82
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:66
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:62
 #: protocols/luci-proto-yggdrasil/htdocs/luci-static/resources/protocol/yggdrasil.js:138
 msgid "Uptime"
 msgstr "Toiminta-aika"
@@ -12498,7 +12494,7 @@ msgstr "ainutlaatuinen arvo"
 msgid "unknown"
 msgstr "tuntematon"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:29
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:28
 msgid "unknown version"
 msgstr "tuntematon versio"
 

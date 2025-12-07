@@ -2,7 +2,6 @@
 'require baseclass';
 'require fs';
 'require rpc';
-'require uci';
 
 var callLuciVersion = rpc.declare({
 	object: 'luci',
@@ -26,8 +25,7 @@ return baseclass.extend({
 		return Promise.all([
 			L.resolveDefault(callSystemBoard(), {}),
 			L.resolveDefault(callSystemInfo(), {}),
-			L.resolveDefault(callLuciVersion(), { revision: _('unknown version'), branch: 'LuCI' }),
-			uci.load('system')
+			L.resolveDefault(callLuciVersion(), { revision: _('unknown version'), branch: 'LuCI' })
 		]);
 	},
 
@@ -39,7 +37,6 @@ return baseclass.extend({
 		luciversion = luciversion.branch + ' ' + luciversion.revision;
 
 		var datestr = null;
-		var chipid = uci.get('system', '@system[0]', 'notes');
 
 		if (systeminfo.localtime) {
 			var date = new Date(systeminfo.localtime * 1000);
@@ -59,8 +56,7 @@ return baseclass.extend({
 			_('Model'),            boardinfo.model,
 			_('Architecture'),     boardinfo.system,
 			_('Target Platform'),  (L.isObject(boardinfo.release) ? boardinfo.release.target : ''),
-			_('Firmware Version'), (L.isObject(boardinfo.release) ? boardinfo.release.description : ''),
-			_('Chip ID'),          (chipid != null) ? chipid : '',
+			_('Firmware Version'), (L.isObject(boardinfo.release) ? boardinfo.release.description + ' / ' : '') + (luciversion || ''),
 			_('Kernel Version'),   boardinfo.kernel,
 			_('Local Time'),       datestr,
 			_('Uptime'),           systeminfo.uptime ? '%t'.format(systeminfo.uptime) : null,

@@ -1067,9 +1067,9 @@ msgid ""
 "caution and only in a controlled environment to avoid interference with "
 "other devices."
 msgstr ""
-"周波数、チャネル幅、出力を通常の規制値を超えて一時的に設定でき、他の"
-"チャネル設定をすべて上書きします。干渉を避けるため、管理された環境で注"
-"意して使用してください。"
+"周波数、チャネル幅、出力を通常の規制値を超えて一時的に設定でき、他のチャネル"
+"設定をすべて上書きします。干渉を避けるため、管理された環境で注意して使用して"
+"ください。"
 
 #: protocols/luci-proto-vxlan/htdocs/luci-static/resources/protocol/vxlan.js:42
 #: protocols/luci-proto-vxlan/htdocs/luci-static/resources/protocol/vxlan6.js:42
@@ -1219,7 +1219,7 @@ msgstr "適用して接続喪失後に元に戻す"
 msgid "Applying configuration changes… %ds"
 msgstr "設定を適用中… 残り最大%d秒"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:60
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:57
 msgid "Architecture"
 msgstr "アーキテクチャ"
 
@@ -1921,8 +1921,8 @@ msgid ""
 "Channelization standard; this will affect available channels and hence "
 "interoperability"
 msgstr ""
-"チャネル化規格。利用可能なチャネルに影響し、その結果として互換性にも影"
-"響します"
+"チャネル化規格。利用可能なチャネルに影響し、その結果として互換性にも影響しま"
+"す"
 
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/mounts.js:174
 msgid "Check filesystems before mount"
@@ -1942,10 +1942,6 @@ msgstr "アーカイブのチェック中…"
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/flash.js:222
 msgid "Checking image…"
 msgstr "イメージのチェック中…"
-
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:63
-msgid "Chip ID"
-msgstr "チップ ID"
 
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:881
 msgid "Chips"
@@ -2822,8 +2818,8 @@ msgid ""
 "Disabling this in EU/GB will rely on ACS/DCS to meet regulatory requirements "
 "for AFA (Adaptive Frequency Agility)."
 msgstr ""
-"EU/GB でこれを無効にすると、AFA (Adaptive Frequency Agility) の規制要件"
-"を満たすために ACS/DCS に依存します。"
+"EU/GB でこれを無効にすると、AFA (Adaptive Frequency Agility) の規制要件を満た"
+"すために ACS/DCS に依存します。"
 
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:1268
 msgid "Disassociate On Low Acknowledgement"
@@ -4006,7 +4002,7 @@ msgstr "ファームウェアファイル"
 msgid "Firmware Type"
 msgstr "ファームウェアの種類"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:62
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:59
 msgid "Firmware Version"
 msgstr "ファームウェア バージョン"
 
@@ -4594,7 +4590,7 @@ msgstr ""
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js:38
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js:903
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/dhcp.js:975
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:58
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:55
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/40_dhcp.js:87
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/system.js:135
 msgid "Hostname"
@@ -5621,7 +5617,7 @@ msgstr "キープアライブ"
 msgid "Kernel Log"
 msgstr "カーネルログ"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:64
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:60
 msgid "Kernel Version"
 msgstr "カーネル バージョン"
 
@@ -5957,7 +5953,7 @@ msgstr "受信DNSクエリをリッスンするポート。"
 msgid "Load"
 msgstr "負荷"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:67
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:63
 msgid "Load Average"
 msgstr "システム平均負荷"
 
@@ -6030,7 +6026,7 @@ msgstr "ローカルIPv6アドレス"
 msgid "Local Startup"
 msgstr "ローカルスタートアップ"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:65
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:61
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/system.js:131
 msgid "Local Time"
 msgstr "時刻"
@@ -6581,7 +6577,7 @@ msgstr "モビリティドメイン"
 msgid "Mode"
 msgstr "モード"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:59
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:56
 #: protocols/luci-proto-modemmanager/htdocs/luci-static/resources/view/modemmanager/status.js:83
 msgid "Model"
 msgstr "モデル"
@@ -8277,15 +8273,14 @@ msgid ""
 "Primary 1MHz Channel Index; available options will vary depending on the "
 "main channel"
 msgstr ""
-"プライマリ 1 MHz チャネルインデックス。選択肢はメインチャネルに応じて変"
-"化します"
+"プライマリ 1 MHz チャネルインデックス。選択肢はメインチャネルに応じて変化しま"
+"す"
 
 #: modules/luci-base/htdocs/luci-static/resources/tools/widgets.js:553
 msgid ""
 "Primary Channel Width; available options will vary depending on the main "
 "channel"
-msgstr ""
-"プライマリチャネル幅。選択肢はメインチャネルに応じて変化します"
+msgstr "プライマリチャネル幅。選択肢はメインチャネルに応じて変化します"
 
 #: protocols/luci-proto-bonding/htdocs/luci-static/resources/protocol/bonding.js:213
 msgid "Primary Slave"
@@ -8686,10 +8681,10 @@ msgid ""
 "unicast frames will be done in the host processor instead of the chip. Also, "
 "only AP mode will work, not Mesh/Client/etc."
 msgstr ""
-"AP モードで多数の端末を収容できるように、チップ内の端末ごとのテーブルサ"
-"イズを削減します。<br> これを有効にすると、ユニキャストフレームの暗号化"
-"と復号はチップではなくホストプロセッサで行われます。また、Mesh/Client な"
-"どではなく AP モードだけが動作します。"
+"AP モードで多数の端末を収容できるように、チップ内の端末ごとのテーブルサイズを"
+"削減します。<br> これを有効にすると、ユニキャストフレームの暗号化と復号はチッ"
+"プではなくホストプロセッサで行われます。また、Mesh/Client などではなく AP "
+"モードだけが動作します。"
 
 #: modules/luci-mod-status/htdocs/luci-static/resources/view/status/iptables.js:57
 msgid "References"
@@ -10319,7 +10314,7 @@ msgid "Syntax: {code_syntax}."
 msgstr "文法: {code_syntax}."
 
 #: modules/luci-base/root/usr/share/luci/menu.d/luci-base.json:26
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:23
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:22
 #: modules/luci-mod-system/htdocs/luci-static/resources/view/system/system.js:113
 #: modules/luci-mod-system/root/usr/share/luci/menu.d/luci-mod-system.json:3
 msgid "System"
@@ -10434,7 +10429,7 @@ msgstr "タグ付き"
 msgid "Target"
 msgstr "ターゲット"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:61
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:58
 msgid "Target Platform"
 msgstr "ターゲット プラットフォーム"
 
@@ -11709,7 +11704,7 @@ msgstr ""
 "るためにネットワークが再起動されます。"
 
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/interfaces.js:82
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:66
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:62
 #: protocols/luci-proto-yggdrasil/htdocs/luci-static/resources/protocol/yggdrasil.js:138
 msgid "Uptime"
 msgstr "稼働時間"
@@ -12880,7 +12875,7 @@ msgstr "固有の値"
 msgid "unknown"
 msgstr "不明"
 
-#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:29
+#: modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js:28
 msgid "unknown version"
 msgstr "不明なバージョン"
 
@@ -13145,6 +13140,9 @@ msgstr "{example_nx} は {nxdomain} を返します。"
 #: modules/luci-compat/luasrc/view/cbi/delegator.htm:20
 msgid "« Back"
 msgstr "« 戻る"
+
+#~ msgid "Chip ID"
+#~ msgstr "チップ ID"
 
 #~ msgid ""
 #~ "If enabled, <var data-tooltip=\"sysctl "
