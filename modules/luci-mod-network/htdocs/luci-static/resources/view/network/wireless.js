@@ -744,7 +744,7 @@ return view.extend({
 
 					o = ss.taboption('general', widgets.WifiTxPowerValue, 'txpower', _('Maximum transmit power'), _('Specifies the maximum transmit power the wireless radio may use. Depending on regulatory requirements and wireless usage, the actual transmit power may be reduced by the driver.'));
 					o.wifiNetwork = radioNet;
-			
+
 					const freqValue = ss.taboption('general', widgets.WifiFrequencyValue, '_freq', '<br />' + _('Operating frequency'));
 					freqValue.primChanSelect = true;
 					countryValue.validate = function (sectionId, value) {
@@ -1384,6 +1384,7 @@ return view.extend({
 				if (hwtype == 'morse') {
 					o = ss.taboption("mesh", form.SectionValue, "mesh", form.NamedSection, "mesh_params", "mesh11sd");
 					o.depends("mode", "mesh");
+					const iface_mode = '%s.%s.mode'.format(ss.config, ss.section);
 					const mesh_ss = o.subsection;
 					mesh_ss.uciconfig = "mesh11sd";
 
@@ -1401,20 +1402,28 @@ return view.extend({
 
 					o = mesh_ss.option(form.Flag, "mesh_fwding", _("Forward mesh peer traffic"), help_text);
 					o.rmempty = false;
+					o.retain = true;
+					o.depends(iface_mode, 'mesh');
 					o.default = "1";
 
 					o = mesh_ss.option(form.Value, "mesh_max_peer_links", _("Maximum number of mesh peers"), _("The allowed maximum number of peer links that may be established."));
 					o.rmempty = false;
+					o.retain = true;
+					o.depends(iface_mode, 'mesh');
 					o.default = "10";
 					o.datatype = "and(integer, range(1,10))";
 
 					o = mesh_ss.option(form.Value, "mesh_rssi_threshold", _("RSSI threshold for joining"), _("0 = not using RSSI threshold"));
 					o.rmempty = false;
+					o.retain = true;
+					o.depends(iface_mode, 'mesh');
 					o.default = "0";
 					o.datatype = "and(integer, range(-255,0))";
 
 					o = mesh_ss.option(form.Value, "mesh_ttl", _("Mesh TTL"), _("Specifies the value of Mesh TTL subfield (Range: 1 to 255)"));
 					o.rmempty = false;
+					o.retain = true;
+					o.depends(iface_mode, 'mesh');
 					o.default = "31";
 					o.datatype = "and(uinteger, range(1,255))";
 
@@ -1425,13 +1434,19 @@ return view.extend({
 					o.value('4', _('Root mode with RANN'));
 					o.default = "0";
 					o.rmempty = false;
+					o.retain = true;
+					o.depends(iface_mode, 'mesh');
 
 					o = mesh_ss.option(form.Flag, "mesh_gate_announcements", _("Mesh Gate"), _("Advertise that this mesh station has access to a broader network beyond the MBSS"));
 					o.rmempty = false;
+					o.retain = true;
+					o.depends(iface_mode, 'mesh');
 					o.default = "0";
 
 					o = mesh_ss.option(form.Flag, "mesh_nolearn", _("Disable Mesh Path Learning"), _("Disables automatic HWMP path discovery which reduces the control overhead. Recommended for large fixed mesh networks where self-healing is not critical."));
 					o.rmempty = false;
+					o.retain = true;
+					o.depends(iface_mode, 'mesh');
 					o.default = "0";
 
 					o = mesh_ss.option(form.ListValue, "mbca_config", _("MBCA Configuration"));
@@ -1440,28 +1455,36 @@ return view.extend({
 					o.value('3', _('Enable TBTT selection and Adjustment'));
 					o.default = "1";
 					o.rmempty = false;
+					o.retain = true;
+					o.depends(iface_mode, 'mesh');
 
 					o = mesh_ss.option(form.Flag, "mesh_beacon_less_mode", _("Mesh beaconless Mode"), _("Enable mesh beaconless modes"));
 					o.ucisection = "mesh_beaconless";
 					o.rmempty = false;
+					o.retain = true;
+					o.depends(iface_mode, 'mesh');
 					o.default = "0";
 
 					o = mesh_ss.option(form.Flag, "enabled", _("Mesh dynamic peering"), _("Enable mesh dynamic peering"));
 					o.ucisection = "mesh_dynamic_peering";
 					o.rmempty = false;
+					o.retain = true;
+					o.depends(iface_mode, 'mesh');
 					o.default = "0";
 
 					o = mesh_ss.option(form.Value, "mesh_rssi_margin", _("RSSI margin"), _("Specifies the RSSI margin used to determine when to replace weak peer links (Range: -3 to 30)"));
 					o.ucisection = "mesh_dynamic_peering";
 					o.rmempty = false;
-					o.depends("enabled", "1");
+					o.retain = true;
+					o.depends({ [iface_mode]: 'mesh', 'enabled': '1' });
 					o.default = "5";
 					o.datatype = "range(-3,30)";
 
 					o = mesh_ss.option(form.Value, "mesh_blacklist_timeout", _("Blacklist timeout"), _("Specifies the time in sec during which a removed peer is not allowed conection (Range: 10 to 600)"));
 					o.ucisection = "mesh_dynamic_peering";
 					o.rmempty = false;
-					o.depends("enabled", "1");
+					o.retain = true;
+					o.depends({ [iface_mode]: 'mesh', 'enabled': '1' });
 					o.default = "60";
 					o.datatype = "range(10,600)";
 
