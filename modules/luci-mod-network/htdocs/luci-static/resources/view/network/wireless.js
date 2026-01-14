@@ -674,6 +674,7 @@ return view.extend({
 		s.addModalOptions = function (s) {
 			return network.getWifiNetwork(s.section).then(function (radioNet) {
 				var hwtype = uci.get('wireless', radioNet.getWifiDeviceName(), 'type');
+				var have_mesh = L.hasSystemFeature('hostapd', 'mesh') || L.hasSystemFeature('wpasupplicant', 'mesh');
 				var path = uci.get('wireless', radioNet.getWifiDeviceName(), 'path');
 				var o, ss;
 
