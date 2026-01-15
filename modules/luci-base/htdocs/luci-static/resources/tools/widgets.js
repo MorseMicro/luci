@@ -62,6 +62,10 @@ var CBIWifiFrequencyValue = form.Value.extend({
 		expect: { results: [] }
 	}),
 
+	isNativeS1G: function(section_id) {
+		return uci.get('wireless', section_id, 'type') === 'mac80211' && uci.get('wireless', section_id, 'band') === 's1g';
+	},
+
 	getCurrentHalowChannels: function(elem) {
 		return this.halowChannels.getMap(
 			this.s1gCountry(elem),
@@ -91,7 +95,8 @@ var CBIWifiFrequencyValue = form.Value.extend({
 				'5g': (L.hasSystemFeature('hostapd', 'acs')  && !this.disableACS) ? [ 'auto', 'auto', true ] : [],
 				'6g': [],
 				'60g': [],
-				's1g': (L.hasSystemFeature('hostapd_s1g', 'acs')  && !this.disableACS) ? [ 'auto', 'auto', true ] : [],
+				's1g': (((uci.get('wireless', section_id, 'type') == 'morse' && L.hasSystemFeature('hostapd_s1g', 'acs'))
+						|| L.hasSystemFeature('hostapd', 'acs')) && !this.disableACS) ? [ 'auto', 'auto', true ] : [],
 			};
 
 			// s1g is a problem because the driver doesn't like telling us information until it's loaded
@@ -147,6 +152,7 @@ var CBIWifiFrequencyValue = form.Value.extend({
 
 			this.modes = [
 				'', 'Legacy', true,
+				'ah', 'AH', hwmodelist.ah,
 				'n', 'N', hwmodelist.n,
 				'ac', 'AC', hwmodelist.ac,
 				'ax', 'AX', hwmodelist.ax
@@ -172,6 +178,14 @@ var CBIWifiFrequencyValue = form.Value.extend({
 					'HE40', '40 MHz', htmodelist.HE40,
 					'HE80', '80 MHz', htmodelist.HE80,
 					'HE160', '160 MHz', htmodelist.HE160
+				],
+				// S1G doesn’t have HT modes, but we use this for the width. This is not used by the morse driver.
+				'ah': [
+					'1', '1 MHz', true,
+					'2', '2 MHz', true,
+					'4', '4 MHz', true,
+					'8', '8 MHz', true,
+					'16', '16 MHz', true,
 				]
 			};
 
@@ -192,6 +206,9 @@ var CBIWifiFrequencyValue = form.Value.extend({
 				'ax': [
 					'2g', '2.4 GHz', this.channels['2g'].length > 3,
 					'5g', '5 GHz', this.channels['5g'].length > 3
+				],
+				'ah': [
+					's1g', '< 1GHz', this.channels['s1g'].length > 0
 				]
 			};
 		}, this));
@@ -408,6 +425,8 @@ var CBIWifiFrequencyValue = form.Value.extend({
 		    hwval = uci.get('wireless', section_id, 'hwmode'),
 		    chval = uci.get('wireless', section_id, 'channel'),
 		    s1gchanbwval = uci.get('wireless', section_id, 's1g_chanbw'),
+			// s1g_oper_chwidth is only used by native s1g, not the morse driver
+			s1goperchwidth = uci.get('wireless', section_id, 's1g_oper_chwidth'),
 		    chznval = uci.get('wireless', section_id, 's1g_chzn'),
 		    bandval = uci.get('wireless', section_id, 'band'),
 		    country = uci.get('wireless', section_id, 'country'),
@@ -447,7 +466,9 @@ var CBIWifiFrequencyValue = form.Value.extend({
 
 		this.setValues(mode, this.modes);
 
-		if (/HE20|HE40|HE80|HE160/.test(htval))
+		if (this.isNativeS1G(section_id))
+			mode.value = 'ah';
+		else if (/HE20|HE40|HE80|HE160/.test(htval))
 			mode.value = 'ax';
 		else if (/VHT20|VHT40|VHT80|VHT160/.test(htval))
 			mode.value = 'ac';
@@ -475,8 +496,9 @@ var CBIWifiFrequencyValue = form.Value.extend({
 		}
 
 		this.toggleWifiBand(elem);
-
-		bwdt.value = htval;
+		// This << converts index to channel width
+		// 0 -> 1 MHz, 1 -> 2MHz, 2 -> 4MHz, 3 -> 8MHz, 4 -> 16MHz
+		bwdt.value = this.isNativeS1G(section_id) ? String(1 << Number(s1goperchwidth)) : htval;
 		chan.value = chval || (chan.options[0] ? chan.options[0].value : 'auto');
 
 		return elem;
@@ -665,7 +687,15 @@ var CBIWifiFrequencyValue = form.Value.extend({
 			section_id = this.ucisection;
 		}
 
-		uci.set('wireless', section_id, 'htmode', value[0] || null);
+		// For native s1g, htmode writes the width
+		if (this.isNativeS1G(section_id))
+			if (value[0] !== undefined) {
+				// This log converts channel width to index
+				// 1 MHz-> 0, 2 MHz -> 1, 4 MHz -> 2, 8 MHz -> 3, 16 MHz -> 4
+				uci.set('wireless', section_id, 's1g_oper_chwidth', Math.log2(Number(value[0])));
+			}
+		else
+			uci.set('wireless', section_id, 'htmode', value[0]);
 
 		if (this.useBandOption)
 			uci.set('wireless', section_id, 'band', value[1]);
@@ -676,7 +706,7 @@ var CBIWifiFrequencyValue = form.Value.extend({
 
 		uci.set('wireless', section_id, 'channel', value[2]);
 
-		if (value[1] === 's1g') {
+		if (!this.isNativeS1G(section_id) && value[1] === 's1g') {
 			uci.set('wireless', section_id, 's1g_prim_1mhz_chan_index', value[3]);
 			uci.set('wireless', section_id, 's1g_prim_chwidth', value[4]);
 		}
