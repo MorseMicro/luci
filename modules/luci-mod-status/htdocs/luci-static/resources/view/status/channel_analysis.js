@@ -116,10 +116,18 @@ return view.extend({
 	create_channel_graph: function(chan_analysis, freq_tbl, freq) {
 		// Determine the smallest gap between frequencies, and use this to indicate the lines.
 		const channels_by_mhz = freq_tbl.reduce((acc, freq) => {
-			(acc[freq.mhz] ??= []).push(freq.channel);
+			var mhz = freq.mhz;
+			if (freq.band == '900')
+				mhz += (freq.offset/1000);
+			(acc[mhz] ??= []).push(freq.channel);
 			return acc;
 		}, {});
-		const frequencies = freq_tbl.map(f => f.mhz).sort();
+		const frequencies = freq_tbl.map(f => {
+			var mhz = f.mhz;
+			if (f.band == '900')
+				mhz += (f.offset/1000);
+			return mhz;
+		}).filter(m => isFinite(m)).sort((a, b) => a - b);
 		const frequency_start = frequencies[0];
 		const frequency_end = frequencies[frequencies.length - 1];
 		const frequency_gap = Math.min(...frequencies.map((f, i) => i > 0 ? f - frequencies[i-1] : Infinity).filter(gap => gap > 0));
@@ -330,7 +338,7 @@ return view.extend({
 					chan_width = 2;
 
 				/* Skip WiFi not supported by the current band */
-				if (band != res.band)
+				if (band != "900" && band != res.band)
 					continue;
 				if (chan_analysis.offset_tbl[res.channel] == null)
 					continue;
@@ -389,8 +397,8 @@ return view.extend({
 					}
 				}
 
-				if (res.ah_operation != null) {
-					chan_width = res.ah_operation.channel_width;
+				if (res.s1g_operation != null) {
+					chan_width = res.s1g_operation.channel_width;
 					res.channel_width = `${chan_width} MHz`;
 				}
 
@@ -470,21 +478,36 @@ return view.extend({
 		var tabs = E('div', {}, E('div'));
 
 		for (var ifname in wifiDevs) {
+			var bands = {
+				[900] : { title: '900MHz', channels: [] },
+				[2] : { title: '2.4GHz', channels: [] },
+				[5] : { title: '5GHz', channels: [] },
+				[6] : { title: '6GHz', channels: [] },
+			};
+
 			var freq_tbl = {
+				['900MHz'] : [],
 				['2.4GHz'] : [],
-				['5GHz'] : [], 
-				['900MHz'] : [], 
+				['5GHz'] : [],
+				['6GHz'] : [],
 			};
 			/* Split FrequencyList in Bands */
 			wifiDevs[ifname].freq.forEach(function(freq) {
-				if (freq.mhz >= 500_000) {
-					freq_tbl['900MHz'].push(freq);
+				if (freq.mhz >= 5925) {
+					freq_tbl['6GHz'].push(freq);
 				} else if (freq.mhz >= 5000) {
 					freq_tbl['5GHz'].push(freq);
-				} else if(freq.mhz >= 2000) {
+				} else if (freq.mhz >= 2000) {
 					freq_tbl['2.4GHz'].push(freq);
+				} else if (freq.mhz >= 860) {
+					freq_tbl['900MHz'].push(freq);
 				}
 			});
+
+			bands[900].channels = freq_tbl['900MHz'];
+			bands[2].channels = freq_tbl['2.4GHz'];
+			bands[5].channels = freq_tbl['5GHz'];
+			bands[6].channels = freq_tbl['6GHz'];
 
 			for (var band in bands) {
 				if (bands[band].channels.length == 0)
@@ -523,7 +546,7 @@ return view.extend({
 
 				tabs.firstElementChild.appendChild(tab)
 
-				requestAnimationFrame(L.bind(this.create_channel_graph, this, graph_data, bands[band].channels, band));
+				requestAnimationFrame(L.bind(this.create_channel_graph, this, graph_data, bands[band].channels, bands[band].title));
 			}
 		}
 
