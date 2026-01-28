@@ -66,6 +66,10 @@ var CBIWifiFrequencyValue = form.Value.extend({
 		return uci.get('wireless', section_id, 'type') === 'mac80211' && uci.get('wireless', section_id, 'band') === 's1g';
 	},
 
+	isMorseNativeS1G: function(section_id) {
+		return this.isNativeS1G(section_id) && L.hasSystemFeature('morse_native_s1g');
+	},
+
 	getCurrentHalowChannels: function(elem) {
 		return this.halowChannels.getMap(
 			this.s1gCountry(elem),
@@ -95,8 +99,12 @@ var CBIWifiFrequencyValue = form.Value.extend({
 				'5g': (L.hasSystemFeature('hostapd', 'acs')  && !this.disableACS) ? [ 'auto', 'auto', true ] : [],
 				'6g': [],
 				'60g': [],
-				's1g': (((uci.get('wireless', section_id, 'type') == 'morse' && L.hasSystemFeature('hostapd_s1g', 'acs'))
-						|| L.hasSystemFeature('hostapd', 'acs')) && !this.disableACS) ? [ 'auto', 'auto', true ] : [],
+				// ACS is enabled for native S1G if it's NOT using our native morse driver
+				// This is not used by our default morse driver
+				's1g': (L.hasSystemFeature('hostapd', 'acs') &&
+						!this.isMorseNativeS1G(section_id) &&
+						!this.disableACS)
+						? [ 'auto', 'auto', true ] : [],
 			};
 
 			// s1g is a problem because the driver doesn't like telling us information until it's loaded
