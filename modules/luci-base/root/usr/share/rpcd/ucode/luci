@@ -246,7 +246,7 @@ const methods = {
 				morsedppd:  access('/usr/bin/dppd') == true,
 				morsectrl:  access('/sbin/morsectrl') == true,
 				mesh11sd:   access('/usr/sbin/mesh11sd') == true,
-				native_s1g: access('/lib/firmware/morsemicro') == true,
+				morse_native_s1g: access('/lib/firmware/morsemicro') == true,
 				morsetestmode: access('/sys/module/morse/parameters/chan_test_mode') == true,
 			};
 
