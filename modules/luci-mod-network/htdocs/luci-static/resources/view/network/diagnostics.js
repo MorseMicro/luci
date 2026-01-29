@@ -372,7 +372,7 @@ return view.extend({
 		args.push('-c', '1');
 
 		try {
-			for (i = 0; i < count; ++i) {
+			for (let i = 0; i < count; ++i) {
 				const startInterval = performance.now();
 				const result = await Promise.race([cancelPromise, performSinglePing(exec, args)]);
 				if (result === ui.CANCEL) {
