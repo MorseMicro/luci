@@ -995,6 +995,7 @@ static bool rpc_luci_get_iwinfo(struct blob_buf *buf, const char *devname,
 	iw_call_num(iw->noise, devname, buf, "noise");
 	iw_call_num(iw->channel, devname, buf, "channel");
 	iw_call_str(iw->country, devname, buf, "country");
+	iw_call_num(iw->center_width, devname, buf, "center_width");
 	iw_call_str(iw->phyname, devname, buf, "phy");
 	iw_call_num(iw->txpower, devname, buf, "txpower");
 	iw_call_num(iw->txpower_offset, devname, buf, "txpower_offset");
