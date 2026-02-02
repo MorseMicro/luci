@@ -4203,21 +4203,23 @@ WifiNetwork = baseclass.extend(/** @lends LuCI.network.WifiNetwork.prototype */ 
 	 *
 	 * @returns {null|string}
 	 * Returns the current operating frequency of the network from `ubus`
-	 * runtime information in GHz or `null` if the information is not
+	 * runtime information in MHz (for <1GHz) / GHz or `null` if the information is not
 	 * available.
 	 */
 	getFrequency: function() {
 		var freq = this.ubus('net', 'iwinfo', 'frequency');
 
 		if (freq != null && freq > 0)
-			if (freq > 500000)
-				/* For values in MHz, a 0.5MHz resolution is used, so show only the
-				 * first fractional digit */
-				return '%.01f'.format(freq / 1000);
-			else
+			// > 1GHz
+			if (freq > 1_000_000)
 				/* For values in GHz, a 1 MHz resolution is used, so show only the
 				 * first 3 fractional digits */
-				return '%.03f'.format(freq / 1000);
+				return '%.03f'.format(freq / 1_000_000);
+			// <= 1GHz
+			else
+				/* For values in MHz, a 0.5MHz resolution is used, so show only the
+				 * first fractional digit */
+				return '%.01f'.format(freq / 1_000);
 
 		return null;
 	},
