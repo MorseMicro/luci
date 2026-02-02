@@ -139,13 +139,6 @@ var CBIWifiFrequencyValue = form.Value.extend({
 			for (var i = 0; i < data[1].length; i++) {
 				var band;
 
-				if (data[1][i].mhz >= 800000 && data[1][i].mhz <= 1000000) {
-					// NB these are coming back in khz rather than mhz due
-					// to us wanting sub MHz granularity and the netlink
-					// command not supporting that.
-					data[1][i].mhz /= 1000;
-				}
-
 				if (data[1][i].mhz >= 2412 && data[1][i].mhz <= 2484)
 					band = '2g';
 				else if (data[1][i].mhz >= 5160 && data[1][i].mhz <= 5885)
@@ -159,9 +152,11 @@ var CBIWifiFrequencyValue = form.Value.extend({
 				else
 					continue;
 
+				const offset = 'offset' in data[1][i] ? data[1][i].offset / 1000 : 0;
+				const center_mhz = data[1][i].mhz + offset;
 				this.channels[band].push(
 					data[1][i].channel,
-					this.formatChannel(data[1][i].channel, data[1][i].mhz),
+					this.formatChannel(data[1][i].channel, center_mhz),
 					!data[1][i].restricted
 				);
 			}
@@ -736,7 +731,10 @@ var CBIWifiFrequencyValue = form.Value.extend({
 	},
 
 	formatChannel: function(chanNum, freqMHz) {
-		return '%d (%f MHz)'.format(chanNum, freqMHz);
+		const rounded = Math.round(freqMHz * 10) / 10;
+		return (rounded % 1 !== 0)
+			? '%d (%.1f MHz)'.format(chanNum, rounded)
+			: '%d (%.0f MHz)'.format(chanNum, rounded);
 	},
 });
 
