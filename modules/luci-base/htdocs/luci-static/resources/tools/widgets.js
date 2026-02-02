@@ -696,12 +696,13 @@ var CBIWifiFrequencyValue = form.Value.extend({
 		}
 
 		// For native s1g, htmode writes the width
-		if (this.isNativeS1G(section_id))
+		if (this.isNativeS1G(section_id)) {
 			if (value[0] !== undefined) {
 				// This log converts channel width to index
 				// 1 MHz-> 0, 2 MHz -> 1, 4 MHz -> 2, 8 MHz -> 3, 16 MHz -> 4
 				uci.set('wireless', section_id, 's1g_oper_chwidth', Math.log2(Number(value[0])));
 			}
+		}
 		else
 			uci.set('wireless', section_id, 'htmode', value[0]);
 
