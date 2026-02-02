@@ -10,6 +10,7 @@
 'require halow';
 
 const DEFAULT_S1G_COUNTRY = 'US';
+const MORSE_NATIVE_S1G_MODULE = 'mm81x';
 
 function getUsers() {
     return fs.lines('/etc/passwd').then(function(lines) {
@@ -62,12 +63,19 @@ var CBIWifiFrequencyValue = form.Value.extend({
 		expect: { results: [] }
 	}),
 
+	callSwitchWifiDriverStatus: rpc.declare({
+		object: 'switch_wifi_driver',
+		method: 'status',
+		params: [],
+		expect: { },
+	}),
+
 	isNativeS1G: function(section_id) {
 		return uci.get('wireless', section_id, 'type') === 'mac80211' && uci.get('wireless', section_id, 'band') === 's1g';
 	},
 
-	isMorseNativeS1G: function(section_id) {
-		return this.isNativeS1G(section_id) && L.hasSystemFeature('morse_native_s1g');
+	getCurrentMorseDriver: function() {
+		return this.switchWifiDriverStatus?.now_active;
 	},
 
 	getCurrentHalowChannels: function(elem) {
@@ -92,8 +100,10 @@ var CBIWifiFrequencyValue = form.Value.extend({
 			this.callFrequencyList(section_id),
 			this.callCountryList(section_id),
 			halow.loadChannels(),
+			L.resolveDefault(this.callSwitchWifiDriverStatus(), null),
 		])).then(L.bind(function(data) {
 			this.halowChannels = data[3];
+			this.switchWifiDriverStatus = data[4];
 			this.channels = {
 				'2g': (L.hasSystemFeature('hostapd', 'acs') && !this.disableACS) ? [ 'auto', 'auto', true ] : [],
 				'5g': (L.hasSystemFeature('hostapd', 'acs')  && !this.disableACS) ? [ 'auto', 'auto', true ] : [],
@@ -102,7 +112,8 @@ var CBIWifiFrequencyValue = form.Value.extend({
 				// ACS is enabled for native S1G if it's NOT using our native morse driver
 				// This is not used by our default morse driver
 				's1g': (L.hasSystemFeature('hostapd', 'acs') &&
-						!this.isMorseNativeS1G(section_id) &&
+						this.isNativeS1G(section_id) &&
+						this.getCurrentMorseDriver() !== MORSE_NATIVE_S1G_MODULE &&
 						!this.disableACS)
 						? [ 'auto', 'auto', true ] : [],
 			};
