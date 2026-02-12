@@ -195,11 +195,11 @@ var CBIWifiFrequencyValue = form.Value.extend({
 				],
 				// S1G doesn’t have HT modes, but we use this for the width. This is not used by the morse driver.
 				'ah': [
-					'1', '1 MHz', true,
-					'2', '2 MHz', true,
-					'4', '4 MHz', true,
-					'8', '8 MHz', true,
-					'16', '16 MHz', true,
+					'0', '1 MHz', true,
+					'1', '2 MHz', true,
+					'2', '4 MHz', true,
+					'3', '8 MHz', true,
+					'4', '16 MHz', true,
 				]
 			};
 
@@ -512,7 +512,7 @@ var CBIWifiFrequencyValue = form.Value.extend({
 		this.toggleWifiBand(elem);
 		// This << converts index to channel width
 		// 0 -> 1 MHz, 1 -> 2MHz, 2 -> 4MHz, 3 -> 8MHz, 4 -> 16MHz
-		bwdt.value = this.isNativeS1G(section_id) ? String(1 << Number(s1goperchwidth)) : htval;
+		bwdt.value = this.isNativeS1G(section_id) ? s1goperchwidth : htval;
 		chan.value = chval || (chan.options[0] ? chan.options[0].value : 'auto');
 
 		return elem;
@@ -639,6 +639,8 @@ var CBIWifiFrequencyValue = form.Value.extend({
 		}
 
 		const morse = uci.get('wireless', section_id, 'type') === 'morse';
+		const s1goperchwidth = uci.get('wireless', section_id, 's1g_oper_chwidth');
+		const htval = uci.get('wireless', section_id, 'htmode');
 		const country = uci.get('wireless', section_id, 'country');
 		const channel = uci.get('wireless', section_id, 'channel');
 		let chznval = uci.get('wireless', section_id, 's1g_chzn');
@@ -657,7 +659,7 @@ var CBIWifiFrequencyValue = form.Value.extend({
 		}
 
 		return [
-		    uci.get('wireless', section_id, 'htmode'),
+		    this.isNativeS1G(section_id) ? s1goperchwidth : htval,
 		    uci.get('wireless', section_id, 'band') || uci.get('wireless', section_id, 'hwmode'),
 		    channel,
 		    // If primChanSelect is _not_ set, any change to another value will clear the chan_index/chwidth.
