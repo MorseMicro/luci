@@ -31,7 +31,14 @@ return baseclass.extend({
 			mhz = rt.mhz, nss = rt.nss,
 			mcs = rt.mcs, sgi = rt.short_gi,
 			he = rt.he, he_gi = rt.he_gi,
-			he_dcm = rt.he_dcm;
+			he_dcm = rt.he_dcm,
+			s1g = rt.s1g;
+
+		if (s1g) {
+			s += ', S1G-MCS\xa0%d'.format(mcs);
+			if (nss) s += ', S1G-NSS\xa0%d'.format(nss);
+			if (sgi) s += ', ' + _('Short GI').replace(/ /g,'\xa0');
+		}
 
 		if (ht || vht) {
 			if (vht) s += ', VHT-MCS\xa0%d'.format(mcs);
