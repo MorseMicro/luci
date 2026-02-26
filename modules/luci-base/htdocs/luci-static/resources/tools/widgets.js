@@ -165,7 +165,7 @@ var CBIWifiFrequencyValue = form.Value.extend({
 				.reduce(function(o, v) { o[v] = true; return o }, {});
 
 			this.modes = [
-				'', 'Legacy', true,
+				'', 'Legacy', !hwmodelist.ah,
 				'ah', 'AH', hwmodelist.ah,
 				'n', 'N', hwmodelist.n,
 				'ac', 'AC', hwmodelist.ac,
