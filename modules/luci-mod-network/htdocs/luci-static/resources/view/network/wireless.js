@@ -683,6 +683,12 @@ return view.extend({
 				var hwtype = uci.get('wireless', radioNet.getWifiDeviceName(), 'type');
 				var have_mesh = L.hasSystemFeature('hostapd', 'mesh') || L.hasSystemFeature('wpasupplicant', 'mesh');
 				var path = uci.get('wireless', radioNet.getWifiDeviceName(), 'path');
+				var isThereAnotherInterface = function(section_id) {
+					var deviceName = uci.get('wireless', section_id, 'device');
+					var wifiIfaces = uci.sections('wireless', 'wifi-iface');
+					return wifiIfaces.filter(function (iface) { return iface.device == deviceName && iface.disabled != '1' && iface['.name'] != section_id}).length;
+				}
+
 				var o, ss;
 
 				o = s.option(form.SectionValue, '_device', form.NamedSection, radioNet.getWifiDeviceName(), 'wifi-device', _('Device Configuration'));
@@ -1498,9 +1504,14 @@ return view.extend({
 					o = ss.taboption('powersave', form.Flag, 'powersave', _('Enable Powersave'));
 					o.optional = true;
 					o.rmempty = false;
-					o.default = path.includes("usb") ? o.disabled : o.enabled;
+					o.default = path.includes("usb") || isThereAnotherInterface(s.section) ? o.disabled : o.enabled;
 					o.depends('mode', 'sta');
 					o.depends('mode', 'sta-wds');
+					o.validate = function(section_id, value) {
+						if (this.section.formvalue(section_id, 'powersave') == '1' && isThereAnotherInterface(section_id))
+							return _('Power save can not be enabled in multi-interface mode');
+						return true;
+					}
 
 					o = ss.taboption('powersave', form.Flag, 'twt', _('Enable TWT'));
 					o.enabled = '1';
