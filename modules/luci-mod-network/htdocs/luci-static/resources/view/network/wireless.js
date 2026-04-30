@@ -1382,13 +1382,31 @@ return view.extend({
 					o.datatype = 'range(1,2147483647)';
 
 					o = ss.taboption('advanced', form.Value, 'beacon_int', _('Beacon Interval'));
-					o.datatype = 'and(uinteger,range(15,10000))';
+					o.datatype = 'uinteger';
 					o.validate = function (section_id, value) {
 						const uielem = this.getUIElement(section_id);
 						if (uielem) {
 							uielem.setPlaceholder(mode.formvalue(section_id) === 'mesh' ? '1000' : '100');
 						}
-						return form.Value.prototype.validate.apply(this, [section_id, value])
+						const isMesh = mode.formvalue(section_id) === 'mesh';
+
+						if (value == null || value === '')
+							return true;
+
+						if (!/^[0-9]+$/.test(value))
+							return _('Must be a valid integer');
+
+						const v = +value;
+
+						if (isMesh) {
+							if (v < 1000 || v > 2000)
+								return _('For mesh mode, must be between 1000 and 2000 ms.');
+						} else {
+							if (v < 15 || v > 10000)
+								return _('Must be between 15 and 10000 ms.');
+						}
+
+						return true;
 					};
 					o.rmempty = true;
 
@@ -1471,19 +1489,93 @@ return view.extend({
 					o.retain = true;
 					o.depends(iface_mode, 'mesh');
 
-					o = mesh_ss.option(form.Flag, "mesh_beacon_less_mode", _("Mesh beaconless Mode"), _("Enable mesh beaconless modes"));
-					o.ucisection = "mesh_beaconless";
-					o.rmempty = false;
-					o.retain = true;
-					o.depends(iface_mode, 'mesh');
-					o.default = "0";
+					const betaMeshFeatureConflictMessage = _('Mesh beaconless mode (Beta) and Mesh dynamic peering (Beta) cannot be enabled at the same time.');
+					let meshBeaconlessOption;
+					let meshDynamicPeeringOption;
 
-					o = mesh_ss.option(form.Flag, "enabled", _("Mesh dynamic peering"), _("Enable mesh dynamic peering"));
-					o.ucisection = "mesh_dynamic_peering";
-					o.rmempty = false;
-					o.retain = true;
-					o.depends(iface_mode, 'mesh');
-					o.default = "0";
+					meshBeaconlessOption = mesh_ss.option(
+						form.Flag,
+						"mesh_beacon_less_mode",
+						_("Mesh beaconless mode (Beta)"),
+						_("Enable mesh beaconless mode. Cannot be selected alongside dynamic peering.")
+					);
+					meshBeaconlessOption.ucisection = "mesh_beaconless";
+					meshBeaconlessOption.enabled = "1";
+					meshBeaconlessOption.disabled = "0";
+					meshBeaconlessOption.rmempty = false;
+					meshBeaconlessOption.retain = true;
+					meshBeaconlessOption.depends(iface_mode, "mesh");
+					meshBeaconlessOption.default = "0";
+
+					meshDynamicPeeringOption = mesh_ss.option(
+						form.Flag,
+						"enabled",
+						_("Mesh dynamic peering (Beta)"),
+						_("Enable mesh dynamic peering. Cannot be selected alongside beaconless mode.")
+					);
+					meshDynamicPeeringOption.ucisection = "mesh_dynamic_peering";
+					meshDynamicPeeringOption.enabled = "1";
+					meshDynamicPeeringOption.disabled = "0";
+					meshDynamicPeeringOption.rmempty = false;
+					meshDynamicPeeringOption.retain = true;
+					meshDynamicPeeringOption.depends(iface_mode, "mesh");
+					meshDynamicPeeringOption.default = "0";
+
+					let meshBetaInputs = {
+						beaconless: {},
+						dynamicPeering: {}
+					};
+
+					function updateMeshBetaVisibility(section_id) {
+						const beaconlessInput = meshBetaInputs.beaconless[section_id];
+						const dynamicPeeringInput = meshBetaInputs.dynamicPeering[section_id];
+
+						if (!beaconlessInput || !dynamicPeeringInput)
+							return;
+
+						const beaconlessEnabled = beaconlessInput.checked;
+						const dynamicPeeringEnabled = dynamicPeeringInput.checked;
+
+						const beaconlessRow = dom.parent(beaconlessInput, '.cbi-value');
+						const dynamicPeeringRow = dom.parent(dynamicPeeringInput, '.cbi-value');
+
+						if (beaconlessRow)
+							beaconlessRow.style.display = dynamicPeeringEnabled ? 'none' : '';
+
+						if (dynamicPeeringRow)
+							dynamicPeeringRow.style.display = beaconlessEnabled ? 'none' : '';
+					}
+
+					function registerMeshBetaInput(kind, section_id, node) {
+						const input = node.querySelector('input[type="checkbox"]');
+
+						if (!input)
+							return;
+
+						meshBetaInputs[kind][section_id] = input;
+
+						input.addEventListener('change', function () {
+							window.setTimeout(function () {
+								updateMeshBetaVisibility(section_id);
+							}, 0);
+						});
+
+						window.setTimeout(function () {
+							updateMeshBetaVisibility(section_id);
+						}, 0);
+					}
+
+					meshBeaconlessOption.renderWidget = function (section_id, option_index, cfgvalue) {
+						const node = form.Flag.prototype.renderWidget.apply(this, [section_id, option_index, cfgvalue]);
+						registerMeshBetaInput('beaconless', section_id, node);
+						return node;
+					};
+
+					meshDynamicPeeringOption.renderWidget = function (section_id, option_index, cfgvalue) {
+						const node = form.Flag.prototype.renderWidget.apply(this, [section_id, option_index, cfgvalue]);
+						registerMeshBetaInput('dynamicPeering', section_id, node);
+						return node;
+					};
 
 					o = mesh_ss.option(form.Value, "mesh_rssi_margin", _("RSSI margin"), _("Specifies the RSSI margin used to determine when to replace weak peer links (Range: -3 to 30)"));
 					o.ucisection = "mesh_dynamic_peering";
