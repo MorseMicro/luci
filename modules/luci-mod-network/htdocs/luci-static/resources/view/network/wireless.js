@@ -1084,13 +1084,6 @@ return view.extend({
 				o.default = '1';
 				o.depends('mode', 'mesh');
 
-				o = ss.taboption('advanced', form.Value, 'mesh_rssi_threshold', _('RSSI threshold for joining mesh'), _('0 = not using RSSI threshold, 1 = do not change driver default') + ' ' +
-					_('Units: dBm. Where -255 is weakest, and -10 is strong.'));
-				o.rmempty = false;
-				o.default = '0';
-				o.datatype = 'range(-255,1)';
-				o.depends('mode', 'mesh');
-
 				o = ss.taboption('general', form.Value, 'ssid', _('<abbr title="Extended Service Set Identifier">ESSID</abbr>'));
 				o.datatype = 'maxlength(32)';
 				o.depends('mode', 'ap');
@@ -1441,8 +1434,8 @@ return view.extend({
 					o.rmempty = false;
 					o.retain = true;
 					o.depends(iface_mode, 'mesh');
-					o.default = "10";
-					o.datatype = "and(integer, range(1,10))";
+					o.default = "20";
+					o.datatype = "and(integer, range(1,20))";
 
 					o = mesh_ss.option(form.Value, "mesh_rssi_threshold", _("RSSI threshold for joining"), _("0 = not using RSSI threshold"));
 					o.rmempty = false;
