@@ -750,7 +750,7 @@ return view.extend({
 					countryValue.wifiNetwork = radioNet;
 
 					o = ss.taboption('general', form.Flag, 'enable_auto_duty_cycle', _('Use standard duty cycle'),
-						_('Disabling this in EU/GB will rely on ACS/DCS to meet regulatory requirements for AFA (Adaptive Frequency Agility).'));
+						_('Before disabling this in EU/GB, please check the relevant local regulatory requirements.'));
 					o.default = true;
 					o.depends('country', 'EU');
 					o.depends('country', 'GB');

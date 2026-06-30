@@ -393,18 +393,15 @@ var CBIWifiFrequencyValue = form.Value.extend({
 
 		var s1gWidth = elem.querySelector('.s1g-width')?.value;
 		if (s1gWidth) {
-			const country = this.s1gCountry(elem);
 			const hasAcs = L.hasSystemFeature('hostapd_s1g', 'acs') && !this.disableACS;
 			const channelValues = hasAcs ? [ 'auto', 'auto', true ] : [];
 			const chanList = [];
 			const haLowChannels = this.getCurrentHalowChannels(elem);
-			if (!halow.isAutoOnlyCountry(country)) {
-				const chans = Object.values(haLowChannels).toSorted((a, b) => Number(a.centre_freq_mhz) - Number(b.centre_freq_mhz));
-				for (const chanInfo of chans) {
-					if (chanInfo.bw === s1gWidth) {
-						channelValues.push(chanInfo.s1g_chan, this.formatChannel(chanInfo.s1g_chan, chanInfo.centre_freq_mhz), true);
-						chanList.push(chanInfo.s1g_chan);
-					}
+			const chans = Object.values(haLowChannels).toSorted((a, b) => Number(a.centre_freq_mhz) - Number(b.centre_freq_mhz));
+			for (const chanInfo of chans) {
+				if (chanInfo.bw === s1gWidth) {
+					channelValues.push(chanInfo.s1g_chan, this.formatChannel(chanInfo.s1g_chan, chanInfo.centre_freq_mhz), true);
+					chanList.push(chanInfo.s1g_chan);
 				}
 			}
 

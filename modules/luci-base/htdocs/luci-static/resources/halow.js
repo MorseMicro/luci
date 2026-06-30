@@ -15,16 +15,14 @@ const CHZN_NAMES = {
 	"80211_2024": "IEEE 802.11-2024",
 };
 
-/* These countries cannot have fixed channels; devices must automatically
- * change channels when appropriate.
- */
-const AUTO_ONLY_COUNTRIES = new Set([
+/* These countries are restricted from using mesh modes. */
+ const DISABLED_MESH_COUNTRIES = new Set([
 	'EU',
 	'GB',
-]);
+ ]);
 
-function isAutoOnlyCountry(code) {
-	return AUTO_ONLY_COUNTRIES.has(code);
+function isDisabledMeshCountry(code) {
+	return DISABLED_MESH_COUNTRIES.has(code);
 }
 
 class HaLowChannels {
@@ -236,5 +234,5 @@ async function getCSV() {
 
 return L.Class.extend({
 	loadChannels,
-	isAutoOnlyCountry,
+	isDisabledMeshCountry
 });
