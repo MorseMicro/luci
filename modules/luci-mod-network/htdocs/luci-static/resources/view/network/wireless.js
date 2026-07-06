@@ -1079,11 +1079,6 @@ return view.extend({
 				o = ss.taboption('general', form.Value, 'mesh_id', _('Mesh Id'));
 				o.depends('mode', 'mesh');
 
-				o = ss.taboption('advanced', form.Flag, 'mesh_fwding', _('Forward mesh peer traffic'));
-				o.rmempty = false;
-				o.default = '1';
-				o.depends('mode', 'mesh');
-
 				o = ss.taboption('general', form.Value, 'ssid', _('<abbr title="Extended Service Set Identifier">ESSID</abbr>'));
 				o.datatype = 'maxlength(32)';
 				o.depends('mode', 'ap');
