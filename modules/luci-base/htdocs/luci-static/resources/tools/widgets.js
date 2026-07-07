@@ -306,7 +306,7 @@ var CBIWifiFrequencyValue = form.Value.extend({
 			s1gChznValues.push(chzn.codename, chzn.fullname, true);
 		}
 
-		this.setValues(s1gChznEl, s1gChznValues, true);
+		this.setValues(s1gChznEl, s1gChznValues, false);
 
 		if (initialVal) {
 			s1gChznEl.value = initialVal;
