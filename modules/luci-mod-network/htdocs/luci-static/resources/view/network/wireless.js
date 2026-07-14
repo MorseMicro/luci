@@ -1390,8 +1390,8 @@ return view.extend({
 							if (v < 1000 || v > 2000)
 								return _('For mesh mode, must be between 1000 and 2000 ms.');
 						} else {
-							if (v < 15 || v > 10000)
-								return _('Must be between 15 and 10000 ms.');
+							if (v < 21 || v > 10000)
+								return _('Must be between 21 and 10000 ms.');
 						}
 
 						return true;
