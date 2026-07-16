@@ -6729,7 +6729,7 @@ msgid ""
 msgstr ""
 
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:1615
-msgid "Minimum wake duration (us)"
+msgid "Minimum wake duration (µs)"
 msgstr ""
 
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/switch.js:204
@@ -12127,7 +12127,7 @@ msgid "Waiting for device..."
 msgstr ""
 
 #: modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js:1603
-msgid "Wake interval (us)"
+msgid "Wake interval (µs)"
 msgstr ""
 
 #: protocols/luci-proto-yggdrasil/htdocs/luci-static/resources/protocol/yggdrasil.js:344
