@@ -1600,7 +1600,7 @@ return view.extend({
 					o.depends({ mode: "sta", powersave: '1' });
 					o.depends({ mode: "sta-wds", powersave: '1' });
 
-					o = ss.taboption('powersave', form.Value, 'wake_interval', _('Wake interval (us)'));
+					o = ss.taboption('powersave', form.Value, 'wake_interval', _('Wake interval (µs)'));
 					o.depends('twt', '1');
 					o.placeholder = '1000000';
 					o.datatype = 'range(0, 18446744073709550591)'
@@ -1612,7 +1612,7 @@ return view.extend({
 					 * also doesnt match (18446744073709550000).
 					 */
 
-					o = ss.taboption('powersave', form.Value, 'min_wake_duration', _('Minimum wake duration (us)'));
+					o = ss.taboption('powersave', form.Value, 'min_wake_duration', _('Minimum wake duration (µs)'));
 					o.depends('twt', '1');
 					o.placeholder = '65280';
 					o.datatype = 'range(1, 65280)'
