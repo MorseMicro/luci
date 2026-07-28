@@ -1129,7 +1129,7 @@ return view.extend({
 				o.onclick = ui.createHandlerFn(s, network_updown, s.section, s.map);
 
 				if (hwtype == 'mac80211') {
-					o = ss.taboption('general', widgets.WifiFrequencyValue, '_freq', '<br />' + _('Operating frequency'));
+					const freqValue = ss.taboption('general', widgets.WifiFrequencyValue, '_freq', '<br />' + _('Operating frequency'));
 
 					o = ss.taboption('general', form.Flag, 'legacy_rates', _('Allow legacy 802.11b rates'), _('Legacy or badly behaving devices may require legacy 802.11b rates to interoperate. Airtime efficiency may be significantly reduced where these are used. It is recommended to not allow 802.11b rates where possible.'));
 					o.depends({ '_freq': '2g', '!contains': true });
@@ -1139,6 +1139,12 @@ return view.extend({
 
 					o = ss.taboption('advanced', widgets.WifiCountryValue, 'country', _('Country Code'));
 					o.wifiNetwork = radioNet;
+					o.onchange = (ev, section_id, value) => {
+						// The channels available to us depend on the country loaded into the
+						// driver, so the operating frequency can't be changed until the new
+						// country has been applied.
+						freqValue.updateCountryPending(section_id, value);
+					};
 
 					o = ss.taboption('advanced', form.ListValue, 'cell_density', _('Coverage cell density'), _('Configures data rates based on the coverage cell density. Normal configures basic rates to 6, 12, 24 Mbps if legacy 802.11b rates are not used else to 5.5, 11 Mbps. High configures basic rates to 12, 24 Mbps if legacy 802.11b rates are not used else to the 11 Mbps rate. Very High configures 24 Mbps as the basic rate. Supported rates lower than the minimum basic rate are not offered.'));
 					o.value('0', _('Disabled'));
@@ -1179,6 +1185,10 @@ return view.extend({
 					countryValue.onchange = (ev, section_id, value) => {
 						// This makes sure we update the frequency widget when the country changes.
 						freqValue.toggleS1gCountry(section_id, value);
+						// The country and the operating frequency can't be changed at the same
+						// time, so lock the frequency widget if the selected country isn't the
+						// one currently in use by the driver.
+						freqValue.updateCountryPending(section_id, value);
 					};
 
 					if (L.hasSystemFeature('morsesmartmanager')) {

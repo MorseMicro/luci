@@ -11,6 +11,7 @@
 
 const DEFAULT_S1G_COUNTRY = 'US';
 const MORSE_NATIVE_S1G_MODULE = 'mm81x';
+const WORLD_COUNTRY = '00';
 
 function getUsers() {
     return fs.lines('/etc/passwd').then(function(lines) {
@@ -45,6 +46,11 @@ var CBIWifiFrequencyValue = form.Value.extend({
 	__init__: function() {
 		this.super('__init__', arguments);
 		this.disableACS = false;
+
+		// The country currently loaded into the driver as reported by iwinfo,
+		// which is not necessarily the configured country. Set for all device
+		// types, but null if the driver reports no real country (i.e. '00').
+		this.activeCountry = null;
 
 		this.dataPromises = {};
 	},
@@ -104,6 +110,14 @@ var CBIWifiFrequencyValue = form.Value.extend({
 		])).then(L.bind(function(data) {
 			this.halowChannels = data[3];
 			this.switchWifiDriverStatus = data[4];
+
+			// The country the driver is currently using, which is not necessarily
+			// the configured one. '00' means the driver has no real country, in
+			// which case we can't tell whether ours was applied or not.
+			const activeCountry = data[2].find(c => c.active);
+			this.activeCountry = (activeCountry && activeCountry.iso3166 !== WORLD_COUNTRY)
+				? activeCountry.iso3166 : null;
+
 			this.channels = {
 				'2g': (L.hasSystemFeature('hostapd', 'acs') && !this.disableACS) ? [ 'auto', 'auto', true ] : [],
 				'5g': (L.hasSystemFeature('hostapd', 'acs')  && !this.disableACS) ? [ 'auto', 'auto', true ] : [],
@@ -126,7 +140,6 @@ var CBIWifiFrequencyValue = form.Value.extend({
 			// s1g would be added to the <select> so that setting band.value to s1g would fail,
 			// which leads to defaulting to 11a (see write:).
 			if (uci.get('wireless', section_id, 'type') == 'morse') {
-				const activeCountry = data[2].find(c => c.active);
 				if (activeCountry) {
 					const activeChannels = new Set(data[1].map(chanInfo => chanInfo.channel));
 					this.halowChannels.restrict(
@@ -258,6 +271,33 @@ var CBIWifiFrequencyValue = form.Value.extend({
 		this.updateS1gCountry(elem, country);
 		this.updateS1gChannelization(elem);
 		this.toggleS1gChannelization(elem);
+	},
+
+	// The country and the channel can't be changed at the same time,
+	// as the available channels depend on the country loaded into the driver.
+	isCountryPending: function(section_id, country) {
+		country ??= uci.get('wireless', section_id, 'country');
+
+		return !!(this.activeCountry && country && this.activeCountry !== country);
+	},
+
+	updateCountryPending: function(section_id, country) {
+		var elem = this.map.findElement('id', this.cbid(section_id));
+
+		if (elem)
+			this.setCountryPending(elem, this.isCountryPending(section_id, country));
+	},
+
+	// Disable every select in this widget and show a warning explaining why.
+	setCountryPending: function(elem, pending) {
+		var disabled = (this.disabled != null) ? this.disabled : this.map.readonly;
+
+		for (const sel of elem.querySelectorAll('select'))
+			sel.disabled = pending || !!disabled;
+
+		var warning = elem.querySelector('.country-pending-warning');
+		if (warning)
+			warning.style.display = pending ? '' : 'none';
 	},
 
 	toggleS1gChannelization: function(elem) {
@@ -611,7 +651,11 @@ var CBIWifiFrequencyValue = form.Value.extend({
 					'disabled': (this.disabled != null) ? this.disabled : this.map.readonly
 				})
 			]),
-			E('br', { 'style': 'clear:left' })
+			E('br', { 'style': 'clear:left' }),
+			E('div', {
+				'class': 'cbi-value-description country-pending-warning',
+				'style': 'display:none',
+			}, _('Save and apply the new country before changing the operating frequency.'))
 		]);
 
 		const changeState = {};
@@ -625,7 +669,14 @@ var CBIWifiFrequencyValue = form.Value.extend({
 				L.bind(this.handleValueChange, this, section_id, changeState));
 		}
 
-		return this.setInitialValues(this.ucisection || section_id, elem);
+		this.setInitialValues(this.ucisection || section_id, elem);
+
+		// If the configured country hasn't been applied to the driver yet
+		// (possibly from a previous page load), start off locked.
+		this.setCountryPending(elem,
+			this.isCountryPending(this.ucisection || section_id));
+
+		return elem;
 	},
 
 	cfgvalue: function(section_id) {
