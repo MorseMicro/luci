@@ -35,6 +35,7 @@
 #include <netinet/ether.h>
 #include <linux/rtnetlink.h>
 #include <linux/if_packet.h>
+#include <linux/if_bridge.h>
 
 #include <netlink/msg.h>
 #include <netlink/attr.h>
@@ -627,6 +628,166 @@ lease_next(void)
 	return NULL;
 }
 
+
+struct bridge_port {
+	unsigned int no;
+	unsigned int entries;
+	char name[IFNAMSIZ];
+};
+
+/* Collect the ports of the given bridge from /sys/class/net/<name>/brif.
+ *
+ * Returns a newly allocated array which the caller has to free, storing the
+ * number of entries in *n_ports. Ports are identified by number in the
+ * forwarding table, so the number is read alongside the name.
+ */
+static struct bridge_port *
+rpc_luci_get_bridge_ports(const char *name, size_t *n_ports)
+{
+	struct bridge_port *ports = NULL;
+	size_t count = 0, len, i;
+	struct dirent *e;
+	char path[128];
+	DIR *d;
+
+	*n_ports = 0;
+
+	snprintf(path, sizeof(path), "/sys/class/net/%s/brif", name);
+
+	d = opendir(path);
+
+	if (d == NULL)
+		return NULL;
+
+	while (true) {
+		e = readdir(d);
+
+		if (e == NULL)
+			break;
+
+		if (strcmp(e->d_name, ".") && strcmp(e->d_name, ".."))
+			count++;
+	}
+
+	if (count > 0)
+		ports = calloc(count, sizeof(*ports));
+
+	if (ports == NULL) {
+		closedir(d);
+		return NULL;
+	}
+
+	rewinddir(d);
+
+	for (i = 0; i < count; ) {
+		e = readdir(d);
+
+		if (e == NULL)
+			break;
+
+		if (!strcmp(e->d_name, ".") || !strcmp(e->d_name, ".."))
+			continue;
+
+		len = strlen(e->d_name);
+		if (len >= sizeof(ports[i].name))
+			continue;
+
+		ports[i].no = strtoul(readstr("/sys/class/net/%s/brif/%s/port_no",
+		                              name, e->d_name), NULL, 0);
+
+		memcpy(ports[i].name, e->d_name, len + 1);
+
+		i++;
+	}
+
+	closedir(d);
+
+	*n_ports = i;
+
+	return ports;
+}
+
+static void
+rpc_luci_parse_bridge_fdb(const char *name, const char *mac_filter)
+{
+	struct bridge_port *ports;
+	struct __fdb_entry fdb[32];
+	size_t n_ports, n, i, j;
+	const char *mac;
+	char path[128];
+	unsigned int no;
+	void *a, *o;
+	FILE *f;
+
+	ports = rpc_luci_get_bridge_ports(name, &n_ports);
+
+	if (ports == NULL)
+		return;
+
+	snprintf(path, sizeof(path), "/sys/class/net/%s/brforward", name);
+
+	f = fopen(path, "r");
+
+	if (f == NULL) {
+		free(ports);
+		return;
+	}
+
+	a = blobmsg_open_array(&blob, "fdb");
+
+	while ((n = fread(fdb, sizeof(fdb[0]), ARRAY_SIZE(fdb), f)) > 0) {
+		for (i = 0; i < n; i++) {
+			if (fdb[i].is_local)
+				continue;
+
+			no = (fdb[i].port_hi << 8) | fdb[i].port_no;
+
+			for (j = 0; j < n_ports; j++)
+				if (ports[j].no == no)
+					break;
+
+			if (j < n_ports)
+				ports[j].entries++;
+
+			/* Use ea2str() rather than ether_ntoa() so the rendering matches
+			 * the zero padded, upper case addresses used by getHostHints. */
+			mac = ea2str((struct ether_addr *)fdb[i].mac_addr);
+
+			if (mac_filter != NULL && strcasecmp(mac_filter, mac))
+				continue;
+
+			o = blobmsg_open_table(&blob, NULL);
+
+			blobmsg_add_string(&blob, "mac", mac);
+
+			if (j < n_ports)
+				blobmsg_add_string(&blob, "port", ports[j].name);
+
+			blobmsg_add_u32(&blob, "port_no", no);
+
+			/* The kernel reports the ageing timer in USER_HZ (1/100s) units. */
+			blobmsg_add_u32(&blob, "age", fdb[i].ageing_timer_value / 100);
+
+			blobmsg_close_table(&blob, o);
+		}
+	}
+
+	blobmsg_close_array(&blob, a);
+
+	fclose(f);
+
+	a = blobmsg_open_table(&blob, "ports");
+
+	for (i = 0; i < n_ports; i++) {
+		o = blobmsg_open_table(&blob, ports[i].name);
+		blobmsg_add_u32(&blob, "entries", ports[i].entries);
+		blobmsg_close_table(&blob, o);
+	}
+
+	blobmsg_close_table(&blob, a);
+
+	free(ports);
+}
 
 static void
 rpc_luci_parse_network_device_sys(const char *name, struct ifaddrs *ifaddr)
@@ -1939,6 +2100,53 @@ rpc_luci_get_board_json(struct ubus_context *ctx, struct ubus_object *obj,
 }
 
 enum {
+	RPC_B_BRIDGE,
+	RPC_B_MAC,
+	__RPC_B_MAX,
+};
+
+static const struct blobmsg_policy rpc_get_bridge_fdb_policy[__RPC_B_MAX] = {
+	[RPC_B_BRIDGE] = { .name = "bridge", .type = BLOBMSG_TYPE_STRING },
+	[RPC_B_MAC]    = { .name = "mac",    .type = BLOBMSG_TYPE_STRING }
+};
+
+static int
+rpc_luci_get_bridge_fdb(struct ubus_context *ctx, struct ubus_object *obj,
+                        struct ubus_request_data *req, const char *method,
+                        struct blob_attr *msg)
+{
+	struct blob_attr *tb[__RPC_B_MAX];
+	const char *bridge;
+	char path[128];
+
+	blobmsg_parse(rpc_get_bridge_fdb_policy, __RPC_B_MAX, tb,
+	              blob_data(msg), blob_len(msg));
+
+	if (!tb[RPC_B_BRIDGE])
+		return UBUS_STATUS_INVALID_ARGUMENT;
+
+	bridge = blobmsg_get_string(tb[RPC_B_BRIDGE]);
+	if (!bridge || !*bridge)
+		return UBUS_STATUS_INVALID_ARGUMENT;
+
+	/* Only a bridge carries a brif directory, so its presence doubles as the
+	 * existence check for the requested device. */
+	snprintf(path, sizeof(path), "/sys/class/net/%s/brif", bridge);
+
+	if (access(path, F_OK) != 0)
+		return UBUS_STATUS_NOT_FOUND;
+
+	blob_buf_init(&blob, 0);
+
+	rpc_luci_parse_bridge_fdb(bridge,
+		tb[RPC_B_MAC] ? blobmsg_get_string(tb[RPC_B_MAC]) : NULL);
+
+	ubus_send_reply(ctx, req, blob.head);
+
+	return UBUS_STATUS_OK;
+}
+
+enum {
 	RPC_L_FAMILY,
 	__RPC_L_MAX,
 };
@@ -2051,7 +2259,8 @@ rpc_luci_api_init(const struct rpc_daemon_ops *o, struct ubus_context *ctx)
 		UBUS_METHOD_NOARG("getHostHints", rpc_luci_get_host_hints),
 		UBUS_METHOD_NOARG("getDUIDHints", rpc_luci_get_duid_hints),
 		UBUS_METHOD_NOARG("getBoardJSON", rpc_luci_get_board_json),
-		UBUS_METHOD("getDHCPLeases", rpc_luci_get_dhcp_leases, rpc_get_leases_policy)
+		UBUS_METHOD("getDHCPLeases", rpc_luci_get_dhcp_leases, rpc_get_leases_policy),
+		UBUS_METHOD("getBridgeFDB", rpc_luci_get_bridge_fdb, rpc_get_bridge_fdb_policy)
 	};
 
 	static struct ubus_object_type luci_type =
