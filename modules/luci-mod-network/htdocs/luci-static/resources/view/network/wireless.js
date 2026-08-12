@@ -33,6 +33,10 @@ mac80211 module. Unless you have specific requirements, you should use
 this firmware.
 `).trim();
 
+const CHAN_TEST_MODE_DESCRIPTION = _(`
+Using the driver in test mode may violate your local regulatory requirements and is NOT intended for normal use.
+`).trim();
+
 const DCS_EXPLANATION = (`
 <p style="padding:0">Dynamic Channel Selection (DCS) is managed by the <strong>smart_manager</strong>
 daemon on Morse Micro Wi-Fi devices.
@@ -882,10 +886,12 @@ return view.extend({
 							bcfInfoOpt.renderUpdate(sid, renderBcfInfo(val));
 						}
 					}
-					if (L.hasSystemFeature('morsetestmode')) {
+					/* The test-mode driver is shipped alongside the normal one; enabling
+					 * chan_test_mode is what makes netifd load it. */
+					if (L.hasSystemFeature('morse_test_driver')) {
 						ss.tab('chan_test', _('Channel Test'));
 
-						o = ss.taboption('chan_test', form.Flag, 'chan_test_mode', _('Enable channel test mode'), _('Allows temporary setting of frequency, channel width and power beyond normal regulatory limits, which will override all other channel settings. Use with caution and only in a controlled environment to avoid interference with other devices.'));
+						o = ss.taboption('chan_test', form.Flag, 'chan_test_mode', _('Enable channel test mode'), CHAN_TEST_MODE_DESCRIPTION);
 						o.enabled = '1';
 						o.disabled = '0';
 						o.default = o.disabled;
