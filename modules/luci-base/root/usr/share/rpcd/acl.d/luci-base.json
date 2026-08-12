@@ -36,7 +36,7 @@
 		"description": "Grant access to network status information",
 		"read": {
 			"ubus": {
-				"luci-rpc": [ "getBoardJSON", "getHostHints", "getNetworkDevices", "getWirelessDevices" ],
+				"luci-rpc": [ "getBoardJSON", "getBridgeFDB", "getHostHints", "getNetworkDevices", "getWirelessDevices" ],
 				"network": [ "get_proto_handlers" ],
 				"network.interface": [ "dump" ]
 			},
