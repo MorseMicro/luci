@@ -248,6 +248,7 @@ const methods = {
 				mesh11sd:   access('/usr/sbin/mesh11sd') == true,
 				morse_native_s1g: access('/lib/firmware/morsemicro') == true,
 				morsetestmode: access('/sys/module/morse/parameters/chan_test_mode') == true,
+				morse_test_driver: access(`/lib/modules/${uname().release}/morse_test_mode.ko`) == true,
 			};
 
 			const wifi_features = [ 
