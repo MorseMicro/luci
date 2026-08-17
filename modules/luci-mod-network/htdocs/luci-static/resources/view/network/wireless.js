@@ -12,6 +12,10 @@
 'require halow';
 'require tools.widgets as widgets';
 
+const CHAN_TEST_EXPLANATION = _(`
+	Both AP and STA must share the same test channel configurations to associate.
+`).trim();
+
 const THIN_LMAC_EXPLANATION = _(`
 Reduces the per-station table size in the chip to allow a large number of associations in AP mode.<br>
 By enabling this, encryption and decryption of unicast frames will be done in the host processor instead of the chip.
@@ -36,6 +40,281 @@ this firmware.
 const CHAN_TEST_MODE_DESCRIPTION = _(`
 Using the driver in test mode may violate your local regulatory requirements and is NOT intended for normal use.
 `).trim();
+
+/* Replace a select's options, keeping the given value selected if it's still one of
+ * the choices, and falling back to the first if not. */
+function setSelectOptions(select, values, value) {
+	dom.content(select, values.map(([ v, label ]) => E('option', { 'value': v }, [ label ])));
+	select.value = values.some(([ v ]) => v === value) ? value : (values[0]?.[0] ?? '');
+}
+
+const CBIChanTestWidthValue = form.Value.extend({
+	__name__: 'CBI.ChanTestWidthValue',
+
+	bws: [ 1, 2, 4, 8, 16 ],
+
+	getElem: function(section_id) {
+		return this.map.findElement('id', this.cbid(section_id));
+	},
+
+	/* Also read by the channel picker, which builds its operating classes from the
+	 * width, so fall back to uci until our widget exists. */
+	currentBw: function(section_id) {
+		return this.getElem(section_id)?.querySelector('.chan-test-bw').value
+			|| uci.get('wireless', section_id, 'chan_test_bw')
+			|| this.default;
+	},
+
+	/* The primary channel can't be wider than the operating channel, and only 1/2 MHz
+	 * primaries are supported. */
+	primWidths: function(bw) {
+		return [ 1, 2 ].filter(w => w <= Math.min(2, bw))
+			.map(w => [ String(w), '%d MHz'.format(w) ]);
+	},
+
+	primIndexes: function(bw) {
+		return Array.from({ length: bw }, (unused, index) => [ String(index), String(index) ]);
+	},
+
+	updatePrimaries: function(section_id, elem, primWidth, primIndex) {
+		const bw = Number(this.currentBw(section_id));
+
+		setSelectOptions(elem.querySelector('.chan-test-prim-width'), this.primWidths(bw), primWidth);
+		setSelectOptions(elem.querySelector('.chan-test-prim-index'), this.primIndexes(bw), primIndex);
+	},
+
+	handleBwChange: function(section_id) {
+		const elem = this.getElem(section_id);
+
+		this.updatePrimaries(section_id, elem,
+			elem.querySelector('.chan-test-prim-width').value,
+			elem.querySelector('.chan-test-prim-index').value);
+
+		// The width also determines the available operating classes.
+		this.onBwChange?.(section_id);
+	},
+
+	renderWidget: function(section_id, option_index, cfgvalue) {
+		const [ bw, primWidth, primIndex ] = cfgvalue ?? [];
+		const select = (cls, change) => E('select', {
+			'class': cls,
+			'style': 'width:auto; min-width:5em',
+			'change': change,
+			'disabled': this.map.readonly,
+		});
+		const help = (label, tooltip) => E('span', {
+			'style': 'text-decoration: underline currentcolor dotted; cursor: help',
+			'data-tooltip': tooltip,
+		}, label);
+
+		const elem = E('div', { 'id': this.cbid(section_id) }, [
+			E('label', { 'style': 'float:left; margin-right:3px;' }, [
+				_('Width'), E('br'),
+				select('chan-test-bw', L.bind(this.handleBwChange, this, section_id))
+			]),
+			E('label', { 'style': 'float:left; margin-right:3px;' }, [
+				help(_('Prim Width'),
+					_('Primary Channel Width; available options will vary depending on the main channel')),
+				E('br'), select('chan-test-prim-width')
+			]),
+			E('label', { 'style': 'float:left; margin-right:3px;' }, [
+				help(_('Prim Index'),
+					_('Primary 1MHz Channel Index; available options will vary depending on the main channel')),
+				E('br'), select('chan-test-prim-index')
+			]),
+			E('br', { 'style': 'clear:left' })
+		]);
+
+		setSelectOptions(elem.querySelector('.chan-test-bw'),
+			this.bws.map(w => [ String(w), '%d MHz'.format(w) ]), bw);
+		this.updatePrimaries(section_id, elem, primWidth, primIndex);
+
+		return elem;
+	},
+
+	cfgvalue: function(section_id) {
+		return [
+			uci.get('wireless', section_id, 'chan_test_bw') ?? this.default,
+			uci.get('wireless', section_id, 'chan_test_prim_chwidth') ?? '1',
+			uci.get('wireless', section_id, 'chan_test_prim_chan_index') ?? '0',
+		];
+	},
+
+	formvalue: function(section_id) {
+		const elem = this.getElem(section_id);
+
+		return elem ? [
+			elem.querySelector('.chan-test-bw').value,
+			elem.querySelector('.chan-test-prim-width').value,
+			elem.querySelector('.chan-test-prim-index').value,
+		] : null;
+	},
+
+	write: function(section_id, value) {
+		const [ bw, primWidth, primIndex ] = value;
+
+		uci.set('wireless', section_id, 'chan_test_bw', bw);
+		uci.set('wireless', section_id, 'chan_test_prim_chwidth', primWidth);
+		uci.set('wireless', section_id, 'chan_test_prim_chan_index', primIndex);
+	},
+
+	remove: function(section_id) {
+		uci.unset('wireless', section_id, 'chan_test_bw');
+		uci.unset('wireless', section_id, 'chan_test_prim_chwidth');
+		uci.unset('wireless', section_id, 'chan_test_prim_chan_index');
+	},
+});
+
+/* Picks a channel from the global operating classes (IEEE 802.11 2024) for
+ * channel test mode, as an alternative to entering a raw frequency. 
+ *
+ * The operating class and channel are solely stored to be restored after reload.
+ */
+const CBIChanTestChannelValue = form.Value.extend({
+	__name__: 'CBI.ChanTestChannelValue',
+
+	load: function(section_id) {
+		return halow.loadOpClasses().then(L.bind(function(opClasses) {
+			this.opClasses = opClasses;
+		}, this));
+	},
+
+	getElem: function(section_id) {
+		return this.map.findElement('id', this.cbid(section_id));
+	},
+
+	currentBw: function(section_id) {
+		return this.bwOption.currentBw(section_id);
+	},
+
+	defaultSelection: function(bw) {
+		const opClass = this.opClasses.getOpClasses(bw)[0];
+		if (!opClass) {
+			return { op_class: '', s1g_chan: '' };
+		}
+
+		return {
+			op_class: opClass.op_class,
+			s1g_chan: this.opClasses.getChannels(bw, opClass.op_class)[0].s1g_chan,
+		};
+	},
+
+	selectionFor: function(section_id, opClass, chan) {
+		const bw = this.currentBw(section_id);
+
+		if (opClass && this.opClasses.getFreqKhz(bw, opClass, chan) !== null) {
+			return { op_class: opClass, s1g_chan: chan };
+		}
+
+		return this.defaultSelection(bw);
+	},
+
+	opClassLabel: function(section_id, opClass) {
+		const [ first, last ] =
+			this.opClasses.getFreqRangeMhz(this.currentBw(section_id), opClass.op_class);
+
+		return '%s (%s, %s MHz)'.format(opClass.op_class,
+			Array.from(opClass.regions).join(', '),
+			first === last ? first : '%s-%s'.format(first, last));
+	},
+
+	updateSelection: function(section_id, elem, selection) {
+		setSelectOptions(elem.querySelector('.chan-test-op-class'),
+			this.opClasses.getOpClasses(this.currentBw(section_id))
+				.map(oc => [ oc.op_class, this.opClassLabel(section_id, oc) ]),
+			selection.op_class);
+
+		this.updateChannels(section_id, elem, selection.s1g_chan);
+	},
+
+	updateChannels: function(section_id, elem, value) {
+		setSelectOptions(elem.querySelector('.chan-test-chan'),
+			this.opClasses.getChannels(this.currentBw(section_id),
+				elem.querySelector('.chan-test-op-class').value)
+				.map(c => [ c.s1g_chan, '%s (%s MHz)'.format(c.s1g_chan, c.centre_freq_mhz) ]),
+			value);
+	},
+
+	selectedFreq: function(section_id) {
+		const elem = this.getElem(section_id);
+
+		return elem ? this.opClasses.getFreqKhz(this.currentBw(section_id),
+			elem.querySelector('.chan-test-op-class').value,
+			elem.querySelector('.chan-test-chan').value) : null;
+	},
+
+	resync: function(section_id) {
+		const elem = this.getElem(section_id);
+		if (!elem) {
+			return;
+		}
+
+		this.updateSelection(section_id, elem, this.selectionFor(section_id,
+			elem.querySelector('.chan-test-op-class').value,
+			elem.querySelector('.chan-test-chan').value));
+	},
+
+	handleOpClassChange: function(section_id) {
+		this.updateChannels(section_id, this.getElem(section_id));
+	},
+
+	renderWidget: function(section_id, option_index, cfgvalue) {
+		const elem = E('div', { 'id': this.cbid(section_id) }, [
+			E('label', { 'style': 'float:left; margin-right:3px;' }, [
+				_('Op Class'), E('br'),
+				E('select', {
+					'class': 'chan-test-op-class',
+					'style': 'width:auto',
+					'change': L.bind(this.handleOpClassChange, this, section_id),
+					'disabled': this.map.readonly,
+				})
+			]),
+			E('label', { 'style': 'float:left; margin-right:3px;' }, [
+				_('Channel'), E('br'),
+				E('select', {
+					'class': 'chan-test-chan',
+					'style': 'width:auto',
+					'disabled': this.map.readonly,
+				})
+			]),
+			E('br', { 'style': 'clear:left' })
+		]);
+
+		this.updateSelection(section_id, elem,
+			this.selectionFor(section_id, ...(cfgvalue ?? [])));
+
+		return elem;
+	},
+
+	cfgvalue: function(section_id) {
+		const opClass = uci.get('wireless', section_id, 'chan_test_op_class');
+		const chan = uci.get('wireless', section_id, 'chan_test_chan');
+
+		return opClass && chan
+			? [ opClass, chan, uci.get('wireless', section_id, 'chan_test_freq') ] : null;
+	},
+
+	formvalue: function(section_id) {
+		const elem = this.getElem(section_id);
+		const opClass = elem?.querySelector('.chan-test-op-class').value;
+		const chan = elem?.querySelector('.chan-test-chan').value;
+		const freq = this.selectedFreq(section_id);
+
+		return opClass && chan && freq != null ? [ opClass, chan, String(freq) ] : null;
+	},
+
+	write: function(section_id, value) {
+		uci.set('wireless', section_id, 'chan_test_op_class', value[0]);
+		uci.set('wireless', section_id, 'chan_test_chan', value[1]);
+		uci.set('wireless', section_id, 'chan_test_freq', value[2]);
+	},
+
+	remove: function(section_id) {
+		uci.unset('wireless', section_id, 'chan_test_op_class');
+		uci.unset('wireless', section_id, 'chan_test_chan');
+		// The frequency is left alone, as the frequency option takes over here.
+	},
+});
 
 const DCS_EXPLANATION = (`
 <p style="padding:0">Dynamic Channel Selection (DCS) is managed by the <strong>smart_manager</strong>
@@ -896,41 +1175,51 @@ return view.extend({
 						o.disabled = '0';
 						o.default = o.disabled;
 
-						o = ss.taboption('chan_test', form.Value, 'chan_test_freq', _('Channel test frequency (kHz)'));
+						o = ss.taboption('chan_test', CBIChanTestWidthValue, 'chan_test_bw', _('Test channel width'));
+						o.default = '1';
+						o.forcewrite = true;
+						o.depends('chan_test_mode', '1');
+						const chanTestBwOption = o;
+
+						o = ss.taboption('chan_test', form.ListValue, 'chan_test_set_by', _('Set channel by'));
+						o.value('op_class', _('Operating class'));
+						o.value('freq', _('Frequency'));
+						o.widget = 'radio';
+						o.default = 'op_class';
+						o.depends('chan_test_mode', '1');
+						o.cfgvalue = (section_id) =>
+							uci.get('wireless', section_id, 'chan_test_op_class') ? 'op_class' : 'freq';
+						o.write = () => {};
+						o.remove = () => {};
+
+						o = ss.taboption('chan_test', CBIChanTestChannelValue, 'chan_test_op_class', _('Test channel'));
+						o.optional = true;
+						o.depends({ 'chan_test_mode': '1', 'chan_test_set_by': 'op_class' });
+						const chanTestChannelOption = o;
+
+						o = ss.taboption('chan_test', form.Value, 'chan_test_freq', _('Test channel frequency (kHz)'));
 						o.datatype = 'range(800000,950000)';
 						o.default = '850000';
 						o.optional = true;
-						o.depends('chan_test_mode', '1');
+						o.depends({ 'chan_test_mode': '1', 'chan_test_set_by': 'freq' });
+						const chanTestFreqOption = o;
 
-						o = ss.taboption('chan_test', form.ListValue, 'chan_test_bw', _('Channel test channel width'));
-						o.value('1', '1 MHz');
-						o.value('2', '2 MHz');
-						o.value('4', '4 MHz');
-						o.value('8', '8 MHz');
-						o.value('16', '16 MHz');
-						o.default = '1';
+						/* Sits after both, so it lands under whichever of the two is showing. */
+						o = ss.taboption('chan_test', form.DummyValue, '_chan_test_help');
 						o.depends('chan_test_mode', '1');
+						o.rawhtml = true;
+						o.default = `<label class="cbi-value-title"></label><div class="cbi-value-description">${CHAN_TEST_EXPLANATION}</div>`;
 
-						o = ss.taboption('chan_test', form.ListValue, 'chan_test_prim_chwidth', _('Channel test primary channel width'));
-						o.value('1', '1 MHz');
-						o.value('2', '2 MHz');
-						o.value('4', '4 MHz');
-						o.value('8', '8 MHz');
-						o.value('16', '16 MHz');
-						o.default = '1';
-						o.depends('chan_test_mode', '1');
+						chanTestChannelOption.bwOption = chanTestBwOption;
 
-						o = ss.taboption('chan_test', form.ListValue, 'chan_test_prim_chan_index', _('Channel test primary 1 MHz channel index'));
-						o.value('0', '0');
-						o.value('1', '1');
-						o.value('2', '2');
-						o.value('3', '3');
-						o.value('4', '4');
-						o.value('5', '5');
-						o.value('6', '6');
-						o.value('7', '7');
-						o.default = '0';
-						o.depends('chan_test_mode', '1');
+						chanTestFreqOption.remove = function(section_id) {
+							if (!chanTestChannelOption.isActive(section_id)) {
+								uci.unset('wireless', section_id, 'chan_test_freq');
+							}
+						};
+
+						chanTestBwOption.onBwChange =
+							(section_id) => chanTestChannelOption.resync(section_id);
 					}
 
 					o = ss.taboption('advanced', form.Flag, 's1g_capab', _('Short Guard Interval'));
