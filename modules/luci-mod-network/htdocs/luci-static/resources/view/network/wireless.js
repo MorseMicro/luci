@@ -48,6 +48,81 @@ function setSelectOptions(select, values, value) {
 	select.value = values.some(([ v ]) => v === value) ? value : (values[0]?.[0] ?? '');
 }
 
+/* With auto duty-cycle on in normal operation, it changes the duty cycle when the channel changes 
+ * as well. For test mode specifically, it exits early so the driver will not override the set
+ * duty cycle. As such, it's not that this widget works exclusively for test mode, but rather that
+ * in this one case, the default driver will act unexpectedly. */
+const CBIChanTestDutyCycleValue = form.Value.extend({
+	__name__: 'CBI.ChanTestDutyCycleValue',
+
+	modes: [ [ '0', _('Spread') ], [ '1', _('Burst') ] ],
+
+	getElem: function(section_id) {
+		return this.map.findElement('id', `${this.cbid(section_id)}-row`);
+	},
+
+	renderWidget: function(section_id, option_index, cfgvalue) {
+		const [ mode, percent ] = cfgvalue ?? [];
+
+		const percentEl = new ui.Textfield(percent ?? '', {
+			id: this.cbid(section_id),
+			optional: true,
+			datatype: this.datatype,
+			placeholder: this.placeholder,
+			validate: L.bind(this.validate, this, section_id),
+			disabled: this.map.readonly,
+		}).render();
+		// Use a fixed width to avoid the theme's min-width override
+		Object.assign(percentEl.querySelector('input').style, { width: '6em', minWidth: '6em' });
+
+		const modeEl = E('select', {
+			'class': 'chan-test-duty-cycle-mode',
+			'style': 'width:auto; min-width:5em',
+			'disabled': this.map.readonly,
+		});
+
+		const elem = E('div', { 'id': `${this.cbid(section_id)}-row` }, [
+			E('label', { 'style': 'float:left; margin-right:3px;' }, [
+				_('Mode'), E('br'), modeEl
+			]),
+			E('label', { 'style': 'float:left; margin-right:3px;' }, [
+				_('Percentage'), E('br'), percentEl
+			]),
+			E('br', { 'style': 'clear:left' })
+		]);
+
+		setSelectOptions(modeEl, this.modes, mode);
+
+		return elem;
+	},
+
+	cfgvalue: function(section_id) {
+		return [
+			uci.get('wireless', section_id, 'chan_test_duty_cycle_mode') ?? this.modes[0][0],
+			uci.get('wireless', section_id, 'chan_test_duty_cycle') ?? '',
+		];
+	},
+
+	/* No percentage means no limit, so there's no mode to keep either. */
+	formvalue: function(section_id) {
+		const elem = this.getElem(section_id);
+		const percent = this.getUIElement(section_id)?.getValue() ?? '';
+
+		return elem && percent !== ''
+			? [ elem.querySelector('.chan-test-duty-cycle-mode').value, percent ] : null;
+	},
+
+	write: function(section_id, value) {
+		uci.set('wireless', section_id, 'chan_test_duty_cycle_mode', value[0]);
+		uci.set('wireless', section_id, 'chan_test_duty_cycle', value[1]);
+	},
+
+	remove: function(section_id) {
+		uci.unset('wireless', section_id, 'chan_test_duty_cycle_mode');
+		uci.unset('wireless', section_id, 'chan_test_duty_cycle');
+	},
+});
+
 const CBIChanTestWidthValue = form.Value.extend({
 	__name__: 'CBI.ChanTestWidthValue',
 
@@ -1174,6 +1249,20 @@ return view.extend({
 						o.enabled = '1';
 						o.disabled = '0';
 						o.default = o.disabled;
+
+						o = ss.taboption('chan_test', CBIChanTestDutyCycleValue, 'chan_test_duty_cycle', _('Duty cycle'),
+							_('Proportion of airtime the radio may transmit for. Leave blank to disable and apply no limit.'));
+						o.datatype = 'range(0.01,100)';
+						o.optional = true;
+						o.placeholder = _('no limit');
+						o.depends('chan_test_mode', '1');
+						// morse_cli accepts values in 0.01 resolution
+						o.validate = function(section_id, value) {
+							if (value !== '' && !/^\d+(\.\d{1,2})?$/.test(value))
+								return _('Expecting a percentage with at most two decimal places');
+
+							return true;
+						};
 
 						o = ss.taboption('chan_test', CBIChanTestWidthValue, 'chan_test_bw', _('Test channel width'));
 						o.default = '1';
