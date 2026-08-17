@@ -1,4 +1,7 @@
-/* Helpers for reading halow channel info from channels.csv.
+/* Helpers for reading halow channel info from the morse-regdb csvs.
+ *
+ * channels.csv is the regulatory data whereas s1g_opclasses.csv is the operating 
+ * class table from the spec, which is only used in the test driver mode.
  *
  * We currently don't just use iwinfo because:
  *  - iwinfo freqlist doesn't have bandwidth information
@@ -204,35 +207,106 @@ class HaLowChannels {
 	}
 }
 
-let getCSVPromise;
-async function loadChannels() {
-	if (!getCSVPromise) {
-		getCSVPromise = getCSV();
+/**
+ * The S1G channels grouped by global operating class (IEEE 802.11 2024).
+ */
+class S1GOpClasses {
+	constructor(rows) {
+		// bw -> global op_class -> {op_class, regions, channels: {chan: chanInfo}}
+		this.opClassMap = {};
+
+		for (const row of rows) {
+			const opClassInfo = ((this.opClassMap[row.bw] ??= {})[row.global_op_class] ??= {
+				op_class: row.global_op_class,
+				regions: new Set(),
+				channels: {},
+			});
+
+			opClassInfo.regions.add(row.region);
+
+			opClassInfo.channels[row.s1g_chan] = {
+				s1g_chan: row.s1g_chan,
+				centre_freq_mhz: row.centre_freq_mhz,
+				freq_khz: Math.round(Number(row.centre_freq_mhz) * 1000),
+			};
+		}
 	}
 
-	return new HaLowChannels(await getCSVPromise);
+	/**
+	 * Get the operating classes usable at this bandwidth, in operating class order.
+	 *
+	 * @returns {array} [{op_class, regions, channels}]
+	 */
+	getOpClasses(bw) {
+		return Object.values(this.opClassMap[bw] ?? {})
+			.sort((a, b) => Number(a.op_class) - Number(b.op_class));
+	}
+
+	/**
+	 * Get the channels in an operating class, in channel number order.
+	 *
+	 * @returns {array} [{s1g_chan, centre_freq_mhz, freq_khz}]
+	 */
+	getChannels(bw, opClass) {
+		return Object.values(this.opClassMap[bw]?.[opClass]?.channels ?? {})
+			.sort((a, b) => Number(a.s1g_chan) - Number(b.s1g_chan));
+	}
+
+	/**
+	 * Get the centre frequencies at the edges of an operating class as [first, last] in MHz.
+	 *
+	 * The channels of a class all share its starting frequency, so channel order is
+	 * frequency order.
+	 */
+	getFreqRangeMhz(bw, opClass) {
+		const channels = this.getChannels(bw, opClass);
+
+		return [ channels[0]?.centre_freq_mhz, channels[channels.length - 1]?.centre_freq_mhz ];
+	}
+
+	/**
+	 * Get the centre frequency in kHz for a channel, or null if it's not in the table.
+	 */
+	getFreqKhz(bw, opClass, chan) {
+		return this.opClassMap[bw]?.[opClass]?.channels?.[chan]?.freq_khz ?? null;
+	}
 }
 
+async function loadChannels() {
+	return new HaLowChannels(await getCSV('halow-channels.csv'));
+}
+
+async function loadOpClasses() {
+	return new S1GOpClasses(await getCSV('halow-opclasses.csv'));
+}
+
+const csvPromises = {};
+
 /**
- * Request the halow-channels.csv file.
+ * Request one of the morse-regdb csv files (exposed in /www by the morse-regdb package).
  *
  * The header is used to construct each line in object format.
  */
-async function getCSV() {
-	const resp = await request.get(`/halow-channels.csv?v=${L.env.resource_version}`, {cache: true});
-	if (!resp.ok) {
-		L.error(`Unable to load channel map: ${resp.statusText}`);
-	}
+async function getCSV(filename) {
+	csvPromises[filename] ??= (async () => {
+		const resp = await request.get(`/${filename}?v=${L.env.resource_version}`, {cache: true});
+		if (!resp.ok) {
+			L.error(`Unable to load ${filename}: ${resp.statusText}`);
+		}
 
-	const [header, ...data] = (await resp.text()).trim().split(/[\r\n]+/).map(line => line.split(','));
+		const [header, ...data] = (await resp.text()).trim().split(/[\r\n]+/).map(line => line.split(','));
 
-	return data.map(channel => channel.reduce((channel_obj, val, i) => {
-		channel_obj[header[i]] = val;
-		return channel_obj;
-	}, {}));
+		return data.map(row => row.reduce((row_obj, val, i) => {
+			row_obj[header[i]] = val;
+			return row_obj;
+		}, {}));
+	})();
+
+	return csvPromises[filename];
 }
 
 return L.Class.extend({
 	loadChannels,
+	loadOpClasses,
 	isDisabledMeshCountry
 });
