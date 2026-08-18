@@ -123,6 +123,67 @@ const CBIChanTestDutyCycleValue = form.Value.extend({
 	},
 });
 
+/* The burst window is fixed by the driver. */
+const BURST_WINDOW_S = 3600;
+
+/* The airtime left in the current duty cycle burst window, polled from the driver while
+ * the tab is open. morse_cli only tracks this in burst mode, so in spread mode (or with
+ * no duty cycle at all) the budget just reads as empty.
+ */
+const CBIChanTestAirtimeValue = form.DummyValue.extend({
+	__name__: 'CBI.ChanTestAirtimeValue',
+
+	getElem: function(section_id) {
+		return this.map.findElement('id', this.cbid(section_id));
+	},
+
+	/* From uci rather than the form, as the driver only has what's been applied. */
+	isBurst: function(section_id) {
+		return uci.get('wireless', section_id, 'chan_test_duty_cycle_mode') === '1';
+	},
+
+	setSeconds: function(elem, seconds) {
+		dom.content(elem, '%d / %d s'.format(seconds, BURST_WINDOW_S));
+	},
+
+	refresh: function(section_id) {
+		const elem = this.getElem(section_id);
+
+		/* The tabs are only hidden with css, so don't poll from the other ones. */
+		if (!elem || elem.offsetParent === null) {
+			return;
+		}
+
+		if (!this.isBurst(section_id)) {
+			this.setSeconds(elem, 0);
+			return;
+		}
+
+		// morse_cli reports the remaining airtime in microseconds.
+		return fs.exec('/sbin/morse_cli', [ 'duty_cycle', 'airtime' ]).then(res => {
+			const us = Number(res.stdout);
+
+			this.setSeconds(elem, Number.isFinite(us) ? Math.round(us / 1000000) : 0);
+		}).catch(() => this.setSeconds(elem, 0));
+	},
+
+	renderWidget: function(section_id) {
+		const elem = E('div', { 'id': this.cbid(section_id) });
+
+		this.setSeconds(elem, 0);
+
+		/* The option survives a re-render of the map, so drop the previous registration. */
+		if (this.pollFn) {
+			poll.remove(this.pollFn);
+		}
+
+		this.pollFn = L.bind(this.refresh, this, section_id);
+		poll.add(this.pollFn, 1);
+
+		return elem;
+	},
+});
+
 const CBIChanTestWidthValue = form.Value.extend({
 	__name__: 'CBI.ChanTestWidthValue',
 
@@ -1263,6 +1324,11 @@ return view.extend({
 
 							return true;
 						};
+
+						o = ss.taboption('chan_test', CBIChanTestAirtimeValue, '_chan_test_airtime',
+							_('Remaining Airtime'),
+							_('This statistic is only available in burst mode.'));
+						o.depends('chan_test_mode', '1');
 
 						o = ss.taboption('chan_test', CBIChanTestWidthValue, 'chan_test_bw', _('Test channel width'));
 						o.default = '1';
