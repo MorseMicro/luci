@@ -770,6 +770,9 @@ return view.extend({
 						freqValue.toggleS1gCountry(section_id, value);
 					};
 
+					o = ss.taboption('general', widgets.WifiTxPowerValue, 'txpower', _('Maximum transmit power'), _('Specifies the maximum transmit power the wireless radio may use. Depending on regulatory requirements and wireless usage, the actual transmit power may be reduced by the driver.'));
+					o.wifiNetwork = radioNet;
+
 					if (L.hasSystemFeature('morsesmartmanager')) {
 						ss.tab("dcs", _("Dynamic Channel Selection"));
 
