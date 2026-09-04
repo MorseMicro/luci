@@ -27,7 +27,7 @@ return view.extend({
 				}, _('Configure ttyd.')),
 			]);
 
-		if (window.location.protocol === 'https:' && ssl === '0') {
+		if (window.location.protocol === 'https:' && ssl === '0' && !url) {
 
 			// Check if http is enabled in uhttpd and redirect_https is disabled
 			var http_enabled = (uci.get('uhttpd', 'main', 'listen_http') != null) &&
