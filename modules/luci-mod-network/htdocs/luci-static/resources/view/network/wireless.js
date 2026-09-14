@@ -1098,7 +1098,6 @@ return view.extend({
 			return network.getWifiNetwork(s.section).then(function (radioNet) {
 				var hwtype = uci.get('wireless', radioNet.getWifiDeviceName(), 'type');
 				var have_mesh = L.hasSystemFeature('hostapd', 'mesh') || L.hasSystemFeature('wpasupplicant', 'mesh');
-				var path = uci.get('wireless', radioNet.getWifiDeviceName(), 'path');
 				var isThereAnotherInterface = function(section_id) {
 					var deviceName = uci.get('wireless', section_id, 'device');
 					var wifiIfaces = uci.sections('wireless', 'wifi-iface');
@@ -2021,7 +2020,7 @@ return view.extend({
 					o = ss.taboption('powersave', form.Flag, 'powersave', _('Enable Powersave'));
 					o.optional = true;
 					o.rmempty = false;
-					o.default = path.includes("usb") || isThereAnotherInterface(s.section) ? o.disabled : o.enabled;
+					o.default = isThereAnotherInterface(s.section) ? o.disabled : o.enabled;
 					o.depends('mode', 'sta');
 					o.depends('mode', 'sta-wds');
 					o.validate = function(section_id, value) {
